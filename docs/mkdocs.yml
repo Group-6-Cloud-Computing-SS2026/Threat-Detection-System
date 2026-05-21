@@ -1,7 +1,6 @@
 site_name: Threat Detection System
 site_description: Documentation for the edge-computing threat detection sensor network.
-site_url: https://javierdesant.github.io/Threat-Detection-System/
-repo_url: https://github.com/javierdesant/Threat-Detection-System
+repo_url: https://github.com/Group-6-Cloud-Computing-SS2026/Threat-Detection-System
 repo_name: Threat-Detection-System
 
 theme:
@@ -58,6 +57,10 @@ nav:
       - "Distributed k3s Kubernetes Deployment": guides/k3s-deployment.md
       - "Cluster Shutdown and Cold Start": guides/shutdown-and-cold-start.md
       - "Edge Camera Test Stream": guides/camera-test-stream.md
+      - "Cluster Setup (PXE & NFS)": guides/cluster-setup.md
+      - "Ansible": guides/ansible.md
+      - "Hardware Setup & Boot": guides/hardware-setup.md
+      - "Basic User Guide": guides/user-guide.md
   - Tasks:
       - "Task 1 — Sensor Nodes & PXE Boot": tasks/task-01-sensor-nodes.md
       - "Task 2 — HPL Performance": tasks/task-02-hpl.md
