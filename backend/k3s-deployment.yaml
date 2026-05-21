@@ -1,0 +1,230 @@
+# k3s Deployment Configuration for Threat Detection Backend (Task 7)
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: threat-detection
+---
+# PersistentVolumeClaim for distributed threat data storage (Task 7)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: threats-storage-pvc
+  namespace: threat-detection
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+---
+# ConfigMap for application configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: threat-detection
+data:
+  APP_ENV: "production"
+  DEBUG: "false"
+  STORAGE_ENABLED: "true"
+  STORAGE_PATH: "/data/threats"
+  THREAT_SENSITIVITY: "0.7"
+  CRITICAL_THRESHOLD: "0.95"
+  HIGH_THRESHOLD: "0.85"
+  MEDIUM_THRESHOLD: "0.70"
+---
+# Secret for sensitive credentials (Task 9: Telegram)
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backend-secrets
+  namespace: threat-detection
+type: Opaque
+stringData:
+  TELEGRAM_BOT_TOKEN: "your-telegram-bot-token-here"
+  TELEGRAM_CHAT_ID: "your-telegram-chat-id-here"
+  TELEGRAM_ENABLED: "false"
+---
+# Deployment for FastAPI backend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: threat-detection-backend
+  namespace: threat-detection
+  labels:
+    app: threat-detection-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: threat-detection-backend
+  template:
+    metadata:
+      labels:
+        app: threat-detection-backend
+    spec:
+      containers:
+      - name: backend
+        image: threat-detection-backend:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+          name: http
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: backend-config
+        - secretRef:
+            name: backend-secrets
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+        volumeMounts:
+        - name: threats-storage
+          mountPath: /data/threats
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: threats-storage
+        persistentVolumeClaim:
+          claimName: threats-storage-pvc
+      - name: tmp
+        emptyDir: {}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - threat-detection-backend
+              topologyKey: kubernetes.io/hostname
+---
+# Service for backend exposure
+apiVersion: v1
+kind: Service
+metadata:
+  name: threat-detection-backend
+  namespace: threat-detection
+  labels:
+    app: threat-detection-backend
+spec:
+  type: ClusterIP
+  selector:
+    app: threat-detection-backend
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
+    name: http
+---
+# Horizontal Pod Autoscaler for automatic scaling
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: backend-hpa
+  namespace: threat-detection
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: threat-detection-backend
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+---
+# Ingress for external access
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: threat-detection-ingress
+  namespace: threat-detection
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+  - host: api.threat-detection.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: threat-detection-backend
+            port:
+              number: 8000
+---
+# NetworkPolicy for security
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: threat-detection-netpol
+  namespace: threat-detection
+spec:
+  podSelector:
+    matchLabels:
+      app: threat-detection-backend
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: threat-detection
+    - podSelector:
+        matchLabels:
+          app: threat-detection-frontend
+    ports:
+    - protocol: TCP
+      port: 8000
+  egress:
+  - to:
+    - namespaceSelector: {}
+    ports:
+    - protocol: TCP
+      port: 443
+    - protocol: TCP
+      port: 80
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: threat-detection
+    ports:
+    - protocol: TCP
+      port: 8000
