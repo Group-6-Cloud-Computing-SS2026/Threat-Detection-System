@@ -1,10 +1,9 @@
-function Root() {
-  return (
-    <div id="app">
-      <h1 className="text-3xl font-bold">Threat Detection System</h1>
-      <p>Frontend is running.</p>
-    </div>
-  )
-}
+import { Outlet } from "react-router";
 
-export default Root
+export default function Root() {
+    return (
+        <main id="app">
+            <Outlet />
+        </main>
+    );
+}
