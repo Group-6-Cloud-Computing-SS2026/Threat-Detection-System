@@ -8,36 +8,36 @@ import LandingPage from "../features/landing/LandingPage.tsx";
 import SettingsPage from "../features/settings/SettingsPage.tsx";
 
 const router = createBrowserRouter([
-    {
-        path: "/",
-        Component: Root,
-        children: [
-            {
-                index: true,
-                Component: HomePage,
-            },
-            {
-                path: "landing",
-                Component: LandingPage,
-            },
-            {
-                path: "login",
-                Component: LoginPage,
-            },
-            {
-                path: "settings",
-                Component: SettingsPage,
-            },
-            {
-                path: "profile",
-                Component: ProfilePage,
-            },
-            {
-                path: "docs",
-                Component: DocsPage,
-            },
-        ],
-    },
+  {
+    path: "/",
+    Component: Root,
+    children: [
+      {
+        index: true,
+        Component: HomePage,
+      },
+      {
+        path: "landing",
+        Component: LandingPage,
+      },
+      {
+        path: "login",
+        Component: LoginPage,
+      },
+      {
+        path: "settings",
+        Component: SettingsPage,
+      },
+      {
+        path: "profile",
+        Component: ProfilePage,
+      },
+      {
+        path: "docs",
+        Component: DocsPage,
+      },
+    ],
+  },
 ]);
 
 export default router;
