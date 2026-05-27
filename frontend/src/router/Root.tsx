@@ -1,5 +1,3 @@
-import './App.css'
-
 function Root() {
   return (
     <div id="app">
