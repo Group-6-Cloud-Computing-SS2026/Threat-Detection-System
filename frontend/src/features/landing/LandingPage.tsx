@@ -9,6 +9,7 @@ export default function LandingPage() {
             />
 
             <section>
+                <h1 className="text-3xl font-bold">Landing</h1>
             </section>
         </>
     );

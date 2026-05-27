@@ -16,6 +16,7 @@ export default function DocsPage() {
             />
 
             <section>
+                <h1 className="text-3xl font-bold">Docs</h1>
             </section>
         </>
     );
