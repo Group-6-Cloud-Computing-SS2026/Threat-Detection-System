@@ -1,6 +1,6 @@
 import './App.css'
 
-function App() {
+function Root() {
   return (
     <div id="app">
       <h1 className="text-3xl font-bold">Threat Detection System</h1>
@@ -9,4 +9,4 @@ function App() {
   )
 }
 
-export default App
+export default Root
