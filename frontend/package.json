@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky"
+    "prepare": "cd .. && git config core.hooksPath .husky"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,scss,md,html}": "prettier --write"
