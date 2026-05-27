@@ -1,5 +1,6 @@
-const docsUrl =
-    "https://group-6-cloud-computing-ss2026.github.io/Threat-Detection-System/";
+const docsUrl: URL = new URL(
+    "https://group-6-cloud-computing-ss2026.github.io/Threat-Detection-System/",
+);
 
 export default function DocsPage() {
     return (
@@ -12,7 +13,7 @@ export default function DocsPage() {
             />
             <meta
                 httpEquiv="refresh"
-                content={`3;url=${docsUrl}`}
+                content={`3;url=${docsUrl.href}`}
             />
 
             <section>
