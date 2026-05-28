@@ -16,6 +16,7 @@
     "*.{js,jsx,ts,tsx,json,css,scss,md,html}": "prettier --write"
   },
   "dependencies": {
+    "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/vite": "^4.2.4",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
