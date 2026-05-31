@@ -55,6 +55,7 @@ nav:
       - "Native Backend & Database Setup": guides/backend-pi5.md
       - "Distributed MinIO Storage": guides/minio-pi5.md
       - "MPI Cluster Setup": guides/mpi-cluster.md
+      - "Distributed k3s Kubernetes Deployment": guides/k3s-deployment.md
   - Tasks:
       - "Task 1 — Sensor Nodes & PXE Boot": tasks/task-01-sensor-nodes.md
       - "Task 2 — HPL Performance": tasks/task-02-hpl.md
