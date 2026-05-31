@@ -31,7 +31,7 @@ def upgrade() -> None:
     sa.Column('elapsed_time_seconds', sa.Float(), nullable=False),
     sa.Column('theoretical_amdahl_speedup', sa.Float(), nullable=False),
     sa.Column('theoretical_gustafson_speedup', sa.Float(), nullable=False),
-    sa.Column('executed_at', sa.DateTime(), nullable=False),
+    sa.Column('executed_at', sa.DateTime(timezone=True), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('sensor_nodes',

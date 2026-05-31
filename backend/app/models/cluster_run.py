@@ -18,4 +18,4 @@ class ClusterRun(Base):
     elapsed_time_seconds = Column(Float, nullable=False)
     theoretical_amdahl_speedup = Column(Float, nullable=False)
     theoretical_gustafson_speedup = Column(Float, nullable=False)
-    executed_at = Column(DateTime, nullable=False, default=utc_now)
+    executed_at = Column(DateTime(timezone=True), nullable=False, default=utc_now)
