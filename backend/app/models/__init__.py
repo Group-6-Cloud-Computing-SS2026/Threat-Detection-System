@@ -10,6 +10,7 @@ from app.models.detection_image import DetectionImage
 from app.models.health_status import HealthStatus
 from app.models.system_log import SystemLog
 from app.models.notification import Notification
+from app.models.cluster_run import ClusterRun
 
 __all__ = [
     "Base",
@@ -20,4 +21,5 @@ __all__ = [
     "HealthStatus",
     "SystemLog",
     "Notification",
+    "ClusterRun",
 ]

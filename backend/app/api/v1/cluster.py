@@ -1,9 +1,13 @@
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 
 from app.api.deps import get_current_user
+from app.database import get_db
 from app.models.user import User
+from app.models.cluster_run import ClusterRun
 from app.services.mpi_service import MPIService
 
 router = APIRouter(prefix="/cluster", tags=["MPI Cluster"])
@@ -54,11 +58,12 @@ async def compile_mpi(
 @router.post("/mpi/run", summary="Run MPI Cluster Benchmark")
 async def run_mpi_benchmark(
     request: MPIRunRequest,
+    db: AsyncSession = Depends(get_db),
     _: User = Depends(get_current_user)
 ):
     """
     Run a parallel Monte Carlo Pi integration calculation using MPI.
-    Orchestrates the job across selected worker nodes, measuring timing and scaling laws.
+    Orchestrates the job across selected worker nodes, measuring timing and scaling laws, and logs the run to the database.
     """
     service = MPIService()
     
@@ -84,7 +89,41 @@ async def run_mpi_benchmark(
             detail=f"MPI Execution Failed: {result.get('error')}. Command run: {result.get('command')}"
         )
 
-    return result
+    # Log successfully executed run in database
+    scaling = result.get("scaling_laws", {})
+    run_log = ClusterRun(
+        algorithm="pi_calculation",
+        tasks=result.get("procs", request.tasks),
+        intervals=result.get("intervals", request.intervals),
+        hosts=request.hosts,
+        calculated_pi=result.get("calculated_pi", 0.0),
+        error=result.get("error", 0.0),
+        elapsed_time_seconds=result.get("elapsed_time_seconds", 0.0),
+        theoretical_amdahl_speedup=scaling.get("theoretical_amdahl_speedup", 1.0),
+        theoretical_gustafson_speedup=scaling.get("theoretical_gustafson_speedup", 1.0)
+    )
+    
+    db.add(run_log)
+    await db.commit()
+    await db.refresh(run_log)
+
+    return {
+        "run_id": run_log.id,
+        "executed_at": run_log.executed_at,
+        **result
+    }
+
+@router.get("/mpi/history", summary="Get MPI Benchmark History")
+async def get_mpi_history(
+    limit: int = 20,
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(get_current_user)
+):
+    """Retrieve historical logs of distributed cluster runs."""
+    stmt = select(ClusterRun).order_by(ClusterRun.executed_at.desc()).limit(limit)
+    res = await db.execute(stmt)
+    runs = res.scalars().all()
+    return runs
 
 @router.get("/mpi/scaling-comparison", summary="Get Scaling Law Projections")
 async def get_scaling_laws_comparison(
