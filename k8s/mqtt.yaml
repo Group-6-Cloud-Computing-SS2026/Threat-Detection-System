@@ -87,6 +87,7 @@ metadata:
   name: mqtt
   namespace: default
 spec:
+  type: LoadBalancer
   ports:
     - name: mqtt
       port: 1883
