@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
     mypi = h * sum;
 
     // Collect all computed parts onto rank 0
-    MPI_Reduce(&mypi, &pi, 1, double, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&mypi, &pi, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 
     if (myid == 0) {
         endwtime = MPI_Wtime();
