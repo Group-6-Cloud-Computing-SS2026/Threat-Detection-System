@@ -50,3 +50,11 @@ model.export(
     format='imx',
     imgsz=320
 )
+
+# Training Metrics after last epoch
+# | Metric    | Value |
+# | --------- | ----- |
+# | Precision | 0.858 |
+# | Recall    | 0.808 |
+# | mAP50     | 0.87  |
+# | mAP50-95  | 0.645 |
