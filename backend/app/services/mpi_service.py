@@ -9,11 +9,15 @@ logger = logging.getLogger(__name__)
 class MPIService:
     """Service to compile, orchestrate, and execute MPI jobs on the Raspberry Pi cluster."""
 
-    def __init__(self, binary_dir: str = "/home/cc123/pi-cluster"):
+    # Absolute path to the 4.1.6 mpirun on the master
+    MPIRUN = "/usr/local/openmpi4/bin/mpirun"
+
+    def __init__(self, binary_dir: str = "/usr/local/bin"):
         self.binary_dir = binary_dir
         self.source_path = "/app/mpi/mpi_pi.c"  # Path in container / local repo
-        # Shared execution path on host/workers (located in the NFS golden image space)
-        self.shared_binary_path = "/home/cc123/pi-cluster/mpi_pi"
+        # Binary compiled inside the Bookworm chroot and installed into the shared NFS rootfs.
+        # All workers see this path via /nfs/rootfs64 -> /  (NFS read-only root).
+        self.shared_binary_path = "/usr/local/bin/mpi_pi"
 
     async def verify_mpi_installed(self) -> Dict[str, Any]:
         """Check if MPI compiler and runner are available on the system."""
@@ -94,13 +98,14 @@ class MPIService:
         Execute the parallel Pi calculation across the specified hosts.
         Uses mpirun to orchestrate the worker nodes.
         """
-        # Build mpirun command
-        # Syntax: mpirun -np {tasks} [-host {hosts}] {binary} {intervals}
-        cmd = ["mpirun", "-np", str(tasks)]
-        
+        # Build mpirun command.
+        # --prefix /usr  → tells workers to load MCA plugins from /usr/lib/openmpi/
+        # Using the 4.1.x mpirun explicitly
+        cmd = [self.MPIRUN, "--prefix", "/usr", "-np", str(tasks)]
+
         if hosts and len(hosts) > 0:
-            # Join host names/IPs with commas
-            cmd.extend(["-host", ",".join(hosts)])
+            # Join host IPs with commas for the --host flag
+            cmd.extend(["--host", ",".join(hosts)])
         else:
             # Fallback to local execution if no cluster hosts provided
             cmd.extend(["--allow-run-as-root"])
