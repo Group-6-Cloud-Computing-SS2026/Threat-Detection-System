@@ -58,11 +58,12 @@ nav:
       - "Cluster Shutdown and Cold Start": guides/shutdown-and-cold-start.md
       - "Edge Camera Test Stream": guides/camera-test-stream.md
       - "Cluster Setup (PXE & NFS)": guides/cluster-setup.md
+      - "Cluster Setup V2 (Setup & Verification)": guides/cluster-setup-v2.md
       - "Ansible": guides/ansible.md
       - "Hardware Setup & Boot": guides/hardware-setup.md
       - "Basic User Guide": guides/user-guide.md
   - Tasks:
-      - "Task 1 — Sensor Nodes & PXE Boot": tasks/task-01-sensor-nodes.md
+      - "Task 1 — Edge Computing Infrastructure": tasks/task-01-edge-computing-infrastructure.md
       - "Task 2 — HPL Performance": tasks/task-02-hpl.md
       - "Task 3 — MPI Cluster": tasks/task-03-mpi.md
       - "Task 4 — Non-MPI Scaling Laws": tasks/task-04-scaling-laws.md
