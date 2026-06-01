@@ -15,45 +15,37 @@ WIDTH = 320
 HEIGHT = 240
 QUALITY = 70  # JPEG compression quality percentage
 
-# Initialize camera backend safely
-# To bypass V4L2 kernel driver deadlocks on Debian Trixie (Kernel 6.12+) on Raspberry Pi 4,
-# we prioritize native CSI applications (rpicam-still, libcamera-still) first.
-# OpenCV VideoCapture(0) is only used as a fallback if native CSI tools are missing.
-camera_backend = None
-cap = None
-camera_command = None
+# Attempt to initialize OpenCV first to achieve ultra-fast in-memory streaming (20-30 FPS)
+# now that the camera device '/dev/video0' has been successfully freed of background locks.
+try:
+    import cv2
+    cap = cv2.VideoCapture(0)
+    if cap.isOpened():
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
+        camera_backend = "opencv"
+        print("✅ OpenCV camera backend successfully initialized (supporting up to 30 FPS).")
+    else:
+        cap.release()
+        cap = None
+        print("⚠️ OpenCV camera capture failed to open. Falling back to native system utilities.")
+except ImportError:
+    print("⚠️ OpenCV library not found in Python environment. Falling back to native system utilities.")
 
-# 1. Prioritize native CSI Pi Camera tools (100% stable, bypasses V4L2 lock)
-for cmd in ["rpicam-still", "libcamera-still"]:
-    try:
-        subprocess.run(["which", cmd], check=True, stdout=subprocess.DEVNULL)
-        camera_command = cmd
-        camera_backend = "rpicam" if cmd == "rpicam-still" else "libcamera"
-        print(f"✅ Verified native Pi Camera command: {cmd}")
-        break
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        continue
-
-# 2. Fallback to OpenCV only if native CSI tools are missing
+# Fallback to native Pi Camera apps if OpenCV fails or is busy
 if camera_backend is None:
-    try:
-        import cv2
-        print("Initializing OpenCV camera backend...")
-        cap = cv2.VideoCapture(0)
-        if cap.isOpened():
-            cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
-            cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
-            camera_backend = "opencv"
-            print("✅ OpenCV camera backend successfully initialized.")
-        else:
-            cap.release()
-            cap = None
-            print("⚠️ OpenCV camera capture failed to open.")
-    except ImportError:
-        print("⚠️ OpenCV library not found in Python environment.")
+    for cmd in ["rpicam-still", "libcamera-still"]:
+        try:
+            subprocess.run(["which", cmd], check=True, stdout=subprocess.DEVNULL)
+            camera_command = cmd
+            camera_backend = "rpicam" if cmd == "rpicam-still" else "libcamera"
+            print(f"✅ Verified native Pi Camera command fallback: {cmd}")
+            break
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            continue
 
 if camera_backend is None:
-    print("❌ Fatal: Neither native camera utilities (rpicam-still, libcamera-still) nor OpenCV is available on this system.")
+    print("❌ Fatal: Neither OpenCV nor native camera utilities (rpicam-still, libcamera-still) are available on this system.")
     exit(1)
 
 def capture_frame():
@@ -63,7 +55,7 @@ def capture_frame():
         temp_file = "/tmp/stream_frame.jpg"
         cmd = [
             camera_command,
-            "-t", "100",             # Allow 100ms for sensor format/exposure sync to avoid exit code 255
+            "-t", "1",               # Immediate capture (no delay)
             "--width", str(WIDTH),
             "--height", str(HEIGHT),
             "-q", str(QUALITY),      # JPEG quality
@@ -108,17 +100,16 @@ if __name__ == "__main__":
         
     client.loop_start()
     
-    # Target frame rate paced at 20 FPS (increased from 10)
-    fps = 20
-    interval = 1.0 / fps
-    frameCount = 0
-    
     print("\n-----------------------------------------------------------")
-    print(f"LIVE EDGE CAMERA STREAM ACTIVE [{fps} FPS]")
+    print("LIVE EDGE CAMERA STREAM ACTIVE [10 FPS]")
     print(f"Streaming REAL camera frames to topic: {STREAM_TOPIC}")
     print(f"Active Backend: {camera_backend.upper()}")
     print("Press Ctrl+C to terminate the stream.")
     print("-----------------------------------------------------------\n")
+    
+    fps = 10
+    interval = 1.0 / fps
+    frameCount = 0
     
     try:
         while True:
@@ -140,7 +131,7 @@ if __name__ == "__main__":
                 if frameCount % 30 == 0:
                     print(f"[{datetime.now().strftime('%H:%M:%S')}] Active: Sent {frameCount} frames.")
             
-            # Wait for next frame maintaining exact target FPS
+            # Wait for next frame maintaining exact 10 FPS
             t_elapsed = time.time() - t_start
             t_sleep = max(0, interval - t_elapsed)
             time.sleep(t_sleep)
