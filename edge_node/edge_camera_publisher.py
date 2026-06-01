@@ -18,55 +18,50 @@ QUALITY = 70  # JPEG compression quality percentage
 # Attempt to initialize OpenCV
 camera_backend = None
 cap = None
+camera_command = None
 
-try:
-    import cv2
-    cap = cv2.VideoCapture(0)
-    if cap.isOpened():
-        cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
-        camera_backend = "opencv"
-        print("✅ OpenCV camera backend successfully initialized.")
-    else:
-        cap.release()
-        cap = None
-        print("⚠️ OpenCV camera capture failed to open. Falling back to libcamera-still shell utility.")
-except ImportError:
-    print("⚠️ OpenCV library not found in Python environment. Falling back to libcamera-still shell utility.")
+# First, prioritize the native Pi Camera apps (rpicam-still / libcamera-still) 
+# as they bypass the V4L2 '/dev/video0' Pipewire lock and talk to the CSI GPU directly.
+for cmd in ["rpicam-still", "libcamera-still"]:
+    try:
+        subprocess.run(["which", cmd], check=True, stdout=subprocess.DEVNULL)
+        camera_command = cmd
+        camera_backend = "rpicam" if cmd == "rpicam-still" else "libcamera"
+        print(f"✅ Verified native Pi Camera command: {cmd}")
+        break
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        continue
+
+# Fallback to OpenCV if native CLI tools aren't present
+if camera_backend is None:
+    try:
+        import cv2
+        cap = cv2.VideoCapture(0)
+        if cap.isOpened():
+            cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
+            cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
+            camera_backend = "opencv"
+            print("✅ OpenCV camera backend successfully initialized.")
+        else:
+            cap.release()
+            cap = None
+            print("⚠️ OpenCV camera capture failed to open. No camera available.")
+    except ImportError:
+        print("⚠️ OpenCV library not found in Python environment.")
 
 if camera_backend is None:
-    # Check if libcamera-still is available on the Pi 4
-    try:
-        subprocess.run(["which", "libcamera-still"], check=True, stdout=subprocess.DEVNULL)
-        camera_backend = "libcamera"
-        print("✅ libcamera camera backend verified successfully.")
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        print("❌ Fatal: Neither OpenCV nor libcamera-still is available on this system.")
-        print("Please run: sudo apt-get update && sudo apt-get install python3-opencv -y")
-        exit(1)
+    print("❌ Fatal: Neither native camera utilities (rpicam-still, rpicam-apps) nor OpenCV is available on this system.")
+    print("Please run: sudo apt-get install rpicam-apps -y")
+    exit(1)
 
 def capture_frame():
     """Captures a frame from the real camera and returns it as a Base64 JPEG string."""
-    if camera_backend == "opencv":
-        ret, frame = cap.read()
-        if not ret:
-            print("⚠️ Failed to capture frame from OpenCV.")
-            return None
-        
-        # Resize to 320x240 if cv2.CAP_PROP didn't enforce it
-        if frame.shape[1] != WIDTH or frame.shape[0] != HEIGHT:
-            frame = cv2.resize(frame, (WIDTH, HEIGHT))
-            
-        # Encode as JPEG
-        _, buffer = cv2.imencode(".jpg", frame, [int(cv2.IMWRITE_JPEG_QUALITY), QUALITY])
-        return base64.b64encode(buffer).decode("utf-8")
-        
-    elif camera_backend == "libcamera":
-        # Capture a fast frame using libcamera-still shell command to a temporary file
+    if camera_backend in ["rpicam", "libcamera"]:
+        # Capture a fast frame using rpicam-still / libcamera-still shell command to a temporary file
         temp_file = "/tmp/stream_frame.jpg"
         cmd = [
-            "libcamera-still",
-            "-t", "1",               # Immediate capture
+            camera_command,
+            "-t", "1",               # Immediate capture (no delay)
             "--width", str(WIDTH),
             "--height", str(HEIGHT),
             "-q", str(QUALITY),      # JPEG quality
@@ -82,8 +77,22 @@ def capture_frame():
                 os.remove(temp_file)
                 return base64.b64encode(img_bytes).decode("utf-8")
         except subprocess.CalledProcessError as e:
-            print(f"⚠️ libcamera-still capture failed: {e}")
+            print(f"⚠️ {camera_command} capture failed: {e}")
             return None
+
+    elif camera_backend == "opencv":
+        ret, frame = cap.read()
+        if not ret:
+            print("⚠️ Failed to capture frame from OpenCV.")
+            return None
+        
+        # Resize to 320x240 if cv2.CAP_PROP didn't enforce it
+        if frame.shape[1] != WIDTH or frame.shape[0] != HEIGHT:
+            frame = cv2.resize(frame, (WIDTH, HEIGHT))
+            
+        # Encode as JPEG
+        _, buffer = cv2.imencode(".jpg", frame, [int(cv2.IMWRITE_JPEG_QUALITY), QUALITY])
+        return base64.b64encode(buffer).decode("utf-8")
 
 if __name__ == "__main__":
     client = mqtt.Client()
