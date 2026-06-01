@@ -52,8 +52,8 @@ nav:
       - Overview: getting-started/overview.md
       - Installation: getting-started/installation.md
   - Guides:
-      - "Native Backend & Database Setup": guides/backend-pi5.md
-      - "Distributed MinIO Storage": guides/minio-pi5.md
+      - "Local Development & Backend Setup": guides/backend-pi5.md
+      - "MinIO S3 Object Storage": guides/minio-s3.md
       - "MPI Cluster Setup": guides/mpi-cluster.md
       - "Distributed k3s Kubernetes Deployment": guides/k3s-deployment.md
       - "Edge Camera Test Stream": guides/camera-test-stream.md

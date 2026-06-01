@@ -35,7 +35,7 @@ As required by the project brief, we investigated the implications of this deplo
 | **Reliability** | **Benefit:** High. Eliminates "SD card death" on workers, as the OS runs over the network and in RAM. |
 | **Storage Efficiency** | **Benefit:** Physical SD cards on the Pi 3s are freed up for dedicated high-speed data storage. |
 | **Dependency** | **Drawback:** High dependency on the Master node; if the Pi 5 fails, the entire worker fleet goes offline. |
-| **Boot Latency** | **Drawback:** Simultaneous booting of 8 nodes creates significant network congestion on the Master's disk I/O. |
+| **Boot Latency** | **Drawback/Resolved:** Simultaneous booting of 8 nodes and heavy container runtime I/O operations created massive network congestion and disk bottlenecks on the Master's micro-SD card. **Resolution**: We migrated the entire shared root filesystem (`/nfs`) off the Master's SD card onto a **500GB High-Speed SSD** (`/mnt/ssd/nfs`), bind-mounted transparently back to `/nfs` to ensure complete compatibility. This permanently resolved the disk latency, SQLite timeouts, and boot bottlenecks! |
 
 ---
 
