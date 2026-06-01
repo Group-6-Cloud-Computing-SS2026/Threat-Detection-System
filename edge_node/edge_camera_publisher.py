@@ -3,20 +3,35 @@ import json
 import base64
 import os
 import subprocess
+import argparse
 from datetime import datetime, timezone
 import paho.mqtt.client as mqtt
 
-MQTT_BROKER = "192.168.1.50"  # Pi 5 Master IP
-MQTT_PORT = 1883
-STREAM_TOPIC = "cluster/camera/stream"
+# Parse command line arguments
+parser = argparse.ArgumentParser(description="Live Edge Camera Stream Publisher")
+parser.add_argument("--broker", "-b", default="192.168.1.50", help="MQTT Broker IP Address")
+parser.add_argument("--port", "-p", type=int, default=1883, help="MQTT Broker TCP Port")
+parser.add_argument("--topic", "-t", default="cluster/camera/stream", help="MQTT Topic to publish to")
+parser.add_argument("--fps", "-f", type=int, default=20, help="Target frame rate (frames per second)")
+parser.add_argument("--width", "-w", type=int, default=320, help="Image width")
+parser.add_argument("--height", "-g", type=int, default=240, help="Image height")
+parser.add_argument("--quality", "-q", type=int, default=70, help="JPEG compression quality (1-100)")
+args, unknown = parser.parse_known_args()
 
-# Target resolution for fast network transmission over standard 100Mbps Ethernet
-WIDTH = 320
-HEIGHT = 240
-QUALITY = 70  # JPEG compression quality percentage
+MQTT_BROKER = args.broker
+MQTT_PORT = args.port
+STREAM_TOPIC = args.topic
+FPS = args.fps
+WIDTH = args.width
+HEIGHT = args.height
+QUALITY = args.quality
 
 # Attempt to initialize OpenCV first to achieve ultra-fast in-memory streaming (20-30 FPS)
 # now that the camera device '/dev/video0' has been successfully freed of background locks.
+camera_backend = None
+cap = None
+camera_command = None
+
 try:
     import cv2
     cap = cv2.VideoCapture(0)
@@ -24,7 +39,7 @@ try:
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
         camera_backend = "opencv"
-        print("✅ OpenCV camera backend successfully initialized (supporting up to 30 FPS).")
+        print(f"✅ OpenCV camera backend successfully initialized (supporting up to {FPS} FPS).")
     else:
         cap.release()
         cap = None
@@ -55,7 +70,7 @@ def capture_frame():
         temp_file = "/tmp/stream_frame.jpg"
         cmd = [
             camera_command,
-            "-t", "1",               # Immediate capture (no delay)
+            "-t", "100",             # Allow 100ms for sensor format/exposure sync to avoid exit code 255
             "--width", str(WIDTH),
             "--height", str(HEIGHT),
             "-q", str(QUALITY),      # JPEG quality
@@ -101,14 +116,13 @@ if __name__ == "__main__":
     client.loop_start()
     
     print("\n-----------------------------------------------------------")
-    print("LIVE EDGE CAMERA STREAM ACTIVE [10 FPS]")
+    print(f"LIVE EDGE CAMERA STREAM ACTIVE [{FPS} FPS]")
     print(f"Streaming REAL camera frames to topic: {STREAM_TOPIC}")
     print(f"Active Backend: {camera_backend.upper()}")
     print("Press Ctrl+C to terminate the stream.")
     print("-----------------------------------------------------------\n")
     
-    fps = 10
-    interval = 1.0 / fps
+    interval = 1.0 / FPS
     frameCount = 0
     
     try:
@@ -122,16 +136,16 @@ if __name__ == "__main__":
                 # Publish JSON payload to MQTT
                 payload = {
                     "timestamp": datetime.now(timezone.utc).isoformat(),
-                    "fps": fps,
+                    "fps": FPS,
                     "image": base64_frame
                 }
                 client.publish(STREAM_TOPIC, json.dumps(payload))
                 
                 frameCount += 1
-                if frameCount % 30 == 0:
+                if frameCount % (FPS * 3) == 0 or frameCount % 30 == 0:
                     print(f"[{datetime.now().strftime('%H:%M:%S')}] Active: Sent {frameCount} frames.")
             
-            # Wait for next frame maintaining exact 10 FPS
+            # Wait for next frame maintaining exact target FPS
             t_elapsed = time.time() - t_start
             t_sleep = max(0, interval - t_elapsed)
             time.sleep(t_sleep)
