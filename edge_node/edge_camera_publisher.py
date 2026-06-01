@@ -3,64 +3,57 @@ import json
 import base64
 import os
 import subprocess
-import argparse
 from datetime import datetime, timezone
 import paho.mqtt.client as mqtt
 
-# Parse command line arguments
-parser = argparse.ArgumentParser(description="Live Edge Camera Stream Publisher")
-parser.add_argument("--broker", "-b", default="192.168.1.50", help="MQTT Broker IP Address")
-parser.add_argument("--port", "-p", type=int, default=1883, help="MQTT Broker TCP Port")
-parser.add_argument("--topic", "-t", default="cluster/camera/stream", help="MQTT Topic to publish to")
-parser.add_argument("--fps", "-f", type=int, default=20, help="Target frame rate (frames per second)")
-parser.add_argument("--width", "-w", type=int, default=320, help="Image width")
-parser.add_argument("--height", "-g", type=int, default=240, help="Image height")
-parser.add_argument("--quality", "-q", type=int, default=70, help="JPEG compression quality (1-100)")
-args, unknown = parser.parse_known_args()
+MQTT_BROKER = "192.168.1.50"  # Pi 5 Master IP
+MQTT_PORT = 1883
+STREAM_TOPIC = "cluster/camera/stream"
 
-MQTT_BROKER = args.broker
-MQTT_PORT = args.port
-STREAM_TOPIC = args.topic
-FPS = args.fps
-WIDTH = args.width
-HEIGHT = args.height
-QUALITY = args.quality
+# Target resolution for fast network transmission over standard 100Mbps Ethernet
+WIDTH = 320
+HEIGHT = 240
+QUALITY = 70  # JPEG compression quality percentage
 
-# Attempt to initialize OpenCV first to achieve ultra-fast in-memory streaming (20-30 FPS)
-# now that the camera device '/dev/video0' has been successfully freed of background locks.
+# Initialize camera backend safely
+# To bypass V4L2 kernel driver deadlocks on Debian Trixie (Kernel 6.12+) on Raspberry Pi 4,
+# we prioritize native CSI applications (rpicam-still, libcamera-still) first.
+# OpenCV VideoCapture(0) is only used as a fallback if native CSI tools are missing.
 camera_backend = None
 cap = None
 camera_command = None
 
-try:
-    import cv2
-    cap = cv2.VideoCapture(0)
-    if cap.isOpened():
-        cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
-        camera_backend = "opencv"
-        print(f"✅ OpenCV camera backend successfully initialized (supporting up to {FPS} FPS).")
-    else:
-        cap.release()
-        cap = None
-        print("⚠️ OpenCV camera capture failed to open. Falling back to native system utilities.")
-except ImportError:
-    print("⚠️ OpenCV library not found in Python environment. Falling back to native system utilities.")
+# 1. Prioritize native CSI Pi Camera tools (100% stable, bypasses V4L2 lock)
+for cmd in ["rpicam-still", "libcamera-still"]:
+    try:
+        subprocess.run(["which", cmd], check=True, stdout=subprocess.DEVNULL)
+        camera_command = cmd
+        camera_backend = "rpicam" if cmd == "rpicam-still" else "libcamera"
+        print(f"✅ Verified native Pi Camera command: {cmd}")
+        break
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        continue
 
-# Fallback to native Pi Camera apps if OpenCV fails or is busy
+# 2. Fallback to OpenCV only if native CSI tools are missing
 if camera_backend is None:
-    for cmd in ["rpicam-still", "libcamera-still"]:
-        try:
-            subprocess.run(["which", cmd], check=True, stdout=subprocess.DEVNULL)
-            camera_command = cmd
-            camera_backend = "rpicam" if cmd == "rpicam-still" else "libcamera"
-            print(f"✅ Verified native Pi Camera command fallback: {cmd}")
-            break
-        except (subprocess.CalledProcessError, FileNotFoundError):
-            continue
+    try:
+        import cv2
+        print("Initializing OpenCV camera backend...")
+        cap = cv2.VideoCapture(0)
+        if cap.isOpened():
+            cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
+            cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
+            camera_backend = "opencv"
+            print("✅ OpenCV camera backend successfully initialized.")
+        else:
+            cap.release()
+            cap = None
+            print("⚠️ OpenCV camera capture failed to open.")
+    except ImportError:
+        print("⚠️ OpenCV library not found in Python environment.")
 
 if camera_backend is None:
-    print("❌ Fatal: Neither OpenCV nor native camera utilities (rpicam-still, libcamera-still) are available on this system.")
+    print("❌ Fatal: Neither native camera utilities (rpicam-still, libcamera-still) nor OpenCV is available on this system.")
     exit(1)
 
 def capture_frame():
@@ -115,15 +108,17 @@ if __name__ == "__main__":
         
     client.loop_start()
     
+    # Target frame rate paced at 20 FPS (increased from 10)
+    fps = 20
+    interval = 1.0 / fps
+    frameCount = 0
+    
     print("\n-----------------------------------------------------------")
-    print(f"LIVE EDGE CAMERA STREAM ACTIVE [{FPS} FPS]")
+    print(f"LIVE EDGE CAMERA STREAM ACTIVE [{fps} FPS]")
     print(f"Streaming REAL camera frames to topic: {STREAM_TOPIC}")
     print(f"Active Backend: {camera_backend.upper()}")
     print("Press Ctrl+C to terminate the stream.")
     print("-----------------------------------------------------------\n")
-    
-    interval = 1.0 / FPS
-    frameCount = 0
     
     try:
         while True:
@@ -136,13 +131,13 @@ if __name__ == "__main__":
                 # Publish JSON payload to MQTT
                 payload = {
                     "timestamp": datetime.now(timezone.utc).isoformat(),
-                    "fps": FPS,
+                    "fps": fps,
                     "image": base64_frame
                 }
                 client.publish(STREAM_TOPIC, json.dumps(payload))
                 
                 frameCount += 1
-                if frameCount % (FPS * 3) == 0 or frameCount % 30 == 0:
+                if frameCount % 30 == 0:
                     print(f"[{datetime.now().strftime('%H:%M:%S')}] Active: Sent {frameCount} frames.")
             
             # Wait for next frame maintaining exact target FPS
