@@ -15,43 +15,37 @@ WIDTH = 320
 HEIGHT = 240
 QUALITY = 70  # JPEG compression quality percentage
 
-# Attempt to initialize OpenCV
-camera_backend = None
-cap = None
-camera_command = None
+# Attempt to initialize OpenCV first to achieve ultra-fast in-memory streaming (20-30 FPS)
+# now that the camera device '/dev/video0' has been successfully freed of background locks.
+try:
+    import cv2
+    cap = cv2.VideoCapture(0)
+    if cap.isOpened():
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
+        camera_backend = "opencv"
+        print("✅ OpenCV camera backend successfully initialized (supporting up to 30 FPS).")
+    else:
+        cap.release()
+        cap = None
+        print("⚠️ OpenCV camera capture failed to open. Falling back to native system utilities.")
+except ImportError:
+    print("⚠️ OpenCV library not found in Python environment. Falling back to native system utilities.")
 
-# First, prioritize the native Pi Camera apps (rpicam-still / libcamera-still) 
-# as they bypass the V4L2 '/dev/video0' Pipewire lock and talk to the CSI GPU directly.
-for cmd in ["rpicam-still", "libcamera-still"]:
-    try:
-        subprocess.run(["which", cmd], check=True, stdout=subprocess.DEVNULL)
-        camera_command = cmd
-        camera_backend = "rpicam" if cmd == "rpicam-still" else "libcamera"
-        print(f"✅ Verified native Pi Camera command: {cmd}")
-        break
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        continue
-
-# Fallback to OpenCV if native CLI tools aren't present
+# Fallback to native Pi Camera apps if OpenCV fails or is busy
 if camera_backend is None:
-    try:
-        import cv2
-        cap = cv2.VideoCapture(0)
-        if cap.isOpened():
-            cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
-            cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
-            camera_backend = "opencv"
-            print("✅ OpenCV camera backend successfully initialized.")
-        else:
-            cap.release()
-            cap = None
-            print("⚠️ OpenCV camera capture failed to open. No camera available.")
-    except ImportError:
-        print("⚠️ OpenCV library not found in Python environment.")
+    for cmd in ["rpicam-still", "libcamera-still"]:
+        try:
+            subprocess.run(["which", cmd], check=True, stdout=subprocess.DEVNULL)
+            camera_command = cmd
+            camera_backend = "rpicam" if cmd == "rpicam-still" else "libcamera"
+            print(f"✅ Verified native Pi Camera command fallback: {cmd}")
+            break
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            continue
 
 if camera_backend is None:
-    print("❌ Fatal: Neither native camera utilities (rpicam-still, rpicam-apps) nor OpenCV is available on this system.")
-    print("Please run: sudo apt-get install rpicam-apps -y")
+    print("❌ Fatal: Neither OpenCV nor native camera utilities (rpicam-still, libcamera-still) are available on this system.")
     exit(1)
 
 def capture_frame():
