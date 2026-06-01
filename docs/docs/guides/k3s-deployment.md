@@ -63,7 +63,7 @@ In this deployment:
 
 The configuration is organized under the new `k8s/` directory in the repository root:
 * **`k8s/postgres.yaml`**: PVC, Single-instance deployment, and cluster Service.
-* **`k8s/minio.yaml`**: Standalone S3 Object Storage with Console access on Port 9001.
+* **`k8s/minio.yaml`**: Standalone S3 Object Storage with Console access on Port 9091.
 * **`k8s/mqtt.yaml`**: Broker ConfigMap, message persistent storage, and Port 1883/9001 Service.
 * **`k8s/backend.yaml`**: Highly available, anti-affinity API Deployment (3 pods), ClusterIP Service, and Traefik Ingress Controller configurations.
 
