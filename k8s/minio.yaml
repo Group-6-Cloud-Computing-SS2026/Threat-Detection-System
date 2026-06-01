@@ -67,6 +67,8 @@ spec:
               value: "password123"
             - name: MINIO_API_ODIRECT
               value: "off"
+            - name: MINIO_CI_CD
+              value: "on"
           volumeMounts:
             - name: data
               mountPath: /data
