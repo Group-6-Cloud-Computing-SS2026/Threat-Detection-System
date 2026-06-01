@@ -136,7 +136,7 @@ if [ -f "$HOSTS_INI" ]; then
     
     # We wait up to 5 minutes for at least one worker to open port 22
     ATTEMPT=1
-    while ! ansible workers -i "$HOSTS_INI" -m ping -B 5 -P 0 >/dev/null 2>&1; do
+    while ! sudo -u cc123 ansible workers -i "$HOSTS_INI" -m ping -B 5 -P 0 >/dev/null 2>&1; do
         if [ $ATTEMPT -gt 30 ]; then
             warn "Workers are taking longer to respond. Proceeding with time synchronization attempts anyway..."
             break
@@ -153,14 +153,14 @@ if [ -f "$HOSTS_INI" ]; then
     log "Pushing clean UTC ISO time sync to all workers..."
     # Generate ISO time string and set on workers
     UTC_TIME=$(date -u +%FT%TZ)
-    ansible workers -i "$HOSTS_INI" -m shell -a "date -s '$UTC_TIME'" --become || warn "Failed to sync worker dates."
+    sudo -u cc123 ansible workers -i "$HOSTS_INI" -m shell -a "date -s '$UTC_TIME'" --become || warn "Failed to sync worker dates."
     success "Worker clocks synchronized!"
 
     # --------------------------------------------------------------------------
     # 8. Reload Systemd and Restart K3s-agent on Workers
     # --------------------------------------------------------------------------
     log "Reloading systemd and restarting k3s-agent on all workers..."
-    ansible workers -i "$HOSTS_INI" -m shell -a "systemctl daemon-reload && systemctl restart k3s-agent" --become || warn "Failed to restart worker agents."
+    sudo -u cc123 ansible workers -i "$HOSTS_INI" -m shell -a "systemctl daemon-reload && systemctl restart k3s-agent" --become || warn "Failed to restart worker agents."
     success "All worker K3s agents reloaded and restarted!"
 else
     warn "Ansible hosts.ini not found! Skipping worker clock-sync. Please sync workers manually using Ansible."
