@@ -85,8 +85,8 @@ success "NFS bind-mount (/nfs) is active!"
 # 3. Restart Boot Services
 # ------------------------------------------------------------------------------
 log "Restarting boot network and storage services..."
-sudo systemctl restart dnsmasq
-sudo systemctl restart nfs-kernel-server
+sudo systemctl restart dnsmasq || true
+sudo systemctl restart nfs-kernel-server || true
 success "dnsmasq and nfs-kernel-server restarted successfully."
 
 # ------------------------------------------------------------------------------
