@@ -65,6 +65,8 @@ spec:
               value: "admin"
             - name: MINIO_ROOT_PASSWORD
               value: "password123"
+            - name: MINIO_API_ODIRECT
+              value: "off"
           volumeMounts:
             - name: data
               mountPath: /data
