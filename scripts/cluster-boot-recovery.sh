@@ -181,11 +181,21 @@ while ! sudo kubectl get nodes >/dev/null 2>&1; do
     fi
 done
 
-# Force delete stuck pods with CreateContainerError or Terminating status across all namespaces
-log "Clearing ghost/stuck pods in default and kube-system namespaces..."
-sudo kubectl delete pods --all -n default --grace-period=0 --force || true
-sudo kubectl delete pods --all -n kube-system --grace-period=0 --force || true
-success "All stale pods and system services cleared for re-creation!"
+# Force delete stuck/failed/terminating pods across all namespaces selectively to avoid Thundering Herd
+log "Scanning and force-deleting only stuck/failed pods..."
+STUCK_LIST=$(sudo kubectl get pods -A --no-headers 2>/dev/null | grep -E "CreateContainerError|Terminating|ErrImagePull|ImagePullBackOff|Unknown|Failed" | awk '{print $1"/"$2}' || true)
+
+if [ -n "$STUCK_LIST" ]; then
+    for pod_info in $STUCK_LIST; do
+        NAMESPACE=$(echo "$pod_info" | cut -d'/' -f1)
+        POD_NAME=$(echo "$pod_info" | cut -d'/' -f2)
+        log "Force-recreating stuck/failed pod: $POD_NAME in namespace $NAMESPACE..."
+        sudo kubectl delete pod "$POD_NAME" -n "$NAMESPACE" --grace-period=0 --force >/dev/null 2>&1 || true
+    done
+    success "All stuck/ghost pods cleared!"
+else
+    success "No stuck/ghost pods detected. Clean boot!"
+fi
 
 
 success "=========================================================================="
