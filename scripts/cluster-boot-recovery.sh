@@ -39,7 +39,14 @@ sudo sysctl -w net.ipv4.ip_forward=1 >/dev/null
 sudo iptables -t nat -A POSTROUTING -o wlan0 -j MASQUERADE || true
 sudo iptables -A FORWARD -i eth0 -o wlan0 -j ACCEPT || true
 sudo iptables -A FORWARD -i wlan0 -o eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT || true
-success "NAT Routing and IP Forwarding configured!"
+
+log "Ensuring Master DNS resolver is set to public Google DNS..."
+sudo tee /etc/resolv.conf > /dev/null << 'DNS_EOF'
+nameserver 8.8.8.8
+nameserver 1.1.1.1
+DNS_EOF
+
+success "NAT Routing, IP Forwarding, and DNS configured!"
 
 # ------------------------------------------------------------------------------
 # 1. Wait for External SSD to mount
@@ -85,15 +92,18 @@ success "dnsmasq and nfs-kernel-server restarted successfully."
 # ------------------------------------------------------------------------------
 # 4. Wait for Network & Internet (NTP Sync)
 # ------------------------------------------------------------------------------
+log "Forcing NTP time synchronization..."
+sudo systemctl restart systemd-timesyncd || true
+
 log "Waiting for system clock to synchronize via NTP..."
-# Wait up to 60s for time synchronization
+# Wait up to 3 minutes (36 attempts * 5s) for time synchronization
 ATTEMPT=1
 while ! timedatectl status | grep -q "System clock synchronized: yes"; do
-    if [ $ATTEMPT -gt 12 ]; then
+    if [ $ATTEMPT -gt 36 ]; then
         warn "NTP synchronization timed out. Proceeding with current Master system time."
         break
     fi
-    log "Waiting for NTP sync... Attempt $ATTEMPT/12"
+    log "Waiting for NTP sync (Wi-Fi connecting...)... Attempt $ATTEMPT/36"
     sleep 5
     ATTEMPT=$((ATTEMPT + 1))
 done
