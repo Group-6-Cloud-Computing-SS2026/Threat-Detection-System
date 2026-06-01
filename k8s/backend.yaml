@@ -6,7 +6,7 @@ metadata:
   labels:
     app: tds-api
 spec:
-  replicas: 3
+  replicas: 9
   selector:
     matchLabels:
       app: tds-api
