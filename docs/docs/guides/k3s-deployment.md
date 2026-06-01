@@ -54,8 +54,9 @@ watch "kubectl get pods -l 'app in (tds-api, tds-postgres, tds-minio, tds-mqtt)'
 
 In this deployment:
 * **Storage and Broker isolation**: PostgreSQL, MinIO, and Mosquitto MQTT run as dedicated single-pod workloads backed by k3s local-path Persistent Volume Claims (retaining state across rescheduling).
-* **High Availability Application Scaling**: The FastAPI web service is scaled to **3 active replicas**.
+* **High Availability Application Scaling**: The FastAPI web service is scaled to **9 active replicas**.
 * **Anti-Affinity Distribution**: By implementing `podAntiAffinity` rules, we force Kubernetes to schedule your backend instances across **different physical worker nodes**, guaranteeing that a single hardware crash cannot take the system offline.
+
 
 ---
 
@@ -125,20 +126,31 @@ kubectl get pods -l "app in (tds-api, tds-postgres, tds-minio, tds-mqtt)" -o wid
 
 ### Expected Output Structure:
 ```text
-NAME                            READY   STATUS    RESTARTS   AGE    IP              NODE             NOMINATED NODE
-tds-postgres-78895cb7f9-b6kdl   1/1     Running   0          2m     10.42.0.24      pi3-worker-104   <none>
-tds-minio-7b79d998f5-kvv7r      1/1     Running   0          2m     10.42.1.18      pi3-worker-136   <none>
-tds-mqtt-b89b88cc7-9mvcd        1/1     Running   0          2m     10.42.2.14      pi3-worker-58    <none>
-tds-api-77f794c968-8slvf        1/1     Running   0          45s    10.42.3.9       pi3-worker-86    <none>
-tds-api-77f794c968-lb58d        1/1     Running   0          45s    10.42.4.11      pi3-worker-117   <none>
-tds-api-77f794c968-mjhwd        1/1     Running   0          45s    10.42.5.3       pi3-worker-83    <none>
+Every 2.0s: kubectl get pods -l 'app in (tds-api, tds-postgres, tds-minio, tds-mqtt)' -o wide                                                                                                                                                                    pi5-master: Mon Jun  1 22:26:37 2026
+
+NAME                            READY   STATUS    RESTARTS        AGE   IP             NODE         NOMINATED NODE   READINESS GATES
+tds-api-866b6d55d7-8ptfb        1/1     Running   0               17m   10.42.19.119   worker6      <none>           <none>
+tds-api-866b6d55d7-b8qr8        1/1     Running   4 (22m ago)     45m   10.42.11.107   worker5      <none>           <none>
+tds-api-866b6d55d7-j52cm        1/1     Running   4 (22m ago)     45m   10.42.15.115   worker3      <none>           <none>
+tds-api-866b6d55d7-k9pct        1/1     Running   0               17m   10.42.18.118   worker7      <none>           <none>
+tds-api-866b6d55d7-knvr2        1/1     Running   4 (22m ago)     45m   10.42.13.123   worker2      <none>           <none>
+tds-api-866b6d55d7-mm9vs        1/1     Running   0               17m   10.42.9.127    worker4      <none>           <none>
+tds-api-866b6d55d7-r2cmd        1/1     Running   4 (19m ago)     45m   10.42.2.179    worker1      <none>           <none>
+tds-api-866b6d55d7-rxqlw        1/1     Running   0               17m   10.42.0.64     pi5-master   <none>           <none>
+tds-api-866b6d55d7-s56qv        1/1     Running   4 (22m ago)     45m   10.42.16.142   worker8      <none>           <none>
+tds-minio-0                     1/1     Running   0               18m   10.42.0.63     pi5-master   <none>           <none>
+tds-minio-1                     1/1     Running   0               19m   10.42.19.118   worker6      <none>           <none>
+tds-minio-2                     1/1     Running   0               20m   10.42.9.126    worker4      <none>           <none>
+tds-minio-3                     1/1     Running   0               20m   10.42.18.117   worker7      <none>           <none>
+tds-mqtt-b89b88cc7-9mvcd        1/1     Running   1 (5h34m ago)   27h   10.42.0.48     pi5-master   <none>           <none>
+tds-postgres-78895cb7f9-b6kdl   1/1     Running   1 (5h34m ago)   27h   10.42.0.43     pi5-master   <none>           <none>
 ```
 
 🔬 **How this proves Distributed Kubernetes is working**:
-1. **The `NODE` Column**: Running with `-o wide` exposes the **`NODE`** column. Look closely at the nodes: your pods are actively distributed across distinct worker nodes (`pi3-worker-104`, `pi3-worker-136`, `pi3-worker-58`, etc.).
-2. **True Anti-Affinity Application Distribution**: Look at the three **`tds-api`** pods: they are successfully running concurrently on **`pi3-worker-86`**, **`pi3-worker-117`**, and **`pi3-worker-83`**. Because of our podAntiAffinity rule, k3s was forced to split them onto separate physical boards! 
+1. **The `NODE` Column**: Running with `-o wide` exposes the **`NODE`** column. Look closely at the nodes: your pods are actively distributed across the entire physical cluster (`pi5-master` and `worker1` through `worker8`).
+2. **True Anti-Affinity Application Distribution**: Look at the **`tds-api`** pods: they are successfully running concurrently and load-balanced across all available hardware. Because of our `podAntiAffinity` rules, K3s ensures that replicas are evenly spread across separate physical boards, rather than scheduling them all onto a single node!
+3. **4-Node Distributed MinIO Erasure-Coded Pool**: MinIO is configured in distributed mode across 4 dedicated nodes (`pi5-master`, `worker6`, `worker4`, `worker7`). If any drive or worker node fails, erasure coding guarantees the S3 storage pool remains online and readable with zero data loss.
 
-If any one of these worker nodes is physically powered off, Kubernetes automatically detects the loss of that board and schedules a replacement replica on one of the other online worker nodes within seconds.
 
 ---
 
@@ -315,3 +327,57 @@ The Raspberry Pi 5 Master is dual-homed on the same subnet (`192.168.1.0/24`) wi
      sudo iptables -I FORWARD 1 -m state --state RELATED,ESTABLISHED -j ACCEPT
      ```
 
+### 8.6 — Post-Reboot Volatile RAM DNS, Sandbox manual pull wakeup, and StatefulSet rollout
+
+During a complete physical cluster reboot, we identified three critical runtime interactions affecting the distributed services:
+
+#### 1. Volatile RAM `/etc/resolv.conf` on PXE Workers
+* **The Blocker**: Network-booted Raspberry Pi workers mount `/etc` as a volatile RAM overlay (`tmpfs`). As a result, editing the NFS base image at `/nfs/rootfs64/etc/resolv.conf` *after* nodes have booted has no effect. The active system memory continues to hold the local, broken DHCP nameserver.
+* **The Resolution**: We used Ansible to inject clean public resolvers directly into the running nodes' active memory:
+  ```bash
+  ansible workers -i ~/pi-cluster/hosts.ini -m shell -a "printf 'nameserver 8.8.8.8\nnameserver 1.1.1.1\n' | sudo tee /etc/resolv.conf" --become
+  ```
+
+#### 2. Containerd Sandbox (`pause` image) Pull Back-Off Loop
+* **The Blocker**: Because the workers booted without a working DNS resolver, the local container runtime (`containerd`) failed to pull the required Kubernetes network sandbox container (`rancher/mirrored-pause:3.6`). Even after fixing DNS, containerd entered a lengthy exponential pull back-off timeout, leaving pods stuck in `ContainerCreating` with `PodReadyToStartContainers: False`.
+* **The Resolution**: We used Ansible to manually force-pull the sandbox image directly into the K3s containerd cache across all nodes, instantly waking up the scheduler threads:
+  ```bash
+  ansible workers -i ~/pi-cluster/hosts.ini -m shell -a "sudo k3s crictl pull rancher/mirrored-pause:3.6" --become
+  ```
+
+#### 3. Stale DNS and Connection Caching in Distributed MinIO
+* **The Blocker**: Since some MinIO StatefulSet replicas booted during the DNS lockout, their internal Go client network socket states got stuck retrying stale, failed connections, continually returning `503 Service Unavailable` even after local routing and IP-level overlays were fully repaired.
+* **The Resolution**: We forced a clean rollout restart of both the distributed storage StatefulSet and the API service to reset all network connections:
+  ```bash
+  # 1. Recycle storage layer
+  kubectl rollout restart statefulset tds-minio
+  
+  # 2. Recycle API backend layer
+  kubectl rollout restart deployment tds-api
+  ```
+
+#### 4. Distributed MinIO `O_DIRECT` Failures on NFS Mounts
+* **The Blocker**: By default, MinIO in distributed mode enforces POSIX Direct I/O (`O_DIRECT`) for all read and write operations to guarantee transactional consistency on raw block devices. However, network filesystems (like the NFS mounts used by our diskless workers booting over the network share) do not support `O_DIRECT` flags inside Docker/K3s container mounts. MinIO catches this write check failure during startup and marks the storage drives as **`drive not found` / `Offline`**, completely stalling the cluster bootstrap process.
+* **The Resolution**: We added the `MINIO_API_ODIRECT` environment variable with the value `"off"` inside the StatefulSet environment block (`k8s/minio.yaml`). This disables the strict Direct I/O requirement, allowing MinIO to leverage the standard Linux page cache and successfully format and write its metadata to our NFS-backed PVs:
+  ```yaml
+              - name: MINIO_API_ODIRECT
+                value: "off"
+  ```
+
+#### 5. Distributed MinIO `drive is part of root drive` on Diskless NFS Workers
+* **The Blocker**: After solving the `O_DIRECT` issue, MinIO drives still appeared as `drive not found` in a continuous retry loop. Inspecting the **worker node** logs (`kubectl logs tds-minio-1 | head -n 50`) revealed the true root cause:
+  ```
+  Error: Drive ... returned an unexpected error: major: 0: minor: 42:
+  drive is part of root drive, will not be used, please investigate
+  ```
+  MinIO performs a safety check comparing the device IDs (`major:minor`) of the data path (`/data`) and the root path (`/`). If they match, MinIO assumes the data directory is on the OS disk and refuses to use it. On our PXE/NFS diskless workers, **both** `/` and `/data` are NFS mounts — they both report device `major: 0` (the NFS pseudo-device), triggering this false positive. The master node (`tds-minio-0`) only logged the symptom (`drive not found, will be retried`) but never the cause, making the error misleading when only checking pod-0 logs.
+* **The Resolution**: We added the `MINIO_CI_CD` environment variable with the value `"on"` inside the StatefulSet environment block (`k8s/minio.yaml`). This disables MinIO's root-drive safety check, which is designed for bare-metal setups with dedicated disks but breaks on NFS-backed storage where all mount points share the same virtual device ID:
+  ```yaml
+              - name: MINIO_CI_CD
+                value: "on"
+  ```
+  After applying this change and wiping stale metadata (`rm -rf /data/.minio.sys` on all 4 pods), the cluster successfully formatted and booted:
+  ```
+  INFO: Formatting 1st pool, 1 set(s), 4 drives per set.
+  INFO: All MinIO sub-systems initialized successfully
+  ```
