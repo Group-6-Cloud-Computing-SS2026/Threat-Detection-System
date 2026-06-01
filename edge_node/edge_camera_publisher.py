@@ -34,16 +34,24 @@ try:
 except ImportError:
     print("⚠️ OpenCV library not found in Python environment. Falling back to libcamera-still shell utility.")
 
+camera_command = None
+
 if camera_backend is None:
-    # Check if libcamera-still is available on the Pi 4
-    try:
-        subprocess.run(["which", "libcamera-still"], check=True, stdout=subprocess.DEVNULL)
-        camera_backend = "libcamera"
-        print("✅ libcamera camera backend verified successfully.")
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        print("❌ Fatal: Neither OpenCV nor libcamera-still is available on this system.")
-        print("Please run: sudo apt-get update && sudo apt-get install python3-opencv -y")
-        exit(1)
+    # Check for native Pi Camera CLI tools — rpicam-still (Pi Camera 3 / IMX500) or libcamera-still
+    # These bypass the V4L2 lock entirely and talk directly to the CSI/GPU interface.
+    for cmd in ["rpicam-still", "libcamera-still"]:
+        try:
+            subprocess.run(["which", cmd], check=True, stdout=subprocess.DEVNULL)
+            camera_command = cmd
+            camera_backend = "rpicam" if cmd == "rpicam-still" else "libcamera"
+            print(f"✅ Verified native Pi Camera command: {cmd}")
+            break
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            continue
+
+if camera_backend is None:
+    print("❌ Fatal: Neither OpenCV nor native camera utilities (rpicam-still, libcamera-still) are available.")
+    exit(1)
 
 def capture_frame():
     """Captures a frame from the real camera and returns it as a Base64 JPEG string."""
@@ -61,12 +69,12 @@ def capture_frame():
         _, buffer = cv2.imencode(".jpg", frame, [int(cv2.IMWRITE_JPEG_QUALITY), QUALITY])
         return base64.b64encode(buffer).decode("utf-8")
         
-    elif camera_backend == "libcamera":
-        # Capture a fast frame using libcamera-still shell command to a temporary file
+    elif camera_backend in ["rpicam", "libcamera"]:
+        # Capture a fast frame using rpicam-still / libcamera-still shell command to a temporary file
         temp_file = "/tmp/stream_frame.jpg"
         cmd = [
-            "libcamera-still",
-            "-t", "1",               # Immediate capture
+            camera_command,
+            "-t", "100",             # Allow 100ms for sensor format/exposure sync to avoid exit code 255
             "--width", str(WIDTH),
             "--height", str(HEIGHT),
             "-q", str(QUALITY),      # JPEG quality
@@ -82,7 +90,7 @@ def capture_frame():
                 os.remove(temp_file)
                 return base64.b64encode(img_bytes).decode("utf-8")
         except subprocess.CalledProcessError as e:
-            print(f"⚠️ libcamera-still capture failed: {e}")
+            print(f"⚠️ {camera_command} capture failed: {e}")
             return None
 
 if __name__ == "__main__":
