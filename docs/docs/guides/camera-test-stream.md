@@ -95,3 +95,30 @@ Once you have verified the live video stream, terminate the publisher and restor
    ```bash
    sudo systemctl start sensor-node.service
    ```
+
+---
+
+## 5. Observing YOLO Detection Events (MQTT)
+
+When the Pi 4 Edge Node is running in its normal state (with the `sensor-node.service` active), it natively captures camera frames, runs YOLO object detection, and publishes clean JSON events directly into the cluster broker.
+
+Follow these steps to verify that detection data is successfully flowing:
+
+### Step 5.1 — Verify the Service on `pi4-edge`
+1. SSH into the **Pi 4 Edge Node** (`192.168.1.2`).
+2. Verify that the detection service is running and active:
+   ```bash
+   sudo systemctl status sensor-node.service
+   ```
+3. If the service was disconnected during a cluster power cycle, restart it to re-establish the connection to the Master broker:
+   ```bash
+   sudo systemctl restart sensor-node.service
+   ```
+
+### Step 5.2 — Watch the Detections on the Master (`pi5-master`)
+1. Open a terminal on the **Pi 5 Master** (`192.168.1.50`).
+2. Run the subscription tool to listen for clean YOLO JSON payloads as they pass through the broker:
+   ```bash
+   mosquitto_sub -h localhost -t 'cluster/camera/#' -v
+   ```
+   * *Note: Using the `#` wildcard will capture both stream raw data and processed events (`cluster/camera/events`).*

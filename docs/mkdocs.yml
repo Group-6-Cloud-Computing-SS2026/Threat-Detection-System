@@ -56,6 +56,7 @@ nav:
       - "MinIO S3 Object Storage": guides/minio-s3.md
       - "MPI Cluster Setup": guides/mpi-cluster.md
       - "Distributed k3s Kubernetes Deployment": guides/k3s-deployment.md
+      - "Cluster Shutdown and Cold Start": guides/shutdown-and-cold-start.md
       - "Edge Camera Test Stream": guides/camera-test-stream.md
   - Tasks:
       - "Task 1 — Sensor Nodes & PXE Boot": tasks/task-01-sensor-nodes.md
