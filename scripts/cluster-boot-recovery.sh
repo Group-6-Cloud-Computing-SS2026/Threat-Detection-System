@@ -82,15 +82,7 @@ done
 success "NFS bind-mount (/nfs) is active!"
 
 # ------------------------------------------------------------------------------
-# 3. Restart Boot Services
-# ------------------------------------------------------------------------------
-log "Restarting boot network and storage services..."
-sudo systemctl restart dnsmasq || true
-sudo systemctl restart nfs-kernel-server || true
-success "dnsmasq and nfs-kernel-server restarted successfully."
-
-# ------------------------------------------------------------------------------
-# 4. Wait for Network & Internet (NTP Sync)
+# 3. Wait for Network & Internet (NTP Sync)
 # ------------------------------------------------------------------------------
 log "Forcing NTP time synchronization..."
 sudo systemctl restart systemd-timesyncd || true
@@ -113,6 +105,14 @@ if timedatectl status | grep -q "System clock synchronized: yes"; then
 else
     warn "Continuing with local Master time: $(date)"
 fi
+
+# ------------------------------------------------------------------------------
+# 4. Restart Boot Services
+# ------------------------------------------------------------------------------
+log "Restarting boot network and storage services..."
+sudo systemctl restart dnsmasq || true
+sudo systemctl restart nfs-kernel-server || true
+success "dnsmasq and nfs-kernel-server restarted successfully."
 
 # ------------------------------------------------------------------------------
 # 5. Restart K3s Control Plane
