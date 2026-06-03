@@ -21,7 +21,7 @@ To ensure the cluster bootstraps successfully on the first try without any manua
 ```mermaid
 graph TD
     A[1. Unplug Master & Workers] --> B[2. Plug in Master Pi 5 ONLY]
-    B --> C[3. Wait for SSD Light to Settle ~2 mins]
+    B --> C["3. Wait for Master (SSD settle or SSH verify)"]
     C --> D[4. Plug in all Pi 3 Workers]
     D --> E[5. Auto-Recovery Service Restores Cluster]
 ```
@@ -36,6 +36,39 @@ Plug in the **Pi 5 Master ONLY**.
 Watch the activity LED on the external SSD connected to the Pi 5 Master:
 * **Rapid Flashing:** The Master is currently booting its own operating system and launching the K3s control plane.
 * **Ready State (Steady Pulse or Faint/Off):** The Master has finished booting. Its system clock has synced, the NFS storage bind-mounts are active, and the network boot server is warm.
+
+#### 🔍 Verification via SSH (Highly Recommended)
+To be absolutely sure the Master is ready to boot the workers, SSH into the Master and verify that the TFTP and NFS services are active and the recovery script is waiting:
+
+1. **SSH into the Pi 5 Master:**
+   ```bash
+   ssh cc123@pi5-master
+   # OR use the IP address (e.g., 192.168.1.50 or the Wi-Fi DHCP IP)
+   ssh cc123@192.168.1.50
+   ```
+
+2. **Verify that the DHCP, TFTP, and NFS boot services are active:**
+   ```bash
+   systemctl is-active dnsmasq nfs-kernel-server
+   ```
+   *Expected output:*
+   ```text
+   active
+   active
+   ```
+
+3. **Check the boot recovery service logs:**
+   ```bash
+   sudo journalctl -u cluster-recovery -n 25 --no-pager
+   ```
+   *Expected output: Look for the initial waiting message or the recurring connection attempt lines:*
+   ```text
+   [INFO] YYYY-MM-DD HH:MM:SS - Waiting for workers to boot and open SSH (Port 22)...
+   # OR
+   [INFO] YYYY-MM-DD HH:MM:SS - Waiting for worker SSH connectivity... Attempt X/30
+   ```
+
+Once these checks pass, proceed to Step 4.
 
 ### Step 4: Power the Workers
 Plug in the power source for the **8x Pi 3 Workers** all at once. 
