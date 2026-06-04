@@ -111,6 +111,8 @@ fi
 # ------------------------------------------------------------------------------
 log "Restarting boot network and storage services..."
 sudo systemctl restart dnsmasq || true
+log "Flushing system page caches to prevent NFS thread allocation errors (errno 12)..."
+sudo sh -c "sync && echo 3 > /proc/sys/vm/drop_caches" || true
 sudo systemctl stop nfs-kernel-server || true
 sudo systemctl start nfs-kernel-server || true
 success "dnsmasq and nfs-kernel-server restarted successfully."
