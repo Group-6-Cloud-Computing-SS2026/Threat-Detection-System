@@ -111,7 +111,8 @@ fi
 # ------------------------------------------------------------------------------
 log "Restarting boot network and storage services..."
 sudo systemctl restart dnsmasq || true
-sudo systemctl restart nfs-kernel-server || true
+sudo systemctl stop nfs-kernel-server || true
+sudo systemctl start nfs-kernel-server || true
 success "dnsmasq and nfs-kernel-server restarted successfully."
 
 # ------------------------------------------------------------------------------
