@@ -76,7 +76,38 @@ Plug in the power source for the **8x Pi 3 Workers** all at once.
 
 ---
 
-## 3. 🛡️ The Self-Healing Boot Automation
+## 3. ⚖️ Post-Boot Check & Pod Redistribution
+
+Because the Master Pi 5 boots significantly faster than the network-booted Pi 3 workers, the Kubernetes scheduler may temporarily schedule all API replicas on the Master node because the workers are still in `NotReady` status during boot. 
+
+Once all nodes are online, you should verify the cluster health and redistribute the API pods/replicas evenly across the workers.
+
+### Step 1: Monitor Cluster and Pod Status (Live Watch)
+To monitor the status and node placement of all system pods in real-time as they boot, use the `watch` command:
+```bash
+watch -n 2 "sudo kubectl get pods -l 'app in (tds-api, tds-postgres, tds-minio, tds-mqtt)' -o wide"
+```
+Or to watch all pods across all namespaces:
+```bash
+watch -n 2 "sudo kubectl get pods -A -o wide"
+```
+*Verify that all pods eventually transition to `1/1 Running` and get assigned IPs. Under normal operation, the system is fully functional once 1 API pod, 3 MinIO pods, 1 Postgres pod, and 1 MQTT pod are healthy.*
+
+### Step 2: Trigger Pod Redistribution (If unevenly distributed)
+If you notice that most `tds-api` pods are running on `pi5-master` instead of being balanced across the workers (i.e., they are unevenly distributed), trigger a rolling restart to force the scheduler to redistribute them:
+```bash
+sudo kubectl rollout restart deployment tds-api
+```
+*This will safely terminate the pods one by one and reschedule them across the newly active worker nodes in accordance with pod anti-affinity rules.*
+
+To watch the rolling restart and redistribution happen live, you can run:
+```bash
+watch -n 1 "sudo kubectl get pods -l app=tds-api -o wide"
+```
+
+---
+
+## 4. 🛡️ The Self-Healing Boot Automation
 
 Upon Master boot, a dedicated, persistent systemd unit (`cluster-recovery.service`) automatically executes `/usr/local/bin/cluster-boot-recovery.sh` to handle the entire cluster synchronization hands-free.
 
@@ -91,7 +122,7 @@ The automation performs the following steps in sequence:
 
 ---
 
-## 4. 🔍 Hardware Diagnostic Led Guide
+## 5. 🔍 Hardware Diagnostic Led Guide
 
 Use these physical indicators on the boards to diagnose boot stages:
 
@@ -106,7 +137,7 @@ Use these physical indicators on the boards to diagnose boot stages:
 
 ---
 
-## 5. 🛠️ Emergency Manual Troubleshooting Commands
+## 6. 🛠️ Emergency Manual Troubleshooting Commands
 
 If the boot sequence is messed up, log into `pi5-master` via SSH and run these commands to restore health:
 
@@ -134,7 +165,7 @@ sudo -u cc123 ansible worker7 -i ~/pi-cluster/hosts.ini -m shell -a "echo 1 > /p
 
 ---
 
-## 6. 🔌 Clean Shutdown & Power-Off Sequence
+## 7. 🔌 Clean Shutdown & Power-Off Sequence
 
 To prevent database corruption on the external SSD or dirty NFS filesystem locks, **never abruptly cut power while the cluster is active.** Always execute this clean shutdown sequence:
 
