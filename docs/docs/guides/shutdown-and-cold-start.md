@@ -26,6 +26,19 @@ graph TD
     D --> E[5. Auto-Recovery Service Restores Cluster]
 ```
 
+### Precondition: Ensure Master (PI-5) has WIFI
+
+Make sure the `pi5-master` has access to internet. You can use the following command;
+
+```bash
+sudo nmcli --ask device wifi connect "YOUR WIFI"
+```
+Enter password and it should be good. You might need to reboot the master after this. Use this for a reboot;
+
+```bash
+sudo reboot
+```
+
 ### Step 1: Complete Power Isolation
 Unplug the power sources for both the `pi5-master` and the private network switch / multi-port power supply feeding the `Pi 3 Workers`.
 
@@ -55,6 +68,10 @@ To be absolutely sure the Master is ready to boot the workers, SSH into the Mast
    ```text
    active
    active
+   ```
+   If any of the services reports "activating" or "deactivating", you can try to reboot the master;
+   ```bash
+   sudo reboot
    ```
 
 3. **Check the boot recovery service logs:**
