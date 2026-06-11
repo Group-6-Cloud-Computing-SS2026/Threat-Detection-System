@@ -1,48 +1,292 @@
-# Task 1: Sensor Nodes & Infrastructure
+# Task 1 — Infrastructure & Sensor Node Setup
 
-## 1. Infrastructure Overview
-The foundation of this project is a hybrid edge-computing cluster. It utilizes a high-performance Master node to manage a fleet of worker nodes via network-based orchestration. This setup eliminates individual points of failure (like SD card corruption on workers) and centralizes administration.
+This page documents the foundational infrastructure of our edge computing monitoring solution: a diskless Raspberry Pi cluster with network boot, a shared operating system image, automatic time synchronization, and a sensor node that performs on-camera object detection and streams detection events to the cluster.
 
-### Hardware Components
-* **Master Node:** Raspberry Pi 5 (8GB) acting as the gateway and PXE server.
-* **Worker Nodes:** 8x Raspberry Pi 3 Model B+ units.
-* **Networking:** Gigabit Ethernet switch connecting all nodes to the Master via a local LAN.
+The goal of Task 1 was to design and build a reproducible hardware and software platform on which all later tasks (benchmarking, MPI, monitoring, model training, backend, frontend, and notifications) are deployed.
 
 ---
 
-## 2. Cluster Consolidation via PXE and NFS
-We investigated the consolidation of operating system images by implementing a **PXE (Preboot Execution Environment)** boot scenario. This allows the Raspberry Pi 3 nodes to boot over the LAN without requiring physical SD cards for the operating system.
+## 1. Overview
 
-### The "Golden Image" Strategy
-We consolidated the worker operating systems into a single "Golden Image" located on the Pi 5 at `/nfs/common_root`.
-* **Read-Only Root:** The core OS is exported as Read-Only (`ro`) to ensure that no worker node can accidentally corrupt shared system files.
-* **Virtual Writable Space:** Using `tmpfs` mounts in the `fstab`, we created virtual writable space in the worker's RAM for temporary directories like `/tmp`, `/var/log`, and `/run`.
+The infrastructure consists of three logical parts:
 
-### Identity & Persistence Management
-Since all nodes share a single image, we implemented the following for unique identification:
-* **Dynamic Hostnaming:** An initialization script (`init-node.sh`) runs at boot to set the hostname (e.g., `pi3-worker-105`) based on the node's assigned IP address.
-* **Private Data Trees:** Each node is assigned a private directory on the Pi 5 (e.g., `/nfs/nodes/pi3-worker1`). Through **Bind Mounts**, the node "overlays" its unique `/etc` and `/var` folders onto the shared read-only root.
-* **Static IP Mapping:** We used `dnsmasq` on the Master node to map MAC addresses to specific IPs, ensuring consistency across reboots.
+1. **Master node** — a Raspberry Pi 5 that provides network services (DHCP, TFTP, NFS), acts as the cluster's NTP time source, and hosts the MQTT broker.
+2. **Worker nodes** — eight Raspberry Pi 3 boards that boot entirely over the network (no SD cards) from a single shared 64-bit operating system image served by the master.
+3. **Sensor node** — a Raspberry Pi 4 with a Raspberry Pi AI Camera (Sony IMX500) that runs object detection on the camera module itself and publishes detection events to the cluster over MQTT.
+
+All devices are connected to a single Gigabit switch on the private subnet `192.168.1.0/24`.
+
+```
+                 Edge-Computing Infrastructure (SS2026)
+
+  User / Administrator
+         |
+         |  (management, SSH)
+         v
+  +---------------------------------------------------------------+
+  |                          Cluster                              |
+  |                                                               |
+  |   Sensor Node                 Master Node      Worker Nodes   |
+  |   +-------------+             +-----------+    +------------+  |
+  |   | Pi 4 +      |   MQTT      |  Pi 5     |    | Pi3 #1     |  |
+  |   | AI Camera   |-----------> |  Master   |--->| Pi3 #2     |  |
+  |   | (IMX500)    |  events     |           |    | ...        |  |
+  |   +-------------+             +-----------+    | Pi3 #8     |  |
+  |                                                +------------+  |
+  +---------------------------------------------------------------+
+                     all connected via one Gigabit switch
+```
+
+### Device Inventory
+
+| Role | Device | Hostname | IP Address |
+|------|--------|----------|------------|
+| **Master** | Raspberry Pi 5 | `pi5-master` | `192.168.1.50` |
+| **Sensor** | Raspberry Pi 4 + AI Camera | `pi4-edge` | `192.168.1.2` |
+| **Worker 1** | Raspberry Pi 3 | `worker1` | `192.168.1.58` |
+| **Worker 2** | Raspberry Pi 3 | `worker2` | `192.168.1.54` |
+| **Worker 3** | Raspberry Pi 3 | `worker3` | `192.168.1.104` |
+| **Worker 4** | Raspberry Pi 3 | `worker4` | `192.168.1.136` |
+| **Worker 5** | Raspberry Pi 3 | `worker5` | `192.168.1.86` |
+| **Worker 6** | Raspberry Pi 3 | `worker6` | `192.168.1.117` |
+| **Worker 7** | Raspberry Pi 3 | `worker7` | `192.168.1.83` |
+| **Worker 8** | Raspberry Pi 3 | `worker8` | `192.168.1.133` |
 
 ---
 
-## 3. Investigation: Benefits and Drawbacks
-As required by the project brief, we investigated the implications of this deployment scenario:
+## 2. Diskless Network Boot (PXE)
 
-| Feature | Observation |
-| :--- | :--- |
-| **Administration** | **Benefit:** High. Updates to the "Golden Image" on the Master affect all 8 workers simultaneously. |
-| **Reliability** | **Benefit:** High. Eliminates "SD card death" on workers, as the OS runs over the network and in RAM. |
-| **Storage Efficiency** | **Benefit:** Physical SD cards on the Pi 3s are freed up for dedicated high-speed data storage. |
-| **Dependency** | **Drawback:** High dependency on the Master node; if the Pi 5 fails, the entire worker fleet goes offline. |
-| **Boot Latency** | **Drawback:** Simultaneous booting of 8 nodes creates significant network congestion on the Master's disk I/O. |
+Rather than maintaining eight separate SD cards, the worker nodes boot over the network from a single operating system image hosted on the master. This consolidation simplifies administration (one image to patch and update) and demonstrates a realistic HPC-style provisioning model.
+
+### How a Worker Boots
+
+The Raspberry Pi 3 bootloader is configured to boot from the network. On power-on, each node performs the following sequence, all served by the master:
+
+1. **DHCP** — The node requests an IP address. The master (running `dnsmasq`) replies with a fixed address based on the node's MAC, the gateway, and the location of the TFTP server.
+2. **TFTP** — The node downloads its bootloader (`bootcode.bin`), the 64-bit kernel (`kernel8.img`), the device tree, and a per-node `cmdline.txt`.
+3. **NFS Root Mount** — The kernel mounts its root filesystem over NFS from the master, read from the shared image.
+4. **Per-Node Overlay Mount** — A startup script mounts each node's private writable directories.
+
+```
+Power on Pi3 (no SD card)
+   |
+   |-- DHCP request --------------> dnsmasq replies (IP, gateway, TFTP server)
+   |-- TFTP download -------------> bootcode.bin, kernel8.img, dtb, cmdline.txt
+   |-- NFS mount / (read-only) ---> /nfs/rootfs64  (shared OS image)
+   |-- mount /etc /var /home -----> /nfs/nodes/<serial>/  (per-node, writable)
+   v
+Worker is up, SSH reachable
+```
+
+### Shared Root + Per-Node Overlays
+
+The central design decision is the split between **shared read-only** and **per-node writable** storage layers. All nodes share a single OS image, but each node has its own writable system directories so they do not conflict.
+
+| Mount Point | Source on Master | Mode | Shared? |
+|-------------|-----------------|------|---------|
+| **`/` (Root)** | `/nfs/rootfs64` | Read-Only | Shared by all nodes |
+| **`/etc`** | `/nfs/nodes/<serial>/etc` | Read-Write | Per-node |
+| **`/var`** | `/nfs/nodes/<serial>/var` | Read-Write | Per-node |
+| **`/home`** | `/nfs/nodes/<serial>/home` | Read-Write | Per-node |
+| **`/tmp`** | `tmpfs` (RAM) | Read-Write | Per-node, volatile |
+
+This is the standard HPC pattern: one operating system, many machines, each with private configuration and state. Installing software once on the master's shared image makes it instantly available to all eight workers.
+
+> **Node Identity:** Each Raspberry Pi 3 is identified by its hardware serial number (the last 8 hex digits, e.g., `a7b7e022`). The master keeps one directory per serial under `/nfs/nodes/` and one boot directory per serial under `/nfs/boot64/`, so each node receives its own hostname and private storage while sharing the same OS.
+
+### Directory Layout on the Master
+
+```
+/nfs/
+├── rootfs64/        Shared 64-bit OS image (mounted as / by all workers)
+├── boot64/          Network boot files
+│   ├── bootcode.bin   First-stage bootloader
+│   ├── kernel8.img    64-bit kernel
+│   ├── cmdline.txt    Default kernel command line
+│   └── <serial>/      Per-node boot directory
+│       └── cmdline.txt  Per-node kernel command line (sets hostname)
+└── nodes/
+    └── <serial>/      Per-node private storage
+        ├── etc/         Node's /etc
+        ├── var/         Node's /var
+        └── home/        Node's /home
+```
 
 ---
 
-## 4. Object Detection Deployment
-*(To be completed: Describe the deployment of YOLO or TensorFlow on the Pi 5 and the specific OS image used.)*
+## 3. Network Services on the Master
+
+A single `dnsmasq` instance on the master provides both DHCP and the boot information the nodes need. NFS exports the shared image and the per-node overlays, while a separate TFTP daemon serves the boot files.
+
+### DHCP and Boot Configuration (`dnsmasq`)
+
+Key points of the configuration:
+
+- DNS is disabled (`port=0`) — `dnsmasq` is used only for DHCP and PXE.
+- Each worker is pinned to a fixed IP by MAC address, so addresses are predictable and stable across reboots.
+- DHCP option 66 and the boot filename direct each node to the master's TFTP service.
+
+```ini
+port=0
+interface=eth0
+bind-dynamic
+
+dhcp-range=192.168.1.50,192.168.1.150,255.255.255.0,12h
+dhcp-option=3,192.168.1.50         # gateway
+dhcp-option=66,192.168.1.50        # TFTP server address
+dhcp-boot=bootcode.bin,pxeserver,192.168.1.50
+
+# Fixed address per worker (MAC -> IP -> hostname)
+dhcp-host=b8:27:eb:b7:e0:22,192.168.1.58,worker1
+dhcp-host=b8:27:eb:90:0a:eb,192.168.1.54,worker2
+# ... one line per worker configuration
+```
+
+### NFS Exports
+
+The shared root and each per-node directory are exported to the cluster subnet.
+
+```text
+/nfs/rootfs64        192.168.1.0/24(ro,sync,no_subtree_check,no_root_squash)
+/nfs/boot64          192.168.1.0/24(ro,sync,no_subtree_check,no_root_squash)
+/nfs/nodes/<serial>  192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash)
+```
 
 ---
 
-## 5. AI Camera & AI HAT+ Integration
-*(To be completed: Document the physical installation of the Raspberry Pi AI Camera and the AI HAT+ hardware configuration.)*
+## 4. Time Synchronization
+
+Network booting is sensitive to clock errors: if the master's clock is behind, freshly downloaded files can appear to have modification times "in the future," causing systemd instabilities and TLS failures. We therefore implemented reliable, automatic time synchronization as part of the primary core infrastructure.
+
+We use **chrony** in a two-tier arrangement:
+
+- The **master** synchronizes its clock from public internet NTP servers (when online) and serves time to the cluster subnet. It is configured to serve time even before it has reached the internet, ensuring the cluster always has a continuous baseline reference.
+- Each **worker** synchronizes directly from the master rather than the internet. This keeps all nodes consistent with each other even when the cluster has no external connectivity.
+
+```
+Internet NTP pool
+       |
+       v
+   Pi 5 master  (chrony server, stratum source for the cluster)
+       |
+       +--> worker1 ... worker8   (chrony clients, sync from master)
+```
+
+The master's timezone is set to `Europe/Berlin`. On boot, each worker starts chrony and performs an immediate step correction so the clock is right before any time-sensitive service starts.
+
+---
+
+## 5. Sensor Node
+
+The sensor node is a Raspberry Pi 4 with a Raspberry Pi AI Camera built around the Sony IMX500 image sensor. The IMX500 runs a neural network **on the camera module itself**, so object detection happens at the edge without loading the Pi 4's host CPU.
+
+### Interconnect Topology
+
+The sensor node is wired to the same switch as the rest of the cluster and sits on the private subnet at `192.168.1.2`. Keeping the sensor on the local network — rather than connecting it over the public internet — is the essence of edge computing: detection happens close to the data source, and only compact event messages travel across the network.
+
+### Detection and Event Publishing
+
+A systemd service on the Pi 4 runs the camera with an on-sensor object detection model and handles the telemetry stream. For every frame in which an object is identified, the node compiles a structured JSON string and transmits it over the private network to the cluster's centralized broker.
+
+```
+Raspberry Pi AI Camera (IMX500)
+   |  on-sensor object detection
+   v
+Pi 4 sensor service
+   |  filters out empty frames and camera debug output
+   |  builds a JSON event with node, timestamp, object count
+   v
+MQTT publish  ->  topic: cluster/sensor/detections  ->  broker on Pi 5 (port 1883)
+```
+
+A published telemetry packet follows this standard JSON structure:
+
+```json
+{
+  "node_id": "sensor-node-pi4",
+  "timestamp": 1778168381,
+  "metrics": {
+    "object_count": 1,
+    "inference_latency_ms": 14.25
+  }
+}
+```
+
+### Protocol Choice: MQTT
+
+MQTT was chosen for sensor-to-cluster communication because it is a lightweight publish/subscribe protocol designed for high-frequency, low-bandwidth edge messaging. The sensor node simply publishes events; any number of consumers on the cluster (the backend, alerting services, logging plugins) can subscribe to the same topic independently.
+
+The MQTT broker (Mosquitto) runs on the master, listens on standard port `1883`, and accepts packet streams from the local subnet.
+
+---
+
+## 6. End-to-End Data Flow
+
+Putting all the functional architecture pieces together, the complete Task 1 flow is:
+
+```
+  AI Camera (IMX500, on-sensor detection)
+        |
+        v
+  Pi 4 sensor node  --- MQTT: cluster/sensor/detections --->  Pi 5 master (broker)
+                                                                 |
+                                                                 |  (consumed by downstream tasks:
+                                                                 |   backend storage, Telegram
+                                                                 |   alerts, frontend dashboard)
+                                                                 v
+  Pi 5 master  --- DHCP / TFTP / NFS / NTP --->  8x Pi 3 workers (diskless, 64-bit)
+```
+
+---
+
+## 7. Operational Verification
+
+The infrastructure can be checked at any time with the following commands run from the master:
+
+**1. Verify all workers are up and running 64-bit kernels:**
+
+```bash
+for IP in 192.168.1.58 192.168.1.54 192.168.1.104 192.168.1.136 \
+          192.168.1.86 192.168.1.117 192.168.1.83 192.168.1.133; do
+  ssh -o StrictHostKeyChecking=no pi@$IP "hostname && uname -m"
+done
+```
+
+Each active node must report its unique hostname and `aarch64`.
+
+**2. Verify shared OS images are exported correctly:**
+
+```bash
+sudo showmount -a
+sudo exportfs -v
+```
+
+**3. Verify time integration status:**
+
+```bash
+chronyc tracking
+chronyc clients
+```
+
+**4. Audit incoming sensor telemetry packets:**
+
+```bash
+mosquitto_sub -h localhost -t 'cluster/sensor/detections' -v
+```
+
+---
+
+## 8. Outcome and Limitations
+
+**What Task 1 delivers:**
+
+- Eight diskless Raspberry Pi 3 workers booting a single shared 64-bit OS image over the network, each with private writable system directories.
+- A master node providing DHCP, TFTP, NFS, NTP, and MQTT for the whole cluster.
+- Automatic, internet-independent time synchronization across all nodes.
+- A sensor node performing on-camera object detection and publishing structured detection events to the cluster, running unattended as a service.
+
+**Known limitations carried into later tasks:**
+
+- **Object Class Mapping:** The baseline detection event reports an object count but omits specific class descriptors (e.g., distinguishing an asset from an obstacle). Custom tensor model conversions handle this downstream.
+- **Pre-trained Network Model:** The camera uses an out-of-the-box pre-trained network model. Compiling and training custom surveillance weights is handled as a separate lifecycle task.
+- **Telemetry Volume:** Detections are dispatched continuously per frame. Rate-limiting, message de-duplication, and alert thresholds are deferred to the backend and notification tiers.
