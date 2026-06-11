@@ -30,6 +30,12 @@ graph TD
 
 Make sure the `pi5-master` has access to internet. You can use the following command;
 
+It is recommended to use the wlan reciever (wlan1) - the white wifi device. Note that wlan1 is auto assigned; it may be that it is wlan2 or something else.
+```bash
+sudo nmcli --ask device wifi connect "YOUR WIFI" ifname wlan1
+```
+
+If the wlan reciever (wlan1) is not available you may use the internal rpi5 wlan reciever
 ```bash
 sudo nmcli --ask device wifi connect "YOUR WIFI"
 ```
