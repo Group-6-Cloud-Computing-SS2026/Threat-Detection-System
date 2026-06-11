@@ -15,8 +15,9 @@ cd /usr/local/bin
 ### Step 2: Running the benchmark
 Example with 2 worker nodes. Change as per your HPL.dat config i.e. use worker nodes as per your benchmark (2, 4, 8)
 
+Note: This command might produce errors due to formatting
 ```bash
-⁠OMPI_MCA_plm_rsh_args="-l pi" mpirun --prefix /usr \
+OMPI_MCA_plm_rsh_args="-l pi" mpirun --prefix /usr \
 -x LD_LIBRARY_PATH="/usr/lib/aarch64-linux-gnu:/usr/lib/aarch64-linux-gnu/openblas-pthread:\$LD_LIBRARY_PATH" \
 --host \
 192.168.1.58:4,\
@@ -24,18 +25,8 @@ Example with 2 worker nodes. Change as per your HPL.dat config i.e. use worker n
 ./xhpl
 ```
 
-### Step 2: Benchmark config
+### Step 3: Benchmark config
 You can change the number of workers nodes, problem size etc (for Amdahl's Law and Gustafson's Law) by modifying the HPL.dat file under cd /usr/local/bin. Maybe like this;
-
-```bash
-⁠OMPI_MCA_plm_rsh_args="-l pi" mpirun --prefix /usr \
--x LD_LIBRARY_PATH="/usr/lib/aarch64-linux-gnu:/usr/lib/aarch64-linux-gnu/openblas-pthread:\$LD_LIBRARY_PATH" \
---host \
-192.168.1.58:4,\
-192.168.1.54:4 \
-./xhpl
-```
-
 
 
 You can change the number of workers nodes, problem size and more for **Amdahl's Law** and **Gustafson's Law** by modifying the HPL.dat file under **/usr/local/bin**. For example
