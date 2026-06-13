@@ -18,5 +18,5 @@ This project implements a complete threat detection pipeline using:
 | Component | Description |
 |-----------|-------------|
 | [Getting Started](getting-started/overview.md) | Setup instructions and prerequisites |
-| [Tasks](tasks/task-01-sensor-nodes.md) | Detailed documentation for each project task |
+| [Tasks](tasks/task-01-edge-computing-infrastructure.md) | Detailed documentation for each project task |
 | [Architecture](architecture.md) | System architecture and design decisions |
