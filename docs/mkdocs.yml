@@ -55,11 +55,11 @@ nav:
       - Overview: getting-started/overview.md
       - Installation: getting-started/installation.md
   - Guides:
+      - "❗ (MUST FOLLOW!) Cluster Shutdown and Cold Start": guides/shutdown-and-cold-start.md
       - "Local Development & Backend Setup": guides/backend-pi5.md
       - "MinIO S3 Object Storage": guides/minio-s3.md
       - "MPI Cluster Setup": guides/mpi-cluster.md
       - "Distributed k3s Kubernetes Deployment": guides/k3s-deployment.md
-      - "Cluster Shutdown and Cold Start": guides/shutdown-and-cold-start.md
       - "Edge Camera Test Stream": guides/camera-test-stream.md
       - "Cluster Setup (PXE & NFS)": guides/cluster-setup.md
       - "Cluster Setup V2 (Setup & Verification)": guides/cluster-setup-v2.md

@@ -12,7 +12,7 @@ Navigate through the guides and configurations structured by component and layer
 
 | Guide | Description |
 | :--- | :--- |
-| [(MUST FOLLOW!) Cluster Shutdown and Cold Start Guide](guides/shutdown-and-cold-start.md) | Step-by-step shutdown and boot recovery operations. |
+| [❗ (MUST FOLLOW!) Cluster Shutdown and Cold Start Guide](guides/shutdown-and-cold-start.md) | Step-by-step shutdown and boot recovery operations. |
 | [Cluster Setup V2 (Setup & Verification)](guides/cluster-setup-v2.md) | Verification checklist and system checks for network boot. |
 | [Ansible Orchestration Guide](guides/ansible.md) | Setting up ssh keys, hosts inventory, and batch task automation. |
 | [Basic User Guide](guides/user-guide.md) | Day-to-day admin commands and Ansible cheat sheet. |
