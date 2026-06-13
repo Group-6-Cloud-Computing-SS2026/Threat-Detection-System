@@ -1,7 +1,6 @@
 # Task 4 — Non-MPI Scaling Laws
 
-!!! note "Work in Progress"
-    Documentation for this task will be added as implementation progresses.
+This task has been fully completed. For the complete experimental setup and validation of Amdahl's and Gustafson's Laws using Task Distributor, please see the [Task Distributor Guide](../guides/task4-task-distributor.md).
 
 ## Objectives
 

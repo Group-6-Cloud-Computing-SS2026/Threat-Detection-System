@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - docs/ansible_minio_hardware_user_guides
+      - service-repository-backend-v1
     paths:
       - "docs/**"
   workflow_dispatch:
