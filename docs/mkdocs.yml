@@ -35,7 +35,11 @@ plugins:
 markdown_extensions:
   - admonition
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
@@ -62,6 +66,8 @@ nav:
       - "Ansible": guides/ansible.md
       - "Hardware Setup & Boot": guides/hardware-setup.md
       - "Basic User Guide": guides/user-guide.md
+      - "HPL Synthetic Benchmarks": guides/synthetic-benchmarks.md
+      - "Task Distributor": guides/task4-task-distributor.md
   - Tasks:
       - "Task 1 — Edge Computing Infrastructure": tasks/task-01-edge-computing-infrastructure.md
       - "Task 2 — HPL Performance": tasks/task-02-hpl.md

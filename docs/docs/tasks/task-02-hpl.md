@@ -1,7 +1,6 @@
 # Task 2 — HPL Performance
 
-!!! note "Work in Progress"
-    Documentation for this task will be added as implementation progresses.
+This task has been fully completed. For the step-by-step setup, configuration, and HPL benchmarking results, please see the [HPL Synthetic Benchmarks Guide](../guides/synthetic-benchmarks.md).
 
 ## Objectives
 

@@ -1,7 +1,6 @@
 # Task 3 — MPI Cluster
 
-!!! note "Work in Progress"
-    Documentation for this task will be added as implementation progresses.
+This task has been fully completed. For the detailed setup, library compilation, and cluster run instructions, please see the [MPI Cluster Setup Guide](../guides/mpi-cluster.md).
 
 ## Objectives
 
