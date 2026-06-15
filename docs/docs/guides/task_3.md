@@ -275,6 +275,3 @@ This minor $14.9\%$ increase in runtime across a $32\times$ problem expansion hi
 
 ---
 
-**Report End.**
-
-```
