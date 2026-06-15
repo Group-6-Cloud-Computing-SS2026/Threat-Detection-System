@@ -1,9 +1,5 @@
-# Task 3 Empirical Verification Report: Amdahl's vs. Gustafson's Law
-**Course / Context:** High Integrity Systems / Parallel Cluster Computing  
-**Execution Date:** June 15, 2026  
+# Task 3 Open MPI and Amdahl's vs. Gustafson's Law
 **Infrastructure:** 8-Node Raspberry Pi 3 Worker Cluster orchestrated by a Raspberry Pi 5 Master  
-**Operator:** Sadia Saeed  
-
 ---
 
 ## 1. Executive Summary & Objective
