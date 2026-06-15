@@ -1,6 +1,3 @@
-Here is the entire report formatted into a single, cohesive block. You can copy everything below, paste it into a file named something like `README.md` or `Task3_Report.md`, and upload it straight to your GitHub repository.
-
-```markdown
 # Task 3 Empirical Verification Report: Amdahl's vs. Gustafson's Law
 **Course / Context:** High Integrity Systems / Parallel Cluster Computing  
 **Execution Date:** June 15, 2026  
@@ -283,7 +280,5 @@ This minor $14.9\%$ increase in runtime across a $32\times$ problem expansion hi
 ---
 
 **Report End.**
-
-```
 
 ```
