@@ -86,7 +86,7 @@ The following table summarizes the work packages defined for this project, who i
 
 ---
 
-### Task 7 — Backend Microservice Stack
+### Task 7 — Develop a backend to manage the sensor nodes and the collected data
 *   **Lead Developer:** Abdul Hanan Javaid
 *   **Proposed Approach & Solution:**
     *   **Service-Repository Architecture:** Implement a clean Service-Repository pattern in Python/FastAPI to separate core business logic (such as CRUD operations, health checks, and notifications) from the database layer, utilizing SQL connection pooling and schema data validation.
