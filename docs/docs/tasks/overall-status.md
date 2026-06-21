@@ -20,7 +20,7 @@ The following table summarizes the work packages defined for this project, who i
 | **Task 3** | [MPI Cluster](task-03-mpi.md) | - | - | - |
 | **Task 4** | [Non-MPI Scaling](task-04-scaling-laws.md) | - | - | - |
 | **Task 5** | [Monitoring](task-05-monitoring.md) | - | - | - |
-| **Task 6** | [Model Training](task-06-model-training.md) | - | - | - |
+| **Task 6** | [Model Training](task-06-model-training.md) | **Muhammad Musfir** | Almost Done (optional model optimization remains) | YOLO11n/YOLO8n python scripts and weights, Roboflow dataset, YOLO8n  RPI4 configuration and performance metrics|
 | **Task 7** | [Backend](task-07-backend.md) | **Abdul Hanan Javaid** | Almost Done | FastAPI service-repository backend, 9 replicas on K3s, and distributed MinIO S3 storage. |
 | **Task 8** | [Frontend](task-08-frontend.md) | - | - | - |
 | **Task 9** | [Telegram Bot](task-09-telegram.md) | - | - | - |
