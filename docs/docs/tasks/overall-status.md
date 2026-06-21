@@ -1,16 +1,15 @@
-
 ---
 title: "Overall Tasks Status"
 nav_order: 0
 ---
 
-# 📋 Overall Tasks Status
+# Overall Tasks Status
 
 Welcome to the project task board and status overview. This dashboard lists all key milestones, design decisions, work packages, lead developers, and live progress indicators for the **Threat Detection System** edge-computing cluster.
 
 ---
 
-## 🛠️ Tasks Progress Matrix
+## Tasks Progress Matrix
 
 The following table summarizes the work packages defined for this project, who is taking the lead, and their current completion status. Other team members should fill in their respective tasks.
 
@@ -18,10 +17,10 @@ The following table summarizes the work packages defined for this project, who i
 |---|---|---|---|---|
 | **Task 1** | [Edge Infrastructure](task-01-edge-computing-infrastructure.md) | - | - | - |
 | **Task 2** | [HPL Performance](task-02-hpl.md) |  | In Progress | HPL/LINPACK benchmarks on 2/4/7 nodes. 8-node tests blocked by admin/TCP issues. Results in `performance_using_hpl.md` |
-| **Task 3** | [MPI Cluster](task-03-mpi.md) | | In Progress | MPI deployment, native C benchmarks, Amdahl’s/Gustafson’s Laws on 32 cores. Metrics on master SSD |
+| **Task 3** | [MPI Cluster](task-03-mpi.md) | | In Progress | MPI deployment, native C benchmarks, Amdahl's/Gustafson's Laws on 32 cores. Metrics on master SSD |
 | **Task 4** | [Non-MPI Scaling](task-04-scaling-laws.md) |  | In Progress | Task distributor: repo setup, worker deployment, scalability law benchmarks. Results on SSD |
 | **Task 5** | [Monitoring](task-05-monitoring.md) | - | - | - |
-| **Task 6** | [Model Training](task-06-model-training.md) | **Muhammad Musfir** | Almost Done (optional model optimization remains) | YOLO11n/YOLO8n python scripts and weights, Roboflow dataset, YOLO8n  RPI4 configuration and performance metrics|
+| **Task 6** | [Model Training](task-06-model-training.md) | **Muhammad Musfir** | Almost Done (optional model optimization remains) | YOLO11n/YOLO8n python scripts and weights, Roboflow dataset, YOLO8n RPI4 configuration and performance metrics |
 | **Task 7** | [Backend](task-07-backend.md) | **Abdul Hanan Javaid** | Almost Done | FastAPI service-repository backend, 9 replicas on K3s, and distributed MinIO S3 storage. |
 | **Task 8** | [Frontend](task-08-frontend.md) | - | - | - |
 | **Task 9** | [Telegram Bot](task-09-telegram.md) | - | - | - |
@@ -29,7 +28,7 @@ The following table summarizes the work packages defined for this project, who i
 
 ---
 
-## 🔍 Task-by-Task Details
+## Task-by-Task Details
 
 ---
 
@@ -124,4 +123,4 @@ The following table summarizes the work packages defined for this project, who i
     *   **Static Site Generator:** Construct a comprehensive documentation repository using MkDocs with the Material theme to compile installation, deployment, and task reports.
     *   **Automated Continuous Deployment:** Implement GitHub Actions pipelines to build and deploy static site assets directly to GitHub Pages on every push to the main branch.
 *   **Current Work Status:**
-    *   **Fully Completed.** Structure, guides, and theme layout are finalized. Deployment pipelines automatically publish the live documentation on repository updatese.
+    *   **Fully Completed.** Structure, guides, and theme layout are finalized. Deployment pipelines automatically publish the live documentation on repository updates.
