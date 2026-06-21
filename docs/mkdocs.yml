@@ -69,6 +69,7 @@ nav:
       - "HPL Synthetic Benchmarks": guides/synthetic-benchmarks.md
       - "Task Distributor": guides/task4-task-distributor.md
   - Tasks:
+      - "Overall Tasks Status": tasks/overall-status.md
       - "Task 1 — Edge Computing Infrastructure": tasks/task-01-edge-computing-infrastructure.md
       - "Task 2 — HPL Performance": tasks/task-02-hpl.md
       - "Task 3 — MPI Cluster": tasks/task-03-mpi.md
