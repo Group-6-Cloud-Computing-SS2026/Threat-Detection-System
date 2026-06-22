@@ -23,7 +23,7 @@ The following table summarizes the work packages defined for this project, who i
 | **Task 6** | [Model Training](task-06-model-training.md) | **Muhammad Musfir** | Almost Done (optional model optimization remains) | YOLO11n/YOLO8n python scripts and weights, Roboflow dataset, YOLO8n RPI4 configuration and performance metrics |
 | **Task 7** | [Backend](task-07-backend.md) | **Abdul Hanan Javaid** | Almost Done | FastAPI service-repository backend, 9 replicas on K3s, and distributed MinIO S3 storage. |
 | **Task 8** | [Frontend](task-08-frontend.md) | - | - | - |
-| **Task 9** | [Telegram Bot](task-09-telegram.md) | - | - | - |
+| **Task 9** | [Telegram Bot](task-09-telegram.md) | Md. Forman Ullah Sajib | Almost Done | Send real-time messages, images, and health status alerts using a Telegram bot.  |
 | **Task 10** | Documentation | Complete Team | In Progress | Static site with Material theme, automated builds, and GitHub Pages hosting. |
 
 ---
@@ -109,11 +109,17 @@ The following table summarizes the work packages defined for this project, who i
 ---
 
 ### Task 9 — Telegram Bot Alerts
-*   **Lead Developer:** -
+*   **Lead Developer:** Md. Forman Ullah Sajib
 *   **Proposed Approach & Solution:**
-    *   
+    * Real-time threat alerts delivered via Telegram Bot to security personnel. Automatically sends notifications for CRITICAL and HIGH-level threats detected by the system.
+    * Threat Detected → Classifier → Notifier → Telegram API → User Alert
+      **Key Components:**
+      * Sends threat alerts via Telegram Bot API
+      * Formats messages with threat details and evidence
+      * Handles errors and retries gracefully
+      * Async HTTP client for non-blocking calls
 *   **Current Work Status:**
-    *   -
+    *   Almost done.
 
 ---
 
