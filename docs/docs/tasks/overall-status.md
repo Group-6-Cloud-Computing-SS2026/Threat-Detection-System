@@ -113,7 +113,7 @@ The following table summarizes the work packages defined for this project, who i
 *   **Proposed Approach & Solution:**
     * Real-time threat alerts delivered via Telegram Bot to security personnel. Automatically sends notifications for CRITICAL and HIGH-level threats detected by the system.
     * Threat Detected → Classifier → Notifier → Telegram API → User Alert
-    **Key Components:**
+    * **Key Components:**
       * Sends threat alerts via Telegram Bot API
       * Formats messages with threat details and evidence
       * Handles errors and retries gracefully
