@@ -15,15 +15,15 @@ The following table summarizes the work packages defined for this project, who i
 
 | Task | Category | Lead Developer | Status | Core Focus / Deliverables |
 |---|---|---|---|---|
-| **Task 1** | [Edge Infrastructure](task-01-edge-computing-infrastructure.md) | - | - | - |
-| **Task 2** | [HPL Performance](task-02-hpl.md) |  | In Progress | HPL/LINPACK benchmarks on 2/4/7 nodes. 8-node tests blocked by admin/TCP issues. Results in `performance_using_hpl.md` |
-| **Task 3** | [MPI Cluster](task-03-mpi.md) | | In Progress | MPI deployment, native C benchmarks, Amdahl's/Gustafson's Laws on 32 cores. Metrics on master SSD |
-| **Task 4** | [Non-MPI Scaling](task-04-scaling-laws.md) |  | In Progress | Task distributor: repo setup, worker deployment, scalability law benchmarks. Results on SSD |
-| **Task 5** | [Monitoring](task-05-monitoring.md) | **Awais Yaseen** | In Progress |  Deploying Prometheus and Grafana on the Pi 5 Master with a flexible setup, allowing us to choose the easiest worker metrics collection method later without disrupting cluster operations.
-| **Task 6** | [Model Training](task-06-model-training.md) | **Muhammad Musfir** | Almost Done (optional model optimization remains) | YOLO11n/YOLO8n python scripts and weights, Roboflow dataset, YOLO8n RPI4 configuration and performance metrics |
+| **Task 1** | [Edge Infrastructure](task-01-edge-computing-infrastructure.md) | **Mohsin Abbasi** | Completed | PXE network booting configuration, shared OS image overlays, chrony synchronization, and AI camera MQTT setup. |
+| **Task 2** | [HPL Performance](task-02-hpl.md) | **Fatima Athar** | In Progress | HPL/LINPACK benchmarks on 2/4/7 nodes. 8-node tests blocked by admin/TCP issues. Results in `performance_using_hpl.md`. |
+| **Task 3** | [MPI Cluster](task-03-mpi.md) | **Sadia Saeed** | In Progress | MPI deployment, native C benchmarks, Amdahl's/Gustafson's Laws on 32 cores. Metrics on master SSD. |
+| **Task 4** | [Non-MPI Scaling](task-04-scaling-laws.md) | **Maham Anis** | In Progress | Task distributor: repo setup, worker deployment, scalability law benchmarks. Results on SSD. |
+| **Task 5** | [Monitoring](task-05-monitoring.md) | **Awais Yaseen** | In Progress | Deploying Prometheus and Grafana on the Pi 5 Master with a flexible setup, allowing us to choose the easiest worker metrics collection method later without disrupting cluster operations. |
+| **Task 6** | [Model Training](task-06-model-training.md) | **Muhammad Musfir** | Almost Done | YOLO11n/YOLO8n python scripts and weights, Roboflow dataset, YOLO8n RPI4 configuration and performance metrics. |
 | **Task 7** | [Backend](task-07-backend.md) | **Abdul Hanan Javaid** | Almost Done | FastAPI service-repository backend, 9 replicas on K3s, and distributed MinIO S3 storage. |
-| **Task 8** | [Frontend](task-08-frontend.md) | - | - | - |
-| **Task 9** | [Telegram Bot](task-09-telegram.md) | **Md. Forman Ullah Sajib** | Almost Done | Send real-time messages, images, and health status alerts using a Telegram bot.  |
+| **Task 8** | [Frontend](task-08-frontend.md) | **Javier de Santiago Soto** | In Progress | React + TypeScript web client, TailwindCSS layout, React Router, live telemetry dashboard, and Google Maps alerts. |
+| **Task 9** | [Telegram Bot](task-09-telegram.md) | **Md. Forman Ullah Sajib** | Almost Done | Send real-time messages, images, and health status alerts using a Telegram bot. |
 | **Task 10** | Documentation | Complete Team | In Progress | Static site with Material theme, automated builds, and GitHub Pages hosting. |
 
 ---
@@ -33,56 +33,62 @@ The following table summarizes the work packages defined for this project, who i
 ---
 
 ### Task 1 — Sensor Nodes & PXE Boot Setup
-*   **Lead Developer:** -
+*   **Lead Developer:** Mohsin Abbasi
 *   **Proposed Approach & Solution:**
-    *   
+    *   **Diskless Network Booting:** Configure a Raspberry Pi 5 Master with DHCP, TFTP, and NFS service suites to boot 8 Raspberry Pi 3 workers over a private switch subnet, mounting writable RAM overlays for private states.
+    *   **Time & Camera Services:** Coordinate NTP sync using chrony client-server configurations. Integrate a Pi 4 with an AI camera to publish object detection event telemetry natively over MQTT.
 *   **Current Work Status:**
-    *   -
+    *   **Completed.** Network booting, clocks synchronization, and automated camera telemetry publishing services are fully operational.
 
 ---
 
 ### Task 2 — HPL Benchmarking
-*   **Lead Developer:** -
+*   **Lead Developer:** Fatima Athar
 *   **Proposed Approach & Solution:**
-    *   
+    *   **LINPACK Suite Compilation:** Compile HPL 2.3 using OpenBLAS and OpenMPI libraries across the ARM64 cluster architecture.
+    *   **Performance Evaluation:** Execute floating-point benchmark runs across multiple grid shapes and worker nodes to analyze cluster performance (Gflops).
 *   **Current Work Status:**
-    *   -
+    *   **In Progress.** Benchmarks on 2, 4, and 7 worker nodes completed. 8-node sweep blocked by network instability on worker2.
 
 ---
 
 ### Task 3 — MPI Cluster & Computing Laws
-*   **Lead Developer:** -
+*   **Lead Developer:** Sadia Saeed
 *   **Proposed Approach & Solution:**
-    *   
+    *   **Native MPI Applications:** Implement parallel numerical integration and Monte Carlo C programs utilizing the MPI framework.
+    *   **Validation of Computing Laws:** Measure execution runtimes from 1 to 32 cores to validate Amdahl's (fixed workload) and Gustafson's (scaled workload) laws.
 *   **Current Work Status:**
-    *   -
+    *   **In Progress.** Scaling metrics gathered and logged to CSV records inside the master's shared network path.
 
 ---
 
 ### Task 4 — Non-MPI Scaling Laws (Task Distributor)
-*   **Lead Developer:** -
+*   **Lead Developer:** Maham Anis
 *   **Proposed Approach & Solution:**
-    *   
+    *   **Distributed Rendering Scheduler:** Use Christian Baun's task-distributor tool to coordinate POV-Ray image rendering in parallel over SSH and shared NFS storage.
+    *   **Experimentation:** Evaluate scaling efficiency using fixed resolution and scaled image dimensions to contrast Amdahl's and Gustafson's limits.
 *   **Current Work Status:**
-    *   -
+    *   **In Progress.** Shell scripts configured to handle ImageMagick version changes and TTY limits. Benchmarking sweeps completed and analyzed.
 
 ---
 
 ### Task 5 — Infrastructure Monitoring
-*   **Lead Developer:** -
+*   **Lead Developer:** Awais Yaseen
 *   **Proposed Approach & Solution:**
-    *   
+    *   **Master Aggregator:** Deploy containerized Prometheus and Grafana on the Pi 5 Master.
+    *   **Flexible Metric Scraping:** Collect key performance indicators (CPU load, memory consumption, disk levels, temperatures) from cluster nodes in a decoupled manner.
 *   **Current Work Status:**
-    *   -
+    *   **In Progress.** Base monitoring setups and dashboard configurations are underway.
 
 ---
 
 ### Task 6 — Model Training & Conversion
-*   **Lead Developer:** -
+*   **Lead Developer:** Muhammad Musfir
 *   **Proposed Approach & Solution:**
-    *   
+    *   **YOLO Training Pipeline:** Train custom YOLOv8n and YOLOv11n models on local or cloud GPU platforms using custom threat images.
+    *   **Hardware optimization:** Convert the final model weights into the optimized format required for on-sensor inference on the Sony IMX500 camera.
 *   **Current Work Status:**
-    *   -
+    *   **Almost Done.** Python scripts, datasets, and weights are prepared. Final integration and configuration for the hardware camera are under development.
 
 ---
 
@@ -100,11 +106,12 @@ The following table summarizes the work packages defined for this project, who i
 ---
 
 ### Task 8 — React Dashboard Frontend
-*   **Lead Developer:** -
+*   **Lead Developer:** Javier de Santiago Soto
 *   **Proposed Approach & Solution:**
-    *   
+    *   **Dashboard SPA Client:** Develop a single-page web app using React, TypeScript, and Vite. Style the dashboard using TailwindCSS.
+    *   **Interactive Interface:** Build nested pages for health telemetry, event logs, maps, and system settings, connecting directly to FastAPI APIs.
 *   **Current Work Status:**
-    *   -
+    *   **In Progress.** Basic routing and layouts are implemented. API endpoints integration is underway.
 
 ---
 
