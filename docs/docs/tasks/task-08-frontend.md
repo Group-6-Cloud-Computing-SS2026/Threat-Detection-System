@@ -1,7 +1,7 @@
 # Task 8 — Frontend
 
 !!! note "Work in Progress"
-Documentation for this task will be added as implementation progresses.
+    Documentation for this task will be added as implementation progresses.
 
 ## Objectives
 
@@ -9,7 +9,7 @@ Documentation for this task will be added as implementation progresses.
 - Deploy as Docker container on k3s Kubernetes cluster
 - Use REST / MQTT for communication with backend and services
 
-## **Overview**
+## Overview
 
 This page focuses on the ongoing development of the frontend for the project. Although the
 implementation is not fully finalized, key foundational components, UI elements, and routing structures have been
@@ -18,7 +18,7 @@ frontend that seamlessly integrates user interface components, efficient routing
 
 ---
 
-### **In Progress**
+### In Progress
 
 The following issues are actively being worked on and form the core of the current progress:
 
@@ -40,7 +40,7 @@ The following issues are actively being worked on and form the core of the curre
 - **#51 - Configure frontend HTML metadata**
     - Define page metadata, titles, descriptions, and favicon settings for a polished application experience.
 
-### **Upcoming**
+### Upcoming
 
 The following tasks are expected to follow once the current frontend surfaces are more fully established:
 
@@ -55,7 +55,7 @@ The following tasks are expected to follow once the current frontend surfaces ar
 - **#47 - Add Dockerfile for frontend deployment**
     - Create a Docker image definition to enable containerized frontend deployments.
 
-### **Blocked**
+### Blocked
 
 Certain tasks are currently marked as blocked:
 
@@ -107,7 +107,7 @@ Certain tasks are currently marked as blocked:
 - **#40 - Add event export functionality**
     - Depends on the event list/detail data path being stable enough for exports.
 
-### **Completed Issues**
+### Completed Issues
 
 The following tasks have been successfully completed as part of the frontend development process:
 
@@ -134,7 +134,7 @@ The following tasks have been successfully completed as part of the frontend dev
 
 ---
 
-### **Current Progress Highlights**
+## Current Progress Highlights
 
 - **Routes and navigation:** React Router is already in place, covering the base app shell and the main user-facing
   pages.
@@ -147,7 +147,7 @@ The following tasks have been successfully completed as part of the frontend dev
 
 ---
 
-### **Planned Improvements**
+## Planned Improvements
 
 1. **Enhanced Responsiveness:**
     - Tighten responsive behavior across dashboard, log, and detail views.
@@ -160,7 +160,7 @@ The following tasks have been successfully completed as part of the frontend dev
 
 ---
 
-### **Conclusion**
+## Conclusion
 
 With the backend work and API direction already in place, the focus can
 move to finishing the screens, connecting them to the existing services, and closing the remaining product gaps.
