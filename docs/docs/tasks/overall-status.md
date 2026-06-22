@@ -19,7 +19,7 @@ The following table summarizes the work packages defined for this project, who i
 | **Task 2** | [HPL Performance](task-02-hpl.md) |  | In Progress | HPL/LINPACK benchmarks on 2/4/7 nodes. 8-node tests blocked by admin/TCP issues. Results in `performance_using_hpl.md` |
 | **Task 3** | [MPI Cluster](task-03-mpi.md) | | In Progress | MPI deployment, native C benchmarks, Amdahl's/Gustafson's Laws on 32 cores. Metrics on master SSD |
 | **Task 4** | [Non-MPI Scaling](task-04-scaling-laws.md) |  | In Progress | Task distributor: repo setup, worker deployment, scalability law benchmarks. Results on SSD |
-| **Task 5** | [Monitoring](task-05-monitoring.md) | - | - | - |
+| **Task 5** | [Monitoring](task-05-monitoring.md) | **Awais Yaseen** | In Progress |  Deploying Prometheus and Grafana on the Pi 5 Master with a flexible setup, allowing us to choose the easiest worker metrics collection method later without disrupting cluster operations.
 | **Task 6** | [Model Training](task-06-model-training.md) | **Muhammad Musfir** | Almost Done (optional model optimization remains) | YOLO11n/YOLO8n python scripts and weights, Roboflow dataset, YOLO8n RPI4 configuration and performance metrics |
 | **Task 7** | [Backend](task-07-backend.md) | **Abdul Hanan Javaid** | Almost Done | FastAPI service-repository backend, 9 replicas on K3s, and distributed MinIO S3 storage. |
 | **Task 8** | [Frontend](task-08-frontend.md) | - | - | - |
