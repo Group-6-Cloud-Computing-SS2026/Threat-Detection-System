@@ -74,6 +74,8 @@ spec:
               value: "sensors/+/detections"
             - name: MQTT_TOPIC_HEALTH
               value: "sensors/+/health"
+            - name: MQTT_TOPIC_CAMERA
+              value: "cluster/camera/#"
           
           # Readiness and Liveness probes to guarantee system self-healing
           livenessProbe:
