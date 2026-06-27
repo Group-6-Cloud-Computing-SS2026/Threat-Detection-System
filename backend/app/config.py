@@ -58,6 +58,7 @@ class Settings(BaseSettings):
     MQTT_BROKER_PORT: int = 1883
     MQTT_TOPIC_DETECTIONS: str = "sensors/+/detections"
     MQTT_TOPIC_HEALTH: str = "sensors/+/health"
+    MQTT_TOPIC_CAMERA: str = "cluster/camera/#"
     PROMETHEUS_ENABLED: bool = True
 
     @field_validator("BACKEND_CORS_ORIGINS", mode="before")

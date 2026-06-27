@@ -13,11 +13,13 @@ import aiomqtt
 
 from app.config import settings
 from app.database import async_session_factory
+from app.repositories.sensor_node_repo import SensorNodeRepository
 from app.schemas.detection_event import DetectionEventCreate
 from app.schemas.health_status import HealthStatusCreate
 from app.services.detection_service import DetectionService
 from app.services.health_service import HealthService
 from app.services.system_log_service import SystemLogService
+from app.utils.enums import NodeStatus
 from app.utils.time_utils import utc_now
 
 logger = logging.getLogger(__name__)
@@ -45,6 +47,7 @@ async def mqtt_subscriber():
 
                 await client.subscribe(settings.MQTT_TOPIC_DETECTIONS)
                 await client.subscribe(settings.MQTT_TOPIC_HEALTH)
+                await client.subscribe(settings.MQTT_TOPIC_CAMERA)
                 logger.info("Subscribed to MQTT topics")
 
                 async for message in client.messages:
@@ -72,6 +75,17 @@ async def _handle_message(message: aiomqtt.Message) -> None:
     topic = str(message.topic)
     payload = json.loads(message.payload.decode())
     parts = topic.split("/")
+
+    # Route camera detection events: cluster/camera/{sub-topic}
+    if len(parts) >= 2 and parts[0] == "cluster" and parts[1] == "camera":
+        async with async_session_factory() as db:
+            try:
+                await _handle_camera_event(db, topic, payload)
+                await db.commit()
+            except Exception as e:
+                await db.rollback()
+                logger.error("Failed to process camera event on %s: %s", topic, e, exc_info=True)
+        return
 
     # Extract sensor_id from topic: sensors/{sensor_id}/detections or health
     if len(parts) < 3:
@@ -143,3 +157,67 @@ async def _handle_health(db, sensor_id_str: str, payload: dict) -> None:
     )
     await service.record_health(sensor_id, data)
     logger.debug("Recorded health from sensor %s", sensor_id_str)
+
+
+async def _handle_camera_event(db, topic: str, payload: dict) -> None:
+    """Process a detection event published by an edge camera node.
+
+    Expects payload: {"node": "pi4-edge", "timestamp": "...", "objects": 1, "label": "person"}
+    Auto-registers the originating node as a SensorNode on first contact.
+    """
+    # Extract node identifier — use topic as fallback if "node" field is absent
+    node_hostname = payload.get("node") or topic.replace("/", "-")
+
+    # Look up or auto-register the sensor node
+    sensor_repo = SensorNodeRepository(db)
+    node = await sensor_repo.get_by_hostname(node_hostname)
+    if not node:
+        now = utc_now()
+        node = await sensor_repo.create({
+            "name": node_hostname,
+            "hostname": node_hostname,
+            "ip_address": "0.0.0.0",
+            "status": NodeStatus.ONLINE,
+            "registered_at": now,
+            "created_at": now,
+            "updated_at": now,
+        })
+        logger.info("Auto-registered camera edge node: %s", node_hostname)
+
+    # Parse timestamp
+    raw_ts = payload.get("timestamp")
+    if isinstance(raw_ts, str):
+        from datetime import datetime
+        detected_at = datetime.fromisoformat(raw_ts.replace("Z", "+00:00"))
+    else:
+        detected_at = utc_now()
+
+    # Parse label
+    label = payload.get("label") or "unknown"
+    # Normalise to a known EventType value where possible
+    _LABEL_MAP = {
+        "person": "person",
+        "theft": "theft",
+        "fire": "fire",
+        "vandalism": "vandalism",
+        "weapon": "weapon",
+    }
+    event_type = _LABEL_MAP.get(label.lower(), "unknown")
+
+    objects_count = payload.get("objects", 1)
+
+    service = DetectionService(db)
+    data = DetectionEventCreate(
+        sensor_node_id=node.id,
+        event_type=event_type,
+        severity="medium",
+        confidence=1.0,
+        detected_at=detected_at,
+        raw_detections={"objects": objects_count, "label": label},
+        metadata={"mqtt_topic": topic, "source": "camera_edge"},
+    )
+    await service.ingest_detection(data)
+    logger.info(
+        "Saved camera detection from node %s: %s (%d object(s))",
+        node_hostname, event_type, objects_count,
+    )
