@@ -7,11 +7,13 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
+from app.utils.enums import EventType
+
 
 class DetectionEventCreate(BaseModel):
     """Payload for ingesting a detection event (REST fallback)."""
     sensor_node_id: UUID
-    event_type: str = Field(..., max_length=50)
+    event_type: EventType
     severity: str = Field("medium", pattern="^(low|medium|high|critical)$")
     confidence: float = Field(..., ge=0.0, le=1.0)
     raw_detections: dict | None = None

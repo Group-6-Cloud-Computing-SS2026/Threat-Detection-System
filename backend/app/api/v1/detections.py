@@ -12,6 +12,7 @@ from app.api.deps import get_current_user
 from app.database import get_db
 from app.models.user import User
 from app.schemas.common import PaginatedResponse
+from app.utils.enums import EventType
 from app.schemas.detection_event import (
     DetectionEventCreate,
     DetectionEventDetailResponse,
@@ -38,7 +39,7 @@ async def ingest_detection(
 
 @router.get("", response_model=PaginatedResponse[DetectionEventResponse])
 async def list_detections(
-    event_type: str | None = None,
+    event_type: EventType | None = None,
     severity: str | None = None,
     sensor_id: UUID | None = None,
     acknowledged: bool | None = None,

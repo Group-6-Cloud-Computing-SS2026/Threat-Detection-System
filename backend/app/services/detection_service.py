@@ -33,7 +33,7 @@ class DetectionService:
             "severity": data.severity,
             "confidence": data.confidence,
             "raw_detections": data.raw_detections,
-            "metadata": data.metadata,
+            "metadata_": data.metadata,
             "acknowledged": False,
             "detected_at": data.detected_at,
             "received_at": now,
