@@ -4,11 +4,65 @@
 @plugin "@tailwindcss/forms";
 
 @theme {
-  --color-brand-pitch-black: #0a0903;
-  --color-brand-carbon-black: #1a1a1a;
-  --color-brand-alabaster-grey: #eaeaea;
-  --color-brand-brick-red: #bb0a21;
-  --color-brand-light-green: #80ef80;
+  --color-brand-pitch-black-50: #040302;
+  --color-brand-pitch-black-100: #060504;
+  --color-brand-pitch-black-200: #080706;
+  --color-brand-pitch-black-300: #0a0807;
+  --color-brand-pitch-black-400: #0a0902;
+  --color-brand-pitch-black-500: #0a0903;
+  --color-brand-pitch-black-600: #0e0c07;
+  --color-brand-pitch-black-700: #100e09;
+  --color-brand-pitch-black-800: #12100b;
+  --color-brand-pitch-black-900: #14120d;
+  --color-brand-pitch-black-950: #16140f;
+
+  --color-brand-carbon-black-50: #0d0d0d;
+  --color-brand-carbon-black-100: #111111;
+  --color-brand-carbon-black-200: #141414;
+  --color-brand-carbon-black-300: #171717;
+  --color-brand-carbon-black-400: #1a1a1a;
+  --color-brand-carbon-black-500: #1a1a1a;
+  --color-brand-carbon-black-600: #1f1f1f;
+  --color-brand-carbon-black-700: #232323;
+  --color-brand-carbon-black-800: #272727;
+  --color-brand-carbon-black-900: #2b2b2b;
+  --color-brand-carbon-black-950: #2f2f2f;
+
+  --color-brand-alabaster-grey-50: #f9f9f9;
+  --color-brand-alabaster-grey-100: #f4f4f4;
+  --color-brand-alabaster-grey-200: #ececec;
+  --color-brand-alabaster-grey-300: #e4e4e4;
+  --color-brand-alabaster-grey-400: #e8e8e8;
+  --color-brand-alabaster-grey-500: #eaeaea;
+  --color-brand-alabaster-grey-600: #d3d3d3;
+  --color-brand-alabaster-grey-700: #c9c9c9;
+  --color-brand-alabaster-grey-800: #bfbfbf;
+  --color-brand-alabaster-grey-900: #b4b4b4;
+  --color-brand-alabaster-grey-950: #aaaaaa;
+
+  --color-brand-brick-red-50: #fae6eb;
+  --color-brand-brick-red-100: #f4cad1;
+  --color-brand-brick-red-200: #eaa1aa;
+  --color-brand-brick-red-300: #e07982;
+  --color-brand-brick-red-400: #d6505a;
+  --color-brand-brick-red-500: #bb0a21;
+  --color-brand-brick-red-600: #9e081b;
+  --color-brand-brick-red-700: #810716;
+  --color-brand-brick-red-800: #640511;
+  --color-brand-brick-red-900: #47030c;
+  --color-brand-brick-red-950: #2a0207;
+
+  --color-brand-light-green-50: #e6ffe6;
+  --color-brand-light-green-100: #ccffcc;
+  --color-brand-light-green-200: #b3ffb3;
+  --color-brand-light-green-300: #99ff99;
+  --color-brand-light-green-400: #80ff80;
+  --color-brand-light-green-500: #80ef80;
+  --color-brand-light-green-600: #4dc04d;
+  --color-brand-light-green-700: #339933;
+  --color-brand-light-green-800: #267026;
+  --color-brand-light-green-900: #195019;
+  --color-brand-light-green-950: #0c280c;
 
   --font-inter: var(--font-inter), sans-serif;
   --font-nacelle: var(--font-nacelle), sans-serif;
@@ -122,6 +176,6 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
+    border-color: var(--color-brand-alabaster-grey-200, currentColor);
   }
 }
