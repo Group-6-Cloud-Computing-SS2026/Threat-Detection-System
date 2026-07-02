@@ -72,7 +72,7 @@ nav:
       - "Overall Tasks Status": tasks/overall-status.md
       - "Task 1 — Edge Computing Infrastructure": tasks/task-01-edge-computing-infrastructure.md
       - "Task 2 — HPL Performance": tasks/task-02-hpl.md
-      - "Task 3 — MPI Cluster": tasks/task-03-mpi.md
+      - "Task 3 — MPI Cluster": guides/task_3.md
       - "Task 4 — Non-MPI Scaling Laws": tasks/task-04-scaling-laws.md
       - "Task 5 — Monitoring": tasks/task-05-monitoring.md
       - "Task 6 — Image Collection & Training": tasks/task-06-model-training.md
