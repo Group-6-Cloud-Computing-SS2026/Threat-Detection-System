@@ -1,21 +1,11 @@
-import Logo from "./logo";
-
 export default function Footer() {
   return (
     <footer>
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
-        {/* Footer illustration */}
-        <div
-          className="pointer-events-none absolute bottom-0 left-1/2 -z-10 -translate-x-1/2"
-          aria-hidden="true"
-        >
-        {/*  TODO: ADD LOGO PIC */}
-
-        </div>
         <div className="grid grid-cols-4 justify-between gap-12 py-8 sm:grid-rows-[auto_auto] md:grid-cols-2 md:grid-rows-[auto_auto] md:py-12 lg:grid-cols-[repeat(4,minmax(0,140px))_1fr] lg:grid-rows-1 xl:gap-20">
           {/* Block */}
           <div className="space-y-2 col-span-2">
-            <h3 className="text-sm font-medium text-gray-200">Team members</h3>
+            <h3 className="text-sm font-medium text-brand-alabaster-grey-500">Team members</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <a
@@ -85,7 +75,7 @@ export default function Footer() {
           </div>
           {/* Block */}
           <div className="space-y-2 col-span-2">
-            <h3 className="text-sm font-medium text-gray-200">Technologies</h3>
+            <h3 className="text-sm font-medium text-brand-alabaster-grey-500">Technologies</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <a
@@ -139,13 +129,13 @@ export default function Footer() {
           </div>
           {/* Block */}
           <div className="col-span-2 md:col-span-4 lg:col-span-1 lg:text-right inset-x-0 bottom-0">
-            <div className="mb-3">
-              <Logo />
+            <div className="mb-3 flex justify-end">
+              <img src="/favicon.svg" alt="ThreatOff logo" width={32} height={32}/>
             </div>
             <div className="text-sm">
-              <p className="mb-3 text-brand-light-green-200/65">
+              <p className="mb-3 text-brand-alabaster-grey-500">
                 © CC Team 6
-                <span className="text-gray-700"> · </span>
+                <span> · </span>
                 <a
                   className="text-brand-light-green-200/65 transition hover:text-brand-light-green-500"
                   href="https://www.christianbaun.de/CGC26/index.html"
