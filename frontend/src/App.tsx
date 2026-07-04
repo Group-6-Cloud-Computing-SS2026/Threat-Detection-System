@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 
 type DetectionEvent = {
@@ -179,6 +179,7 @@ function App() {
         ...item,
         detailLoaded: false,
         imageUrls: {},
+        images: [],
       })))
       setLastUpdated(new Date().toLocaleTimeString())
     } catch (error) {
@@ -197,6 +198,7 @@ function App() {
         ...item,
         detailLoaded: false,
         imageUrls: {},
+        images: [],
       })))
       setFilterTotals({ total: data.total, skip: data.skip, limit: data.limit })
       setLastUpdated(new Date().toLocaleTimeString())
@@ -208,7 +210,6 @@ function App() {
   }
 
   async function loadDetectionDetail(eventId: string, listName: 'live' | 'search') {
-    const setList: Dispatch<SetStateAction<CardState[]>> = listName === 'live' ? setLiveEvents : setFilteredEvents
     const currentList: CardState[] = listName === 'live' ? liveEvents : filteredEvents
     const target = currentList.find((item: CardState) => item.id === eventId)
     if (!target || target.detailLoaded) {
@@ -228,11 +229,19 @@ function App() {
         }
       }
 
-      setList((prev: CardState[]) => prev.map((item: CardState) => (
-        item.id === eventId
-          ? { ...item, ...detail, detailLoaded: true, imageUrls }
-          : item
-      )))
+      if (listName === 'live') {
+        setLiveEvents((prev) => prev.map((item) => (
+          item.id === eventId
+            ? { ...item, ...detail, detailLoaded: true, imageUrls }
+            : item
+        )))
+      } else {
+        setFilteredEvents((prev) => prev.map((item) => (
+          item.id === eventId
+            ? { ...item, ...detail, detailLoaded: true, imageUrls }
+            : item
+        )))
+      }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to load event detail'
       if (listName === 'live') {
