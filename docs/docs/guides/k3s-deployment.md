@@ -8,6 +8,127 @@ To satisfy production and academic requirements for a high-availability, distrib
 
 If the Kubernetes cluster and NFS rootfilesystems are already configured (with the shared `/nfs` directory bind-mounted to the SSD), use these commands to start, verify, and deploy the application. You do **not** need to recreate configurations or rebuild services.
 
+---
+
+## Safe Update Workflow From Your Laptop
+
+Use this flow when you want to update code from your laptop over Wi-Fi without destroying the Pi5 setup, the database, or stored images.
+
+### 1. Update locally first
+
+Make your code changes on your laptop in the normal workspace. Before touching Pi5, confirm your local repo is clean enough to deploy:
+
+```bash
+git status
+git diff --stat
+```
+
+If you use Git, commit the change locally and push it to your remote branch. If you do not use Git, copy only the files you changed.
+
+### 2. Sync only the changed files to Pi5
+
+From your laptop, send just the files you updated. Do **not** delete the repo or re-create the cluster.
+
+```bash
+# Example: sync the updated backend service or edge script
+scp backend/app/services/mqtt_service.py cc123@192.168.1.50:~/Threat-Detection-System/backend/app/services/
+scp edge_node/edge_camera_publisher.py cc123@192.168.1.50:~/Threat-Detection-System/edge_node/
+
+# Or sync a whole folder safely
+rsync -av --progress backend/app/ cc123@192.168.1.50:~/Threat-Detection-System/backend/app/
+```
+
+If you are using Git on Pi5, an even safer option is:
+
+```bash
+ssh cc123@192.168.1.50
+cd ~/Threat-Detection-System
+git pull --ff-only
+```
+
+`--ff-only` prevents Git from creating a merge commit and avoids overwriting local changes on Pi5.
+
+### 3. Deploy with the smallest possible restart
+
+Only restart the component you changed:
+
+```bash
+# If backend code changed
+ssh cc123@192.168.1.50
+kubectl rollout restart deployment/tds-api
+kubectl rollout status deployment/tds-api
+
+# If edge script changed
+scp edge_node/edge_camera_publisher.py cc123@192.168.1.50:~/Threat-Detection-System/edge_node/
+ssh cc123@192.168.1.50 'sudo systemctl restart sensor-node.service'
+```
+
+Do not delete namespaces, PVCs, or the `k8s/` manifests unless you intentionally want to rebuild the environment.
+
+### 4. Verify the update worked
+
+Use a read-only validation path first:
+
+```bash
+ssh cc123@192.168.1.50
+
+# Check the pods
+kubectl get pods -l 'app in (tds-api, tds-postgres, tds-minio, tds-mqtt)' -o wide
+
+# Watch backend logs
+kubectl logs -f -l app=tds-api
+
+# Test the API internally
+curl http://tds-api:8001/api/v1/detections/recent?limit=5
+
+# If you changed MQTT or camera ingestion
+mosquitto_sub -h localhost -t 'cluster/camera/events' -v
+```
+
+### 5. Keep the old setup intact
+
+These rules keep your cluster safe:
+
+* Do not run `kubectl delete namespace default`.
+* Do not run `kubectl delete pvc --all`.
+* Do not rebuild the cluster unless the whole node is broken.
+* Do not replace the entire repo on Pi5 with a fresh copy if only one file changed.
+* Take one backup before large changes: `git status` and `git branch --show-current`.
+
+### 6. Troubleshooting the common Pi5 errors
+
+If `kubectl` says it cannot read `/etc/rancher/k3s/k3s.yaml`, use `sudo` on Pi5:
+
+```bash
+sudo kubectl get pods -l 'app in (tds-api, tds-postgres, tds-minio, tds-mqtt)' -o wide
+sudo kubectl rollout restart deployment/tds-api
+sudo kubectl rollout status deployment/tds-api
+```
+
+If you prefer to avoid `sudo` every time, copy the kubeconfig into your user profile on Pi5:
+
+```bash
+mkdir -p ~/.kube
+sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+sudo chown cc123:cc123 ~/.kube/config
+```
+
+If `sensor-node.service` is not found on Pi5, that usually means the service is not installed on the master node. The edge camera process normally runs on the Pi4 edge node, so check the edge node itself or inspect the available services there with:
+
+```bash
+systemctl list-units --type=service | grep -E 'sensor|edge|camera'
+```
+
+If `curl http://tds-api:8001/...` fails from the Pi5 shell, that is expected outside the pod network. Use one of these instead:
+
+```bash
+sudo kubectl port-forward svc/tds-api 8001:8001
+curl http://localhost:8001/api/v1/detections/recent?limit=5
+
+# Or use the Ingress route exposed on Pi5
+curl http://192.168.1.50/docs
+```
+
 ### 1. Start Services on `pi5-master`
 Ensure the NFS kernel server and K3s orchestration services are active on the Master node:
 ```bash
