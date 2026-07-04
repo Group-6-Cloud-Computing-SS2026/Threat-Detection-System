@@ -1,133 +1,26 @@
+import TeamList from './TeamList';
+import TechList from './TechList';
+import { teamMembers, technologies, links } from './footerData';
+
 export default function Footer() {
+  const githubLink = links.find(link => link.tag === 'GitHub');
+  const teacherPageLink = links.find(link => link.tag === 'Teacher Page');
+
   return (
     <footer>
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
         <div className="grid grid-cols-4 justify-between gap-12 py-8 sm:grid-rows-[auto_auto] md:grid-cols-2 md:grid-rows-[auto_auto] md:py-12 lg:grid-cols-[repeat(4,minmax(0,140px))_1fr] lg:grid-rows-1 xl:gap-20">
-          {/* Block */}
+
           <div className="space-y-2 col-span-2">
             <h3 className="text-sm font-medium text-brand-alabaster-grey-500">Team members</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a
-                  className="text-brand-light-green-200/65 transition hover:text-brand-light-green-500"
-                  href="#0"
-                >
-                  Hafiza Fatima Athar
-                </a>
-              </li>
-              <li>
-                <a
-                  className="text-brand-light-green-200/65 transition hover:text-brand-light-green-500"
-                  href="#0"
-                >
-                  Sadia Saeed
-                </a>
-              </li>
-              <li>
-                <a
-                  className="text-brand-light-green-200/65 transition hover:text-brand-light-green-500"
-                  href="#0"
-                >
-                  Maham Anis
-                </a>
-              </li>
-              <li>
-                <a
-                  className="text-brand-light-green-200/65 transition hover:text-brand-light-green-500"
-                  href="#0"
-                >
-                  Mohsin Ayoub
-                </a>
-              </li>
-              <li>
-                <a
-                  className="text-brand-light-green-200/65 transition hover:text-brand-light-green-500"
-                  href="#0"
-                >
-                  Awais Yaseen
-                </a>
-              </li>
-              <li>
-                <a
-                    className="text-brand-light-green-200/65 transition hover:text-brand-light-green-500"
-                    href="#0"
-                >
-                  Abdul Hanan Javaid
-                </a>
-              </li>
-              <li>
-                <a
-                    className="text-brand-light-green-200/65 transition hover:text-brand-light-green-500"
-                    href="#0"
-                >
-                  Md. Forman Ullah Sajib
-                </a>
-              </li>
-              <li>
-                <a
-                    className="text-brand-light-green-200/65 transition hover:text-brand-light-green-500"
-                    href="#0"
-                >
-                  Javier de Santiago Soto
-                </a>
-              </li>
-            </ul>
+            <TeamList members={teamMembers} />
           </div>
-          {/* Block */}
+
           <div className="space-y-2 col-span-2">
             <h3 className="text-sm font-medium text-brand-alabaster-grey-500">Technologies</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a
-                    className="text-brand-light-green-200/65 transition hover:text-brand-light-green-500"
-                    href="https://react.dev/"
-                >
-                  React
-                </a>
-              </li>
-              <li>
-                <a
-                    className="text-brand-light-green-200/65 transition hover:text-brand-light-green-500"
-                    href="https://www.python.org/"
-                >
-                  Python
-                </a>
-              </li>
-              <li>
-                <a
-                    className="text-brand-light-green-200/65 transition hover:text-brand-light-green-500"
-                    href="https://kubernetes.io/"
-                >
-                  Kubernetes (k3s)
-                </a>
-              </li>
-              <li>
-                <a
-                    className="text-brand-light-green-200/65 transition hover:text-brand-light-green-500"
-                    href="https://www.docker.com/"
-                >
-                  Docker
-                </a>
-              </li>
-              <li>
-                <a
-                    className="text-brand-light-green-200/65 transition hover:text-brand-light-green-500"
-                    href="https://mqtt.org/"
-                >
-                  MQTT
-                </a>
-              </li>
-              <li>
-                <a
-                    className="text-brand-light-green-200/65 transition hover:text-brand-light-green-500"
-                    href="https://docs.ultralytics.com/models/yolo11#overview"
-                >
-                  YOLO
-                </a>
-              </li>
-            </ul>
+            <TechList technologies={technologies} />
           </div>
-          {/* Block */}
+
           <div className="col-span-2 md:col-span-4 lg:col-span-1 lg:text-right inset-x-0 bottom-0">
             <div className="mb-3 flex justify-end">
               <img src="/favicon.svg" alt="ThreatOff logo" width={32} height={32}/>
@@ -138,16 +31,20 @@ export default function Footer() {
                 <span> · </span>
                 <a
                   className="text-brand-light-green-200/65 transition hover:text-brand-light-green-500"
-                  href="https://www.christianbaun.de/CGC26/index.html"
+                  href={teacherPageLink ? teacherPageLink.url.href : 'https://www.christianbaun.de/'}
+                  target="_blank"
+                  aria-label={teacherPageLink?.tag}
                 >
                   CGC26
                 </a>
               </p>
               <a
                   className="inline-flex text-brand-light-green-500 transition hover:text-brand-light-green-400"
-                  href="https://github.com/orgs/Group-6-Cloud-Computing-SS2026"
-                  aria-label="Github"
+                  href={githubLink ? githubLink.url.href : 'https://github.com'}
+                  target="_blank"
+                  aria-label={githubLink?.tag}
               >
+                {/* Github logo */}
                 <svg
                     className="h-8 w-8 fill-current"
                     viewBox="0 0 32 32"
