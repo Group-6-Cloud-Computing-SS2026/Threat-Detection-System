@@ -6,7 +6,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Footer from "../../shared/components/ui/footer.tsx";
 
-export default function DefaultLayout({
+export default function HomeLayout({
                                           children,
                                       }: {
     children: React.ReactNode;
