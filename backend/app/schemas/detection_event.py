@@ -34,6 +34,7 @@ class DetectionEventResponse(BaseModel):
     detected_at: datetime
     received_at: datetime
     created_at: datetime
+    preview_image_url: str | None = None
 
     model_config = {"from_attributes": True, "populate_by_name": True}
 
