@@ -7,23 +7,28 @@ Runs as a background task inside the FastAPI lifespan.
 import asyncio
 import json
 import logging
+from datetime import datetime, timedelta, timezone
 from uuid import UUID
 
 import aiomqtt
 
 from app.config import settings
 from app.database import async_session_factory
+from app.repositories.sensor_node_repo import SensorNodeRepository
 from app.schemas.detection_event import DetectionEventCreate
 from app.schemas.health_status import HealthStatusCreate
 from app.services.detection_service import DetectionService
 from app.services.health_service import HealthService
 from app.services.system_log_service import SystemLogService
+from app.utils.enums import NodeStatus
 from app.utils.time_utils import utc_now
 
 logger = logging.getLogger(__name__)
 
 # Module-level MQTT connection status for infrastructure reporting
 mqtt_connected: bool = False
+# Last known camera stream frame per node so detection events without images can still be archived.
+_latest_camera_stream_frames: dict[str, dict[str, object]] = {}
 
 
 async def mqtt_subscriber():
@@ -45,6 +50,8 @@ async def mqtt_subscriber():
 
                 await client.subscribe(settings.MQTT_TOPIC_DETECTIONS)
                 await client.subscribe(settings.MQTT_TOPIC_HEALTH)
+                await client.subscribe("cluster/camera/stream")
+                await client.subscribe(settings.MQTT_TOPIC_CAMERA)
                 logger.info("Subscribed to MQTT topics")
 
                 async for message in client.messages:
@@ -72,6 +79,21 @@ async def _handle_message(message: aiomqtt.Message) -> None:
     topic = str(message.topic)
     payload = json.loads(message.payload.decode())
     parts = topic.split("/")
+
+    if topic == "cluster/camera/stream":
+        _cache_camera_stream_frame(payload)
+        return
+
+    # Route camera detection events: cluster/camera/{sub-topic}
+    if len(parts) >= 2 and parts[0] == "cluster" and parts[1] == "camera":
+        async with async_session_factory() as db:
+            try:
+                await _handle_camera_event(db, topic, payload)
+                await db.commit()
+            except Exception as e:
+                await db.rollback()
+                logger.error("Failed to process camera event on %s: %s", topic, e, exc_info=True)
+        return
 
     # Extract sensor_id from topic: sensors/{sensor_id}/detections or health
     if len(parts) < 3:
@@ -143,3 +165,116 @@ async def _handle_health(db, sensor_id_str: str, payload: dict) -> None:
     )
     await service.record_health(sensor_id, data)
     logger.debug("Recorded health from sensor %s", sensor_id_str)
+
+
+async def _handle_camera_event(db, topic: str, payload: dict) -> None:
+    """Process a detection event published by an edge camera node.
+
+    Expects payload: {"node": "pi4-edge", "timestamp": "...", "objects": 1, "label": "person"}
+    Auto-registers the originating node as a SensorNode on first contact.
+    """
+    # Extract node identifier — use topic as fallback if "node" field is absent
+    node_hostname = payload.get("node") or topic.replace("/", "-")
+
+    # Look up or auto-register the sensor node
+    sensor_repo = SensorNodeRepository(db)
+    node = await sensor_repo.get_by_hostname(node_hostname)
+    if not node:
+        now = utc_now()
+        node = await sensor_repo.create({
+            "name": node_hostname,
+            "hostname": node_hostname,
+            "ip_address": "0.0.0.0",
+            "status": NodeStatus.ONLINE,
+            "registered_at": now,
+            "created_at": now,
+            "updated_at": now,
+        })
+        logger.info("Auto-registered camera edge node: %s", node_hostname)
+
+    # Parse timestamp
+    raw_ts = payload.get("timestamp")
+    if isinstance(raw_ts, str):
+        from datetime import datetime
+        detected_at = datetime.fromisoformat(raw_ts.replace("Z", "+00:00"))
+    else:
+        detected_at = utc_now()
+
+    # Parse label
+    label = payload.get("label") or "unknown"
+    # Normalise to a known EventType value where possible
+    _LABEL_MAP = {
+        "person": "person",
+        "theft": "theft",
+        "fire": "fire",
+        "vandalism": "vandalism",
+        "weapon": "weapon",
+    }
+    event_type = _LABEL_MAP.get(label.lower(), "unknown")
+
+    objects_count = payload.get("objects", 1)
+
+    image_base64 = payload.get("image_base64")
+    if not image_base64:
+        image_base64 = _get_cached_camera_stream_frame(node_hostname)
+
+    service = DetectionService(db)
+    data = DetectionEventCreate(
+        sensor_node_id=node.id,
+        event_type=event_type,
+        severity="medium",
+        confidence=1.0,
+        detected_at=detected_at,
+        raw_detections={"objects": objects_count, "label": label},
+        metadata={"mqtt_topic": topic, "source": "camera_edge", "image_received": bool(image_base64)},
+        image_base64=image_base64,
+    )
+    await service.ingest_detection(data)
+    logger.info(
+        "Saved camera detection from node %s: %s (%d object(s))",
+        node_hostname, event_type, objects_count,
+    )
+
+
+def _cache_camera_stream_frame(payload: dict) -> None:
+    """Cache the newest raw stream frame for a node so later detections can reuse it."""
+    image_base64 = payload.get("image") or payload.get("image_base64")
+    if not image_base64:
+        return
+
+    node_key = str(payload.get("node") or payload.get("sensor_id") or "pi4-edge")
+    timestamp_value = payload.get("timestamp")
+    timestamp = utc_now()
+
+    if isinstance(timestamp_value, str):
+        try:
+            timestamp = datetime.fromisoformat(timestamp_value.replace("Z", "+00:00"))
+        except Exception:
+            timestamp = utc_now()
+
+    _latest_camera_stream_frames[node_key] = {
+        "image_base64": image_base64,
+        "timestamp": timestamp,
+    }
+
+
+def _get_cached_camera_stream_frame(node_key: str) -> str | None:
+    """Return a fresh cached stream frame if one is available for the node."""
+    cached = _latest_camera_stream_frames.get(node_key)
+    if not cached:
+        return None
+
+    cached_timestamp = cached.get("timestamp")
+    if not isinstance(cached_timestamp, datetime):
+        return None
+
+    current_time = utc_now()
+    if current_time.tzinfo is None:
+        current_time = current_time.replace(tzinfo=timezone.utc)
+    if cached_timestamp.tzinfo is None:
+        cached_timestamp = cached_timestamp.replace(tzinfo=timezone.utc)
+
+    if current_time - cached_timestamp > timedelta(seconds=10):
+        return None
+
+    return cached.get("image_base64") if isinstance(cached.get("image_base64"), str) else None
