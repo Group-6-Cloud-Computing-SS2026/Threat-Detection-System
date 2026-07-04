@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import './App.css'
 
 type DetectionEvent = {
@@ -64,7 +64,22 @@ type CardState = DetectionDetail & {
 }
 
 const storageKey = 'tds-detection-dashboard'
+const authStorageKey = 'tds-auth-state'
 const defaultApiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? '/api/v1'
+
+type AuthState = { token: string; username: string }
+
+function loadSavedAuth(): AuthState | null {
+  try {
+    const raw = localStorage.getItem(authStorageKey)
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as Partial<AuthState>
+    if (!parsed.token?.trim()) return null
+    return { token: parsed.token.trim(), username: parsed.username?.trim() || 'user' }
+  } catch {
+    return null
+  }
+}
 
 const severityOrder = ['critical', 'high', 'medium', 'low']
 
@@ -131,6 +146,20 @@ function App() {
   const [liveError, setLiveError] = useState<string | null>(null)
   const [searchError, setSearchError] = useState<string | null>(null)
   const [lastUpdated, setLastUpdated] = useState<string | null>(null)
+  const [authState, setAuthState] = useState<AuthState | null>(loadSavedAuth)
+
+  function handleLogin(token: string, username: string) {
+    const auth: AuthState = { token, username }
+    localStorage.setItem(authStorageKey, JSON.stringify(auth))
+    setAuthState(auth)
+    setSettings((s) => ({ ...s, token }))
+  }
+
+  function handleLogout() {
+    localStorage.removeItem(authStorageKey)
+    setAuthState(null)
+    setSettings((s) => ({ ...s, token: '' }))
+  }
 
   const liveSummary = useMemo(() => {
     const counts: Record<string, number> = {}
@@ -154,8 +183,9 @@ function App() {
   async function apiFetch(path: string, options?: RequestInit) {
     const headers = new Headers(options?.headers)
     headers.set('accept', 'application/json')
-    if (settings.token.trim()) {
-      headers.set('Authorization', `Bearer ${settings.token.trim()}`)
+    const token = authState?.token || settings.token.trim()
+    if (token) {
+      headers.set('Authorization', `Bearer ${token}`)
     }
 
     const response = await fetch(`${settings.apiBaseUrl.replace(/\/$/, '')}${path}`, {
@@ -274,10 +304,10 @@ function App() {
   }, [autoRefresh, settings.apiBaseUrl, settings.token])
 
   function saveConnectionSettings() {
-    setSettings({
+    setSettings((current) => ({
+      ...current,
       apiBaseUrl: draftSettings.apiBaseUrl.trim() || defaultApiBaseUrl,
-      token: draftSettings.token.trim(),
-    })
+    }))
   }
 
   function resetFilters() {
@@ -304,6 +334,15 @@ function App() {
     void fetchFilteredEvents()
   }
 
+  if (!authState) {
+    return (
+      <LoginPage
+        apiBaseUrl={settings.apiBaseUrl}
+        onLogin={handleLogin}
+      />
+    )
+  }
+
   return (
     <div className="dashboard-shell">
       <header className="hero">
@@ -324,6 +363,9 @@ function App() {
             <a className="inline-link" href="/docs" target="_blank" rel="noreferrer">
               Open Swagger API
             </a>
+            <button className="secondary logout-btn" onClick={handleLogout}>
+              Sign out · {authState.username}
+            </button>
           </div>
         </div>
 
@@ -347,7 +389,7 @@ function App() {
         <div className="section-head">
           <div>
             <h2>Connection</h2>
-            <p>Use the API base URL and bearer token for Swagger-authenticated requests.</p>
+            <p>Signed in as <strong>{authState.username}</strong>. Update the API base URL if needed.</p>
           </div>
           <button className="secondary" onClick={() => void fetchRecentEvents()}>
             Refresh now
@@ -361,14 +403,6 @@ function App() {
               value={draftSettings.apiBaseUrl}
               onChange={(event) => setDraftSettings((current) => ({ ...current, apiBaseUrl: event.target.value }))}
               placeholder={defaultApiBaseUrl}
-            />
-          </label>
-          <label>
-            <span>Bearer token</span>
-            <input
-              value={draftSettings.token}
-              onChange={(event) => setDraftSettings((current) => ({ ...current, token: event.target.value }))}
-              placeholder="Paste the JWT from Swagger"
             />
           </label>
           <div className="actions-row">
@@ -509,6 +543,166 @@ function App() {
           </div>
         </section>
       </main>
+    </div>
+  )
+}
+
+function LoginPage({
+  apiBaseUrl,
+  onLogin,
+}: {
+  apiBaseUrl: string
+  onLogin: (token: string, username: string) => void
+}) {
+  const [tab, setTab] = useState<'login' | 'register'>('login')
+  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [role, setRole] = useState('viewer')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
+
+  // Strip trailing /api/v1 so we can prepend /api/v1/auth/...
+  const base = apiBaseUrl.replace(/\/$/, '').replace(/\/api\/v1$/, '')
+
+  async function handleLogin(e: FormEvent) {
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
+    try {
+      const res = await fetch(`${base}/api/v1/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      })
+      const data = await res.json() as { access_token?: string; detail?: string }
+      if (!res.ok) throw new Error(data.detail ?? `${res.status} ${res.statusText}`)
+      onLogin(data.access_token!, username)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Login failed')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function handleRegister(e: FormEvent) {
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
+    setSuccess(null)
+    try {
+      const res = await fetch(`${base}/api/v1/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password, role }),
+      })
+      const data = await res.json() as { detail?: string }
+      if (!res.ok) throw new Error(data.detail ?? `${res.status} ${res.statusText}`)
+      setSuccess('Account created! You can now sign in.')
+      setTab('login')
+      setPassword('')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Registration failed')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function switchTab(next: 'login' | 'register') {
+    setTab(next)
+    setError(null)
+    setSuccess(null)
+  }
+
+  return (
+    <div className="auth-shell">
+      <div className="auth-card">
+        <p className="eyebrow">Threat Detection System</p>
+        <h1>Welcome back</h1>
+
+        <div className="auth-tabs">
+          <button className={tab === 'login' ? 'active' : ''} onClick={() => switchTab('login')}>
+            Sign in
+          </button>
+          <button className={tab === 'register' ? 'active' : ''} onClick={() => switchTab('register')}>
+            Register
+          </button>
+        </div>
+
+        {success ? <div className="notice success">{success}</div> : null}
+        {error ? <div className="notice error">{error}</div> : null}
+
+        {tab === 'login' ? (
+          <form className="auth-form" onSubmit={(e) => void handleLogin(e)}>
+            <label>
+              <span>Username</span>
+              <input
+                required
+                autoComplete="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </label>
+            <label>
+              <span>Password</span>
+              <input
+                required
+                type="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </label>
+            <button type="submit" disabled={loading}>
+              {loading ? 'Signing in…' : 'Sign in'}
+            </button>
+          </form>
+        ) : (
+          <form className="auth-form" onSubmit={(e) => void handleRegister(e)}>
+            <label>
+              <span>Username</span>
+              <input
+                required
+                autoComplete="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </label>
+            <label>
+              <span>Email</span>
+              <input
+                required
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </label>
+            <label>
+              <span>Password</span>
+              <input
+                required
+                type="password"
+                autoComplete="new-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </label>
+            <label>
+              <span>Role</span>
+              <select value={role} onChange={(e) => setRole(e.target.value)}>
+                <option value="viewer">Viewer</option>
+                <option value="operator">Operator</option>
+                <option value="admin">Admin</option>
+              </select>
+            </label>
+            <button type="submit" disabled={loading}>
+              {loading ? 'Creating account…' : 'Create account'}
+            </button>
+          </form>
+        )}
+      </div>
     </div>
   )
 }

@@ -479,3 +479,83 @@ button.secondary {
 		align-items: start;
 	}
 }
+
+/* ── Auth / Login screen ────────────────────────────────────────── */
+.auth-shell {
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+	color: #f8fafc;
+	font-family: 'Inter', sans-serif;
+	background:
+		radial-gradient(circle at top left, rgba(56, 189, 248, 0.16), transparent 32%),
+		radial-gradient(circle at top right, rgba(16, 185, 129, 0.14), transparent 28%),
+		linear-gradient(180deg, #09111f 0%, #0a0f18 100%);
+}
+
+.auth-card {
+	width: 100%;
+	max-width: 420px;
+	padding: 36px;
+	border-radius: 28px;
+	border: 1px solid rgba(148, 163, 184, 0.16);
+	background: rgba(8, 15, 28, 0.88);
+	box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+	backdrop-filter: blur(18px);
+}
+
+.auth-card h1 {
+	font-size: 1.8rem;
+	margin: 8px 0 20px;
+}
+
+.auth-tabs {
+	display: flex;
+	gap: 6px;
+	margin-bottom: 24px;
+	background: rgba(15, 23, 42, 0.96);
+	border-radius: 16px;
+	padding: 4px;
+}
+
+.auth-tabs button {
+	flex: 1;
+	background: transparent;
+	color: #94a3b8;
+	border: none;
+	border-radius: 12px;
+	padding: 10px;
+	cursor: pointer;
+	font-weight: 500;
+	transition: background 0.15s, color 0.15s;
+}
+
+.auth-tabs button.active {
+	background: rgba(94, 234, 212, 0.14);
+	color: #5eead4;
+}
+
+.auth-form {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.auth-form button[type='submit'] {
+	margin-top: 8px;
+	width: 100%;
+}
+
+.notice.success {
+	border-color: rgba(52, 211, 153, 0.35);
+	color: #6ee7b7;
+	margin-bottom: 12px;
+}
+
+.logout-btn {
+	margin-left: auto;
+	border-color: rgba(248, 113, 113, 0.3);
+	color: #fca5a5;
+}
