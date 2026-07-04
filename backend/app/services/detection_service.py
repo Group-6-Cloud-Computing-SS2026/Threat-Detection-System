@@ -24,6 +24,24 @@ class DetectionService:
         self.image_storage = ImageStorageService()
         self.db = db
 
+    async def _attach_preview_image_url(self, event):
+        """Attach a presigned preview URL from the first stored image, if one exists."""
+        preview_url = None
+        try:
+            images = await self.image_repo.get_by_event_id(event.id)
+            if images:
+                preview_url = self.image_storage.get_presigned_url(images[0].storage_key)
+        except Exception:
+            preview_url = None
+
+        setattr(event, "preview_image_url", preview_url)
+        return event
+
+    async def _attach_preview_image_urls(self, events):
+        for event in events:
+            await self._attach_preview_image_url(event)
+        return events
+
     async def ingest_detection(self, data: DetectionEventCreate):
         """Process an incoming detection: create event, store image, create notification."""
         now = utc_now()
@@ -47,7 +65,7 @@ class DetectionService:
                 storage_key = f"detections/{event.id}/annotated.jpg"
                 self.image_storage.upload_image_bytes(storage_key, image_bytes, "image/jpeg")
 
-                await self.image_repo.create({
+                image = await self.image_repo.create({
                     "detection_event_id": event.id,
                     "storage_key": storage_key,
                     "bucket": self.image_storage.bucket,
@@ -57,8 +75,11 @@ class DetectionService:
                     "captured_at": data.detected_at,
                     "uploaded_at": now,
                 })
+                setattr(event, "preview_image_url", self.image_storage.get_presigned_url(image.storage_key))
             except Exception:
                 pass  # Don't fail the whole ingestion if image storage fails
+        else:
+            setattr(event, "preview_image_url", None)
 
         # Create notification for critical events
         if data.severity in (Severity.CRITICAL, Severity.HIGH):
@@ -79,6 +100,7 @@ class DetectionService:
         if not event:
             raise NotFoundException("DetectionEvent", event_id)
         images = await self.image_repo.get_by_event_id(event_id)
+        await self._attach_preview_image_url(event)
         return event, images
 
     async def get_events_feed(
@@ -92,21 +114,26 @@ class DetectionService:
         skip: int = 0,
         limit: int = 50,
     ):
-        return await self.event_repo.get_filtered(
+        events, total = await self.event_repo.get_filtered(
             event_type=event_type, severity=severity, sensor_id=sensor_id,
             acknowledged=acknowledged, start_time=start_time, end_time=end_time,
             skip=skip, limit=limit,
         )
+        await self._attach_preview_image_urls(events)
+        return events, total
 
     async def get_recent(self, limit: int = 20):
-        return await self.event_repo.get_recent(limit=limit)
+        events = await self.event_repo.get_recent(limit=limit)
+        await self._attach_preview_image_urls(events)
+        return events
 
     async def acknowledge_event(self, event_id: UUID, username: str):
         event = await self.event_repo.get_by_id(event_id)
         if not event:
             raise NotFoundException("DetectionEvent", event_id)
         await self.event_repo.acknowledge(event_id, username)
-        return await self.event_repo.get_by_id(event_id)
+        event = await self.event_repo.get_by_id(event_id)
+        return await self._attach_preview_image_url(event)
 
     async def get_statistics(self):
         by_type = await self.event_repo.count_by_type()
