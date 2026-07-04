@@ -14,6 +14,7 @@ type DetectionEvent = {
   detected_at: string
   received_at: string
   created_at: string
+  preview_image_url: string | null
 }
 
 type DetectionImage = {
@@ -295,6 +296,14 @@ function App() {
     setFilterTotals({ total: 0, skip: 0, limit: 50 })
   }
 
+  function clearPersonFilter() {
+    setQuery((current) => ({
+      ...current,
+      eventType: '',
+    }))
+    void fetchFilteredEvents()
+  }
+
   return (
     <div className="dashboard-shell">
       <header className="hero">
@@ -305,6 +314,14 @@ function App() {
             Poll the backend for the latest detections, search previous records with filters,
             and open stored MinIO images from each event.
           </p>
+          <div className="hero-actions">
+            <button className="secondary" onClick={clearPersonFilter}>
+              Clear person filter
+            </button>
+            <a className="inline-link" href="/camera_stream.html" target="_blank" rel="noreferrer">
+              Open camera preview
+            </a>
+          </div>
         </div>
 
         <div className="hero-stats">
@@ -361,6 +378,27 @@ function App() {
       </section>
 
       <main className="content-grid">
+        <section className="panel panel-preview">
+          <div className="section-head">
+            <div>
+              <h2>Camera preview</h2>
+              <p>Embedded live stream from camera_stream.html.</p>
+            </div>
+            <a className="inline-link" href="/camera_stream.html" target="_blank" rel="noreferrer">
+              Open in new tab
+            </a>
+          </div>
+
+          <div className="preview-frame-wrap">
+            <iframe
+              className="preview-frame"
+              src="/camera_stream.html"
+              title="Live camera preview"
+              loading="lazy"
+            />
+          </div>
+        </section>
+
         <section className="panel panel-live">
           <div className="section-head">
             <div>
@@ -405,7 +443,7 @@ function App() {
           <div className="filter-grid">
             <label>
               <span>Event type</span>
-              <input value={query.eventType} onChange={(event) => setQuery((current) => ({ ...current, eventType: event.target.value }))} placeholder="person" />
+              <input value={query.eventType} onChange={(event) => setQuery((current) => ({ ...current, eventType: event.target.value }))} placeholder="Clear this to see all detections" />
             </label>
             <label>
               <span>Severity</span>
@@ -493,19 +531,30 @@ function DetectionCard({
   return (
     <article className="detection-card">
       <button className="card-header" onClick={toggle}>
-        <div>
-          <div className="card-title-row">
-            <strong>{event.event_type}</strong>
-            <span className={severityClass(event.severity)}>{event.severity}</span>
-            {event.acknowledged ? <span className="chip muted">acknowledged</span> : <span className="chip alert">new</span>}
-          </div>
-          <p>
-            {listName === 'live' ? 'Live feed' : 'Search result'} · {formatDateTime(event.detected_at)}
-          </p>
+        <div className="card-preview-shell">
+          {event.preview_image_url ? (
+            <img src={event.preview_image_url} alt={`${event.event_type} preview`} />
+          ) : (
+            <div className="card-preview-placeholder">
+              <span>No saved image yet</span>
+            </div>
+          )}
         </div>
-        <div className="card-metrics">
-          <span>{Math.round(event.confidence * 100)}%</span>
-          <span>{event.sensor_node_id.slice(0, 8)}</span>
+        <div className="card-header-main">
+          <div>
+            <div className="card-title-row">
+              <strong>{event.event_type}</strong>
+              <span className={severityClass(event.severity)}>{event.severity}</span>
+              {event.acknowledged ? <span className="chip muted">acknowledged</span> : <span className="chip alert">new</span>}
+            </div>
+            <p>
+              {listName === 'live' ? 'Live feed' : 'Search result'} · {formatDateTime(event.detected_at)}
+            </p>
+          </div>
+          <div className="card-metrics">
+            <span>{Math.round(event.confidence * 100)}%</span>
+            <span>{event.sensor_node_id.slice(0, 8)}</span>
+          </div>
         </div>
       </button>
 
@@ -527,6 +576,13 @@ function DetectionCard({
             <h3>Metadata</h3>
             <pre>{JSON.stringify(event.metadata || {}, null, 2)}</pre>
           </div>
+
+          {event.preview_image_url ? (
+            <div className="raw-block">
+              <h3>Saved image</h3>
+              <img className="saved-image" src={event.preview_image_url} alt={`${event.event_type} saved`} />
+            </div>
+          ) : null}
 
           {event.images && event.images.length > 0 ? (
             <div className="image-grid">
