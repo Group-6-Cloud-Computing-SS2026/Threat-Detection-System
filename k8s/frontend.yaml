@@ -20,7 +20,7 @@ spec:
       containers:
         - name: frontend
           image: localhost:5000/tds-frontend:latest
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
               name: http
