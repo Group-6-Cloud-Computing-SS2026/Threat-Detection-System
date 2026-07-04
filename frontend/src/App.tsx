@@ -321,6 +321,9 @@ function App() {
             <a className="inline-link" href="/camera_stream.html" target="_blank" rel="noreferrer">
               Open camera preview
             </a>
+            <a className="inline-link" href="/docs" target="_blank" rel="noreferrer">
+              Open Swagger API
+            </a>
           </div>
         </div>
 
