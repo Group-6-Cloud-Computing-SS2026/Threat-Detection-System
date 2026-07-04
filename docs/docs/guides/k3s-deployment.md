@@ -187,36 +187,57 @@ The configuration is organized under the new `k8s/` directory in the repository 
 * **`k8s/postgres.yaml`**: PVC, Single-instance deployment, and cluster Service.
 * **`k8s/minio.yaml`**: Standalone S3 Object Storage with Console access on Port 9091.
 * **`k8s/mqtt.yaml`**: Broker ConfigMap, message persistent storage, and Port 1883/9001 Service.
-* **`k8s/backend.yaml`**: Highly available, anti-affinity API Deployment (3 pods), ClusterIP Service, and Traefik Ingress Controller configurations.
+* **`k8s/backend.yaml`**: Highly available API Deployment, ClusterIP Service, and Traefik Ingress route for `/api`.
+* **`k8s/frontend.yaml`**: Static React dashboard Deployment, Service, and Traefik Ingress route for `/`.
 
 ---
 
-## 3. Step 1 — Build the Docker Image Natively on the Pi 5 Master
+## 3. Step 1 — Build the Docker Images Natively on the Pi 5 Master
 
-Since the Raspberry Pi worker nodes run on `ARM64` architecture, the Docker image must be built for `ARM64`. Because the Pi 5 Master runs on `ARM64`, you can build the image natively after SSH'ing into the Master node:
+Since the Raspberry Pi worker nodes run on `ARM64` architecture, the Docker images should be built on the Pi 5 Master so they match the cluster CPU architecture. Build the backend and frontend images from their own project folders:
 
 ```bash
+# Backend API image
 cd ~/Threat-Detection-System/backend
 docker build -t localhost:5000/tds-api:latest .
+
+# Frontend dashboard image
+cd ~/Threat-Detection-System/frontend
+docker build -t localhost:5000/tds-frontend:latest .
 ```
 
 ---
 
-## 4. Step 2 — Import the Image into k3s
+## 4. Step 2 — Push Images to the Local Registry
+
+If your Pi 5 Master is running the local registry on `localhost:5000`, push both images so k3s can pull them from the cluster-side registry reference:
+
+```bash
+docker push localhost:5000/tds-api:latest
+docker push localhost:5000/tds-frontend:latest
+```
+
+If you are not using a registry and prefer to import images directly into containerd, you can still do that with the `k3s ctr` flow below.
+
+---
+
+## 5. Step 3 — Import the Images into k3s
 
 If you do not have a private container registry running inside your k3s cluster, you can manually import the compiled image into the `k8s.io` namespace on the master node:
 
 ```bash
 # Save image to tar archive
 docker save localhost:5000/tds-api:latest -o tds-api.tar
+docker save localhost:5000/tds-frontend:latest -o tds-frontend.tar
 
 # Import directly into k3s containerd namespace
 sudo k3s ctr images import tds-api.tar
+sudo k3s ctr images import tds-frontend.tar
 ```
 
 ---
 
-## 5. Step 3 — Apply the Kubernetes Manifests
+## 6. Step 4 — Apply the Kubernetes Manifests
 
 Apply the manifests in logical dependency order (Databases, Broker, and Storage first, followed by the web application):
 
@@ -231,11 +252,14 @@ kubectl apply -f k8s/mqtt.yaml
 
 # 3. Deploy the FastAPI Backend Application
 kubectl apply -f k8s/backend.yaml
+
+# 4. Deploy the React Frontend Dashboard
+kubectl apply -f k8s/frontend.yaml
 ```
 
 ---
 
-## 6. Step 4 — Verify the Distributed Scaling
+## 7. Step 5 — Verify the Distributed Scaling
 
 Once applied, verify that Kubernetes has successfully scheduled and distributed the backend pods across the distinct Raspberry Pi worker nodes.
 
@@ -277,12 +301,14 @@ tds-postgres-78895cb7f9-b6kdl   1/1     Running   1 (5h34m ago)   27h   10.42.0.
 
 ## 7. Step 5 — Access the Distributed API
 
-k3s ships with the **Traefik Ingress Controller** natively. The Ingress in `backend.yaml` automatically exposes your FastAPI pods externally.
+k3s ships with the **Traefik Ingress Controller** natively. The Ingress routes are now split so the browser can load the frontend from `/` and the API from `/api`.
 
 Simply open your browser and navigate to:
-* Swagger UI: **`http://192.168.1.50/docs`** *(No port suffix needed! Traefik routes the standard port 80 traffic internally to port 8001 of your active backend pods)*.
+* Frontend UI: **`http://192.168.1.50/`**
+* Swagger UI: **`http://192.168.1.50/docs`**
+* API base path for the frontend: **`/api/v1`**
 
-Your backend is now fully distributed, load-balanced, and running in high-availability across your Raspberry Pi 3 workers! 
+Your backend and frontend are now both distributed across k3s, with the browser-facing dashboard served separately from the API layer.
 
 ---
 
