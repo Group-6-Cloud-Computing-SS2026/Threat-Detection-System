@@ -122,3 +122,5 @@ Follow these steps to verify that detection data is successfully flowing:
    mosquitto_sub -h localhost -t 'cluster/camera/#' -v
    ```
    * *Note: Using the `#` wildcard will capture both stream raw data and processed events (`cluster/camera/events`).*
+
+3. When the edge node publishes a detection without `image_base64`, the backend now reuses the latest `cluster/camera/stream` frame from the same node and stores that image in MinIO alongside the detection record.

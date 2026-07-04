@@ -1,0 +1,6 @@
+cluster/camera/events {"node":"pi4-edge","timestamp":"2026-06-26T08:19:43Z","objects":1,"label":"blunt_weapon"}
+cluster/camera/events {"node":"pi4-edge","timestamp":"2026-06-26T08:19:43Z","objects":1,"label":"edged_weapon"}
+cluster/camera/events {"node":"pi4-edge","timestamp":"2026-06-26T08:19:44Z","objects":1,"label":"person"}
+cluster/camera/events {"node":"pi4-edge","timestamp":"2026-06-26T08:19:44Z","objects":1,"label":"person"}
+cluster/camera/events {"node":"pi4-edge","timestamp":"2026-06-26T08:19:44Z","objects":1,"label":"edged_weapon"}
+cluster/camera/events {"node":"pi4-edge","timestamp":"2026-06-26T08:19:47Z","objects":1,"label":"edged_weapon"}

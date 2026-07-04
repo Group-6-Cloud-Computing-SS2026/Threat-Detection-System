@@ -21,6 +21,11 @@ class SensorNodeRepository(BaseRepository[SensorNode]):
         result = await self.db.execute(stmt)
         return result.scalar_one_or_none()
 
+    async def get_by_name(self, name: str) -> SensorNode | None:
+        stmt = select(SensorNode).where(SensorNode.name == name)
+        result = await self.db.execute(stmt)
+        return result.scalar_one_or_none()
+
     async def get_by_ip(self, ip_address: str) -> SensorNode | None:
         stmt = select(SensorNode).where(SensorNode.ip_address == ip_address)
         result = await self.db.execute(stmt)
