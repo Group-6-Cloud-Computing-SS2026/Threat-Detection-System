@@ -32,6 +32,8 @@ class Settings(BaseSettings):
     POSTGRES_USER: str = "tds_user"
     POSTGRES_PASSWORD: str = "tds_secret"
     POSTGRES_DB: str = "threat_detection"
+    DATABASE_CONNECT_TIMEOUT_SECONDS: int = 30
+    DATABASE_COMMAND_TIMEOUT_SECONDS: int = 30
 
     @property
     def database_url(self) -> str:
