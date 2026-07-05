@@ -25,6 +25,8 @@ Navigate through the guides and configurations structured by component and layer
 | [Distributed k3s Kubernetes Deployment](guides/k3s-deployment.md) | Scheduling API replicas, node affinity rules, and Ingress routing. |
 | [MinIO S3 Object Storage Guide](guides/minio-s3.md) | Configuration for distributed S3 buckets and erasure coding over NFS. |
 | [Edge Camera Test Stream Guide](guides/camera-test-stream.md) | Ingestion scripts, base64 image streaming, and browser test client. |
+| [Camera Stream → Database Guide](guides/stream-detection-to-database.md) | YOLO detection pipeline, MQTT topics, and how events reach PostgreSQL. |
+| [📋 Changelog v1 → v3](guides/changelog-v3.md) | All backend, frontend, edge node, and K8s changes made in the v3 update. |
 
 ### 📊 HPC Benchmarking & Parallel Computing
 

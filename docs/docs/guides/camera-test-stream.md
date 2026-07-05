@@ -19,7 +19,7 @@ graph LR
     Broker -->|WebSockets Port 9001| Client[Workstation Browser<br>camera_stream.html]
 ```
 
-* **Pi 4 Edge Node**: Ingests frames from the local camera module, resizes them to `320x240` (optimized for 100Mbps Ethernet network load), encodes them to JPEG inside memory, converts them to Base64, and publishes a JSON payload.
+* **Pi 4 Edge Node**: Ingests frames from the local camera module, resizes them to `640x480`, encodes them to JPEG inside memory, converts them to Base64, and publishes a JSON payload. YOLO detection runs on the Pi4 and publishes detection events to a separate topic.
 * **Pi 5 Master Node (Mosquitto)**: Orchestrates the broker pod within K3s, exposed externally via a `LoadBalancer` Service mapping MQTT TCP traffic (`1883`) and WebSockets (`9001`).
 * **Workstation (HUD Client)**: Subscribes to the stream over WebSockets, parses JSON payloads on-the-fly, calculates telemetry stats, and displays live footage.
 
@@ -33,11 +33,16 @@ The updated `edge_camera_publisher.py` script has a fully-featured argument pars
 | :--- | :--- | :--- | :--- |
 | `--broker` | `-b` | `192.168.1.50` | IP Address of the K3s MQTT Broker. |
 | `--port` | `-p` | `1883` | TCP port of the MQTT Broker. |
-| `--topic` | `-t` | `cluster/camera/stream` | MQTT topic to publish stream frames. |
+| `--topic-stream` | `-ts` | `cluster/camera/stream` | MQTT topic for raw stream frames. |
+| `--topic-events` | `-te` | `cluster/camera/events` | MQTT topic for YOLO detection events. |
 | `--fps` | `-f` | `20` | Target frame rate (pacing sleep interval). |
-| `--width` | `-w` | `320` | Capture frame width in pixels. |
-| `--height` | `-g` | `240` | Capture frame height in pixels. |
-| `--quality` | `-q` | `70` | JPEG compression quality percentage (1-100). |
+| `--width` | `-w` | `640` | Capture frame width in pixels. |
+| `--height` | `-g` | `480` | Capture frame height in pixels. |
+| `--quality` | `-q` | `85` | JPEG compression quality percentage (1-100). |
+| `--yolo-model` | `-m` | `yolov8n.pt` | YOLO model to use for detection. |
+| `--confidence` | `-c` | `0.5` | YOLO confidence threshold (0.0–1.0). |
+| `--enable-detections` | — | `true` | Enable YOLO detection and publish events. |
+| `--disable-stream` | — | `false` | Suppress raw stream frames (events only). |
 
 ---
 

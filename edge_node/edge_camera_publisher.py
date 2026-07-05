@@ -28,9 +28,9 @@ DEFAULT_PORT = 1883
 DEFAULT_TOPIC_STREAM = "cluster/camera/stream"
 DEFAULT_TOPIC_EVENTS = "cluster/camera/events"
 DEFAULT_FPS = 20
-DEFAULT_WIDTH = 320
-DEFAULT_HEIGHT = 240
-DEFAULT_QUALITY = 70  # JPEG compression quality percentage
+DEFAULT_WIDTH = 640
+DEFAULT_HEIGHT = 480
+DEFAULT_QUALITY = 85  # JPEG compression quality percentage
 DEFAULT_SENSOR_ID = str(uuid4())  # Generate or use environment variable
 
 def parse_args():
@@ -178,7 +178,7 @@ def capture_frame(camera_backend, cap, camera_command, args):
         temp_file = "/tmp/stream_frame.jpg"
         cmd = [
             camera_command,
-            "-t", "1000",            # Allow 1s for sensor warmup; 100ms is too short on IMX500/IMX sensors
+            "-t", "200",            # 200ms sensor warmup — enough for exposure lock without stalling stream FPS
             "--width", str(args.width),
             "--height", str(args.height),
             "-q", str(args.quality),  # JPEG quality
@@ -238,6 +238,31 @@ def detect_objects(frame, yolo_model, confidence_threshold):
     except Exception as e:
         print(f"⚠️ YOLO detection failed: {e}")
         return None, None
+
+
+# Maps YOLO COCO class names to TDS EventType labels
+_YOLO_TO_EVENT_TYPE: dict[str, str] = {
+    "person": "person",
+    "knife": "weapon",
+    "scissors": "weapon",
+    "baseball bat": "weapon",
+    "gun": "weapon",
+    "pistol": "weapon",
+    "rifle": "weapon",
+    "fire": "fire",
+    "smoke": "fire",
+}
+
+# Severity per EventType
+_EVENT_TYPE_SEVERITY: dict[str, str] = {
+    "person": "low",
+    "weapon": "high",
+    "fire": "critical",
+    "theft": "high",
+    "vandalism": "medium",
+    "unknown": "medium",
+}
+
 
 if __name__ == "__main__":
     args = parse_args()
@@ -320,35 +345,22 @@ if __name__ == "__main__":
                         except Exception:
                             pass
 
-                    # Determine threat level based on detected objects
-                    threat_objects = ["person", "weapon", "gun", "knife", "bomb"]
-                    severity_map = {
-                        "gun": "critical",
-                        "bomb": "critical",
-                        "weapon": "high",
-                        "knife": "high",
-                        "person": "low",
-                    }
-
                     for detection in detections:
                         class_name = detection.get("class_name", "unknown").lower()
                         confidence = detection.get("confidence", 0)
 
-                        # Determine severity
-                        severity = "medium"
-                        for threat_keyword in threat_objects:
-                            if threat_keyword in class_name:
-                                severity = severity_map.get(threat_keyword, "medium")
-                                break
+                        # Map YOLO class to EventType label and severity
+                        event_type = _YOLO_TO_EVENT_TYPE.get(class_name, "unknown")
+                        severity = _EVENT_TYPE_SEVERITY.get(event_type, "medium")
 
                         # Create detection event
                         event_payload = {
                             "timestamp": datetime.now(timezone.utc).isoformat(),
                             "node": "pi4-edge",
                             "sensor_id": args.sensor_id,
-                            "event_type": class_name,
+                            "event_type": event_type,
                             "objects": len(detections),
-                            "label": class_name,
+                            "label": event_type,
                             "confidence": round(confidence, 4),
                             "severity": severity,
                             "raw_detections": detections,
@@ -357,6 +369,7 @@ if __name__ == "__main__":
                                 "frame_width": args.width,
                                 "frame_height": args.height,
                                 "image_received": bool(base64_frame),
+                                "yolo_class": class_name,
                             }
                         }
                         if annotated_base64 or base64_frame:
