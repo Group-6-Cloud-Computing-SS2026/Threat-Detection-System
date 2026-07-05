@@ -193,9 +193,9 @@ python3 edge_camera_publisher.py \
 | `--broker` | `192.168.1.50` | MQTT Broker IP (K3s on Pi5) |
 | `--port` | `1883` | MQTT Broker port |
 | `--fps` | `20` | Frames per second |
-| `--width` | `320` | Frame width (pixels) |
-| `--height` | `240` | Frame height (pixels) |
-| `--quality` | `70` | JPEG quality (1-100) |
+| `--width` | `640` | Frame width (pixels) |
+| `--height` | `480` | Frame height (pixels) |
+| `--quality` | `85` | JPEG quality (1-100) |
 | `--yolo-model` | `yolov8n.pt` | YOLO model name/path |
 | `--confidence` | `0.5` | Detection confidence threshold (0.0-1.0) |
 | `--enable-detections` | `true` | Enable YOLO object detection |

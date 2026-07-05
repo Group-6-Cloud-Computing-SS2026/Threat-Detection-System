@@ -109,6 +109,14 @@ function severityClass(severity: string) {
   return `severity severity-${severity.toLowerCase()}`
 }
 
+function buildImageUrl(previewUrl: string | null | undefined, apiBaseUrl: string): string | null {
+  if (!previewUrl) return null
+  if (previewUrl.startsWith('http://') || previewUrl.startsWith('https://')) return previewUrl
+  // Relative path — prepend API origin so the browser can reach it
+  const origin = apiBaseUrl.replace(/\/api\/v1\/?$/, '').replace(/\/$/, '')
+  return `${origin}${previewUrl}`
+}
+
 function buildQueryString(query: QueryState) {
   const params = new URLSearchParams()
 
@@ -208,6 +216,7 @@ function App() {
       const data = await apiFetch('/detections/recent?limit=8') as DetectionEvent[]
       setLiveEvents(data.map((item) => ({
         ...item,
+        preview_image_url: buildImageUrl(item.preview_image_url, settings.apiBaseUrl),
         detailLoaded: false,
         imageUrls: {},
         images: [],
@@ -227,6 +236,7 @@ function App() {
       const data = await apiFetch(`/detections?${buildQueryString(query)}`) as PaginatedResponse<DetectionEvent>
       setFilteredEvents(data.items.map((item) => ({
         ...item,
+        preview_image_url: buildImageUrl(item.preview_image_url, settings.apiBaseUrl),
         detailLoaded: false,
         imageUrls: {},
         images: [],
@@ -250,26 +260,24 @@ function App() {
     try {
       const detail = await apiFetch(`/detections/${eventId}`) as DetectionDetail
       const imageUrls: Record<string, string> = {}
+      const apiOrigin = settings.apiBaseUrl.replace(/\/api\/v1\/?$/, '')
 
       for (const image of detail.images || []) {
-        try {
-          const urlResponse = await apiFetch(`/images/${image.id}/url`) as { url: string }
-          imageUrls[image.id] = urlResponse.url
-        } catch {
-          imageUrls[image.id] = `${settings.apiBaseUrl.replace(/\/api\/v1$/, '')}/api/v1/images/${image.id}/download`
-        }
+        imageUrls[image.id] = `${apiOrigin}/api/v1/images/${image.id}/download`
       }
+
+      const resolvedPreviewUrl = buildImageUrl(detail.preview_image_url, settings.apiBaseUrl)
 
       if (listName === 'live') {
         setLiveEvents((prev) => prev.map((item) => (
           item.id === eventId
-            ? { ...item, ...detail, detailLoaded: true, imageUrls }
+            ? { ...item, ...detail, preview_image_url: resolvedPreviewUrl ?? item.preview_image_url, detailLoaded: true, imageUrls }
             : item
         )))
       } else {
         setFilteredEvents((prev) => prev.map((item) => (
           item.id === eventId
-            ? { ...item, ...detail, detailLoaded: true, imageUrls }
+            ? { ...item, ...detail, preview_image_url: resolvedPreviewUrl ?? item.preview_image_url, detailLoaded: true, imageUrls }
             : item
         )))
       }
