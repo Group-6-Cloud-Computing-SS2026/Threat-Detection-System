@@ -20,7 +20,7 @@ from app.schemas.health_status import HealthStatusCreate
 from app.services.detection_service import DetectionService
 from app.services.health_service import HealthService
 from app.services.system_log_service import SystemLogService
-from app.utils.enums import NodeStatus
+from app.utils.enums import EventType, NodeStatus
 from app.utils.time_utils import utc_now
 
 logger = logging.getLogger(__name__)
@@ -50,7 +50,6 @@ async def mqtt_subscriber():
 
                 await client.subscribe(settings.MQTT_TOPIC_DETECTIONS)
                 await client.subscribe(settings.MQTT_TOPIC_HEALTH)
-                await client.subscribe("cluster/camera/stream")
                 await client.subscribe(settings.MQTT_TOPIC_CAMERA)
                 logger.info("Subscribed to MQTT topics")
 
@@ -133,11 +132,15 @@ async def _handle_message(message: aiomqtt.Message) -> None:
 
 async def _handle_detection(db, sensor_id_str: str, payload: dict) -> None:
     """Process a detection message."""
+    _valid_types = {e.value for e in EventType}
+    _valid_severities = {"low", "medium", "high", "critical"}
+    raw_type = payload.get("event_type", "unknown")
+    raw_severity = payload.get("severity", "medium")
     service = DetectionService(db)
     data = DetectionEventCreate(
         sensor_node_id=UUID(payload.get("sensor_id", sensor_id_str)),
-        event_type=payload.get("event_type", "unknown"),
-        severity=payload.get("severity", "medium"),
+        event_type=raw_type if raw_type in _valid_types else "unknown",
+        severity=raw_severity if raw_severity in _valid_severities else "medium",
         confidence=payload.get("confidence", 0.0),
         raw_detections=payload.get("detections"),
         metadata=payload.get("metadata"),

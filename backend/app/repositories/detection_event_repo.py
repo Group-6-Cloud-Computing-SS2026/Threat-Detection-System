@@ -71,7 +71,7 @@ class DetectionEventRepository(BaseRepository[DetectionEvent]):
     async def get_recent(self, limit: int = 20) -> list[DetectionEvent]:
         stmt = (
             select(DetectionEvent)
-            .order_by(desc(DetectionEvent.detected_at))
+            .order_by(desc(DetectionEvent.received_at))
             .limit(limit)
         )
         result = await self.db.execute(stmt)
@@ -143,7 +143,7 @@ class DetectionEventRepository(BaseRepository[DetectionEvent]):
         total = (await self.db.execute(count_stmt)).scalar_one()
         items = (
             await self.db.execute(
-                stmt.order_by(desc(DetectionEvent.detected_at)).offset(skip).limit(limit)
+                stmt.order_by(desc(DetectionEvent.received_at)).offset(skip).limit(limit)
             )
         ).scalars().all()
         return list(items), total
