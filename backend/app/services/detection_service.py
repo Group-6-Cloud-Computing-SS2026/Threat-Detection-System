@@ -33,7 +33,7 @@ class DetectionService:
         try:
             images = await self.image_repo.get_by_event_id(event.id)
             if images:
-                preview_url = self.image_storage.get_presigned_url(images[0].storage_key)
+                preview_url = f"/api/v1/images/{images[0].id}/download"
         except Exception:
             preview_url = None
 
@@ -78,7 +78,7 @@ class DetectionService:
                     "captured_at": data.detected_at,
                     "uploaded_at": now,
                 })
-                setattr(event, "preview_image_url", self.image_storage.get_presigned_url(image.storage_key))
+                setattr(event, "preview_image_url", f"/api/v1/images/{image.id}/download")
             except Exception as img_exc:
                 logger.warning("Image upload skipped for event %s: %s", event.id, img_exc)
         else:

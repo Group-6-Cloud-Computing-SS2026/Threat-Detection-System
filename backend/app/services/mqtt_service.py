@@ -136,13 +136,18 @@ async def _handle_detection(db, sensor_id_str: str, payload: dict) -> None:
     _valid_severities = {"low", "medium", "high", "critical"}
     raw_type = payload.get("event_type", "unknown")
     raw_severity = payload.get("severity", "medium")
+    raw_detections_payload = payload.get("detections")
+    if isinstance(raw_detections_payload, list):
+        raw_detections = {"detections": raw_detections_payload, "count": len(raw_detections_payload)}
+    else:
+        raw_detections = raw_detections_payload
     service = DetectionService(db)
     data = DetectionEventCreate(
         sensor_node_id=UUID(payload.get("sensor_id", sensor_id_str)),
         event_type=raw_type if raw_type in _valid_types else "unknown",
         severity=raw_severity if raw_severity in _valid_severities else "medium",
         confidence=payload.get("confidence", 0.0),
-        raw_detections=payload.get("detections"),
+        raw_detections=raw_detections,
         metadata=payload.get("metadata"),
         detected_at=payload.get("timestamp", utc_now().isoformat()),
         image_base64=payload.get("image_base64"),
@@ -212,6 +217,15 @@ async def _handle_camera_event(db, topic: str, payload: dict) -> None:
         "fire": "fire",
         "vandalism": "vandalism",
         "weapon": "weapon",
+        "unknown": "unknown",
+        # YOLO COCO → EventType fallback mappings
+        "knife": "weapon",
+        "scissors": "weapon",
+        "baseball bat": "weapon",
+        "gun": "weapon",
+        "pistol": "weapon",
+        "rifle": "weapon",
+        "smoke": "fire",
     }
     event_type = _LABEL_MAP.get(label.lower(), "unknown")
 
@@ -221,15 +235,39 @@ async def _handle_camera_event(db, topic: str, payload: dict) -> None:
     if not image_base64:
         image_base64 = _get_cached_camera_stream_frame(node_hostname)
 
+    # Use severity/confidence from Pi4; validate severity
+    _valid_severities = {"low", "medium", "high", "critical"}
+    raw_severity = payload.get("severity", "medium")
+    raw_confidence = payload.get("confidence", 1.0)
+
+    # Wrap YOLO list into a dict so JSONB schema is satisfied
+    raw_detections_payload = payload.get("raw_detections")
+    if isinstance(raw_detections_payload, list):
+        raw_detections = {"detections": raw_detections_payload, "count": len(raw_detections_payload)}
+    elif isinstance(raw_detections_payload, dict):
+        raw_detections = raw_detections_payload
+    else:
+        raw_detections = {"objects": objects_count, "label": label}
+
+    # Merge Pi4 edge metadata with backend tracking fields
+    edge_metadata = payload.get("metadata") or {}
+    merged_metadata = {
+        **edge_metadata,
+        "mqtt_topic": topic,
+        "source": "camera_edge",
+        "node": node_hostname,
+        "image_received": bool(image_base64),
+    }
+
     service = DetectionService(db)
     data = DetectionEventCreate(
         sensor_node_id=node.id,
         event_type=event_type,
-        severity="medium",
-        confidence=1.0,
+        severity=raw_severity if raw_severity in _valid_severities else "medium",
+        confidence=min(max(float(raw_confidence), 0.0), 1.0),
         detected_at=detected_at,
-        raw_detections={"objects": objects_count, "label": label},
-        metadata={"mqtt_topic": topic, "source": "camera_edge", "image_received": bool(image_base64)},
+        raw_detections=raw_detections,
+        metadata=merged_metadata,
         image_base64=image_base64,
     )
     await service.ingest_detection(data)
