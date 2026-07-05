@@ -24,6 +24,17 @@ async def lifespan(app: FastAPI):
     """Application lifespan: startup and shutdown hooks."""
     logger.info("🚀 Starting Threat Detection System API v0.1.0")
 
+    # Auto-run Alembic migrations so the database schema is always up to date
+    try:
+        from alembic.config import Config as AlembicConfig
+        from alembic import command as alembic_command
+        alembic_cfg = AlembicConfig("alembic.ini")
+        alembic_command.upgrade(alembic_cfg, "head")
+        logger.info("✅ Database migrations applied successfully")
+    except Exception as e:
+        logger.error("❌ Database migration failed: %s", e)
+        raise
+
     # Ensure MinIO bucket exists
     try:
         storage = ImageStorageService()
