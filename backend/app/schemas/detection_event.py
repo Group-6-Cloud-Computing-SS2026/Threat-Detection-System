@@ -5,7 +5,9 @@ DetectionEvent schemas — request and response representations.
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
+
+from app.utils.enums import EventType
 
 from app.utils.enums import EventType
 
@@ -30,7 +32,7 @@ class DetectionEventResponse(BaseModel):
     severity: str
     confidence: float
     raw_detections: dict | None
-    metadata: dict | None = Field(None, alias="metadata_")
+    metadata: dict | None = Field(None, validation_alias=AliasChoices("metadata_", "metadata"))
     acknowledged: bool
     acknowledged_by: str | None
     detected_at: datetime

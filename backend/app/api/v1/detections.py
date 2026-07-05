@@ -21,6 +21,7 @@ from app.schemas.detection_event import (
 )
 from app.schemas.detection_image import DetectionImageResponse
 from app.services.detection_service import DetectionService
+from app.utils.enums import EventType
 from app.utils.exceptions import AppException
 
 router = APIRouter(prefix="/detections", tags=["Detections"])

@@ -3,6 +3,7 @@ Detection service — business logic for detection event ingestion and querying.
 """
 
 import base64
+import logging
 from datetime import datetime
 from uuid import UUID
 
@@ -15,6 +16,8 @@ from app.services.image_storage_service import ImageStorageService
 from app.utils.enums import ImageType, NotificationChannel, NotificationType, Severity
 from app.utils.exceptions import NotFoundException
 from app.utils.time_utils import utc_now
+
+logger = logging.getLogger(__name__)
 
 
 class DetectionService:
@@ -76,8 +79,8 @@ class DetectionService:
                     "uploaded_at": now,
                 })
                 setattr(event, "preview_image_url", self.image_storage.get_presigned_url(image.storage_key))
-            except Exception:
-                pass  # Don't fail the whole ingestion if image storage fails
+            except Exception as img_exc:
+                logger.warning("Image upload skipped for event %s: %s", event.id, img_exc)
         else:
             setattr(event, "preview_image_url", None)
 
