@@ -14,7 +14,7 @@ export default function DocsPage() {
       <meta httpEquiv="refresh" content={`3;url=${docsUrl.href}`} />
 
       <section>
-        <h1 className="text-3xl font-bold">Docs</h1>
+        <h1 className="text-3xl font-bold">Redirecting...</h1>
       </section>
     </>
   );

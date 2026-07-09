@@ -1,15 +1,28 @@
+import PageIllustration from "./PageIllustration.tsx";
+import HeroHome from "./HeroHome.tsx";
+import Workflows from "./Workflows.tsx";
+import Features from "./Features.tsx";
+import Cta from "./Cta.tsx";
+
 export default function LandingPage() {
   return (
     <>
-      <title>Threat Detection System</title>
-      <meta property="og:title" content="Threat Detection System" />
+      <title>ThreatOff — Edge Computing Threat Detection</title>
+      <meta
+        property="og:title"
+        content="ThreatOff — Edge Computing Threat Detection"
+      />
       <meta
         name="description"
-        content="An edge-computing platform for real-time threat detection and monitoring."
+        content="An edge-computing platform that detects people and identifies threats — theft, fire, vandalism — in real time from Raspberry Pi sensor nodes."
       />
 
-      <section>
-        <h1 className="text-3xl font-bold">Landing</h1>
+      <section id="landing-page" className="relative">
+        <PageIllustration />
+        <HeroHome />
+        <Workflows />
+        <Features />
+        <Cta />
       </section>
     </>
   );
