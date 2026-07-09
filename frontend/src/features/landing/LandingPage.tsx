@@ -1,3 +1,9 @@
+import PageIllustration from "./PageIllustration.tsx";
+import HeroHome from "./HeroHome.tsx";
+import Workflows from "./Workflows.tsx";
+import Features from "./Features.tsx";
+import Cta from "./Cta.tsx";
+
 export default function LandingPage() {
     return (
         <>
