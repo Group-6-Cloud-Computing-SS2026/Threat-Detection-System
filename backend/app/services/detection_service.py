@@ -117,6 +117,7 @@ class DetectionService:
                 notification_type=NotificationType.THREAT_ALERT,
                 message=f"⚠️ {data.severity.upper()} threat detected: {data.event_type} "
                         f"(confidence: {data.confidence:.0%})",
+                image_base64=data.image_base64,
             )
 
         return event

@@ -19,7 +19,7 @@ class NotificationService:
     def __init__(self, db: AsyncSession):
         self.repo = NotificationRepository(db)
 
-    async def send_telegram_alert(self, message: str, detection_event_id: UUID | None):
+    async def send_telegram_alert(self, message: str, detection_event_id: UUID | None, image_base64: str | None = None):
         """Send a real-time photo or text alert to Telegram."""
         if not settings.TELEGRAM_BOT_TOKEN or not settings.TELEGRAM_CHAT_ID:
             return
@@ -29,16 +29,26 @@ class NotificationService:
         from app.repositories.detection_image_repo import DetectionImageRepository
 
         image_bytes = None
-        if detection_event_id:
+        
+        # 1. First, try decoding the passed in base64 string directly (fast & thread-safe)
+        if image_base64:
             try:
+                import base64
+                image_bytes = base64.b64decode(image_base64)
+            except Exception as e:
+                logger.warning("Failed to decode base64 image for Telegram alert: %s", e)
+
+        # 2. Fallback: Query database and MinIO if no base64 string was passed directly
+        if not image_bytes and detection_event_id:
+            try:
+                # Use a separate query pattern to avoid session collision
                 image_repo = DetectionImageRepository(self.repo.db)
                 images = await image_repo.get_by_event_id(detection_event_id)
                 if images:
                     storage = ImageStorageService()
-                    # Read the raw JPEG bytes from MinIO
                     image_bytes = storage.get_object_bytes(images[0].storage_key)
             except Exception as e:
-                logger.warning("Failed to fetch image for Telegram alert: %s", e)
+                logger.warning("Failed to fetch image from storage for Telegram alert: %s", e)
 
         try:
             url = f"https://api.telegram.org/bot{settings.TELEGRAM_BOT_TOKEN}/"
@@ -64,6 +74,7 @@ class NotificationService:
         message: str = "",
         detection_event_id: UUID | None = None,
         channel: str = NotificationChannel.WEBHOOK,
+        image_base64: str | None = None,
     ):
         """Create a notification record for the frontend notification center."""
         now = utc_now()
@@ -82,7 +93,7 @@ class NotificationService:
         # Also deliver Telegram alert in the background if configured
         if notification_type == NotificationType.THREAT_ALERT:
             import asyncio
-            asyncio.create_task(self.send_telegram_alert(message, detection_event_id))
+            asyncio.create_task(self.send_telegram_alert(message, detection_event_id, image_base64))
 
         return notification
 
