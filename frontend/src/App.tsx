@@ -259,7 +259,7 @@ function App() {
   const [latency, setLatency] = useState<number | null>(null)
   const [renderFps, setRenderFps] = useState<number | null>(null)
   const [totalFrames, setTotalFrames] = useState<number>(0)
-  const [activeSection, setActiveSection] = useState<'overview' | 'search' | 'settings'>('overview')
+  const [activeSection, setActiveSection] = useState<'overview' | 'search' | 'settings' | 'graphs'>('overview')
 
   function handleLogin(token: string, username: string) {
     const auth: AuthState = { token, username }
@@ -495,9 +495,12 @@ function App() {
           <a className="nav-item" href="/docs" target="_blank" rel="noreferrer">
             <IconDocs /> API Docs
           </a>
-          <a className="nav-item" href="/guides/task_4_graphs" target="_blank" rel="noreferrer">
-            <IconBarChart /> Task 4 Graphs
-          </a>
+          <button
+            className={`nav-item ${activeSection === 'graphs' ? 'active' : ''}`}
+            onClick={() => setActiveSection('graphs')}
+          >
+            <IconBarChart /> Scaling Law Results
+          </button>
           <a
             className="nav-item"
             href="http://192.168.1.50:3000/d/rpi-cluster-v4/raspberry-pi-cluster-e28094-monitoring?orgId=1&refresh=1m"
@@ -533,6 +536,7 @@ function App() {
               {activeSection === 'overview' && 'Live Overview'}
               {activeSection === 'search' && 'Event Search'}
               {activeSection === 'settings' && 'System Settings'}
+              {activeSection === 'graphs' && 'Amdahl’s & Gustafson’s Law Results'}
             </h1>
             <p>
               {lastUpdated ? `Last updated at ${lastUpdated}` : 'Loading data…'}
@@ -878,6 +882,21 @@ function App() {
                 </div>
               </div>
             </div>
+          )}
+          {/* ── GRAPHS SECTION ── */}
+          {activeSection === 'graphs' && (
+            <iframe
+              src="/task_4_graphs.html"
+              title="Task 4 Graphs"
+              style={{
+                width: '100%',
+                flex: 1,
+                border: 'none',
+                borderRadius: 'var(--radius-xl)',
+                minHeight: 'calc(100vh - var(--topbar-height) - 40px)',
+                background: '#0a0f1e',
+              }}
+            />
           )}
 
         </main>
