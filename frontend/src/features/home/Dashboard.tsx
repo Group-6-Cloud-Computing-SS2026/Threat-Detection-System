@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import Button from "../../shared/components/ui/Button.tsx";
 import { useAuth } from "../auth/AuthContext.tsx";
-import { apiFetch, buildImageUrl, buildQueryString } from "./api.ts";
+import { apiFetch, buildImageUrl, buildQueryString, EMPTY_QUERY, SEVERITY_ORDER } from "./api.ts";
 import DetectionCard from "./DetectionCard.tsx";
-import { EMPTY_QUERY, SEVERITY_ORDER } from "./api.ts";
 import type { CardState, DetectionDetail, DetectionEvent, PaginatedResponse, QueryState } from "../../shared/types";
 import { useApiSettings } from "./useApiSettings.ts";
 
@@ -163,7 +162,7 @@ export default function Dashboard() {
             <section className="grid gap-6 lg:grid-cols-[1fr_auto]">
                 <div>
                     <p className="mb-2 text-sm font-medium text-brand-light-green-400">Threat Detection System</p>
-                    <h1 className="mb-3 font-nacelle text-3xl font-semibold text-brand-alabaster-grey-100">
+                    <h1 className="mb-3 font-nacelle text-4xl font-semibold text-brand-alabaster-grey-100 md:text-5xl">
                         Live detections, history filters, and image drill-down
                     </h1>
                     <p className="mb-5 max-w-2xl text-brand-alabaster-grey-600">
