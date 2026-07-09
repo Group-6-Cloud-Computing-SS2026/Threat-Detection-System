@@ -1,6 +1,11 @@
 #!/bin/bash
 # AI Sensor Node - publishes structured detection events and live stream to cluster
-# Launches the Python wrapper which handles both the binary MJPEG stream and text detection logs.
 
 echo "Starting AI Sensor Node wrapper..."
-python3 "$(dirname "$0")/sensor_node.py"
+if [ -d "/home/cc123/tds-edge-venv" ]; then
+    /home/cc123/tds-edge-venv/bin/python3 "$(dirname "$0")/sensor_node.py"
+elif [ -d "$(dirname "$0")/tds-edge-venv" ]; then
+    "$(dirname "$0")/tds-edge-venv/bin/python3" "$(dirname "$0")/sensor_node.py"
+else
+    python3 "$(dirname "$0")/sensor_node.py"
+fi
