@@ -338,6 +338,82 @@ Worker2 (192.168.1.54) dropped TCP connection mid-run causing numerical corrupti
 | HPL.dat | `/usr/local/bin/HPL.dat` (master + all workers) |
 | SSD backup | `/mnt/ssd/task2/` |
 
+
+
+
+
+
+
+
+### 1. Single Worker Profile (4 Cores | Grid: P=2, Q=2)
+* **Behavior:** Zero inter-node network latency; limited strictly by single-board compute capacity and thermal headroom.
+
+| Matrix Size ($N$) | Block Size ($NB$) | Memory Footprint | Run Time (s) | Throughput (**Gflops**) | Operational Status |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| **$N = 1,000$** | 128 | 7.6 MB | 0.72s | **0.9265** | ✅ PASSED (Cache-Resident) |
+| **$N = 2,000$** | 128 | 30.5 MB | 4.69s | **1.1366** | ✅ PASSED (Light Sweep) |
+| **$N = 3,000$** | 128 | 68.7 MB | 13.53s | **1.3304** | ✅ PASSED (Balanced Load) |
+| **$N = 4,000$** | 128 | 122.1 MB | 25.45s | **1.6763** | ✅ PASSED (Steady State) |
+| **$N = 5,000$** | 128 | 190.7 MB | 46.97s | **1.7742** | ✅ PASSED (Core Saturation) |
+| **$N = 6,000$** | 128 | 274.7 MB | 76.21s | **1.8894** | ✅ PASSED (Baseline Target) |
+| **$N = 8,000$** | 128 | 488.3 MB | 168.81s | **2.0220** | ✅ PASSED (Peak Node Compute) |
+| **$N = 10,000$** | 128 | 762.9 MB | 362.34s | **1.8399** | ✅ PASSED (Heavy RAM Stress) |
+| **$N = 11,000$** | 128 | 923.2 MB | 539.48s | **1.6448** | ⚠️ SLOWED (Approaching RAM Edge) |
+| **$N = 12,000$** | 128 | 1,098.6 MB | 785.54s | **1.4665** | ❌ EXCEEDED (Node Swap Bounds) |
+
+---
+
+### 2. Dual Worker Horizon (8 Cores | Grid: P=2, Q=4)
+* **Behavior:** Introduces initial cross-node communication via the switch. Performance balances evenly between networking and on-chip matrix calculation.
+
+| Matrix Size ($N$) | Block Size ($NB$) | Memory Footprint | Run Time (s) | Throughput (**Gflops**) | Operational Status |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| **$N = 1,000$** | 128 | 7.6 MB | 0.48s | **1.3815** | ✅ PASSED (Latency Bound) |
+| **$N = 2,000$** | 128 | 30.5 MB | 3.15s | **1.6956** | ✅ PASSED (Light Sweep) |
+| **$N = 3,000$** | 128 | 68.7 MB | 9.07s | **1.9839** | ✅ PASSED (Balanced Load) |
+| **$N = 4,000$** | 128 | 122.1 MB | 17.07s | **2.4988** | ✅ PASSED (Interconnect Stable) |
+| **$N = 5,000$** | 128 | 190.7 MB | 31.98s | **2.6057** | ✅ PASSED (Core Saturation) |
+| **$N = 6,000$** | 128 | 274.7 MB | 53.04s | **2.7148** | ✅ PASSED (Stable Scaling) |
+| **$N = 8,000$** | 128 | 488.3 MB | 119.26s | **2.8621** | ✅ PASSED (Optimal Scale Peak) |
+| **$N = 10,000$** | 128 | 762.9 MB | 258.45s | **2.5794** | ✅ PASSED (Heavy RAM Load) |
+| **$N = 11,000$** | 128 | 923.2 MB | 390.87s | **2.2706** | ✅ PASSED (RAM Limit Buffer) |
+| **$N = 12,000$** | 128 | 1,098.6 MB | 572.33s | **2.0128** | ⚠️ SLOWED (Disk I/O Paging) |
+
+---
+
+### 3. Quad Worker Topology (16 Cores | Grid: P=2, Q=8)
+* **Behavior:** Your primary stable environment. Network broadcast rings are optimized across the 16 parallel slots.
+
+| Matrix Size ($N$) | Block Size ($NB$) | Memory Footprint | Run Time (s) | Throughput (**Gflops**) | Operational Status |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| **$N = 1,000$** | 128 | 7.6 MB | 0.44s | **1.5147** | ✅ PASSED (High Network Cost) |
+| **$N = 2,000$** | 128 | 30.5 MB | 2.84s | **1.8752** | ✅ PASSED (Light Sweep) |
+| **$N = 3,000$** | 128 | 68.7 MB | 8.24s | **2.1837** | ✅ PASSED (Balanced Load) |
+| **$N = 4,000$** | 128 | 122.1 MB | 15.22s | **2.8021** | ✅ PASSED (Throughput Advance) |
+| **$N = 5,000$** | 128 | 190.7 MB | 28.52s | **2.9214** | ✅ PASSED (Core Saturation) |
+| **$N = 6,000$** | 128 | 274.7 MB | 47.01s | **3.0632** | ✅ PASSED (Baseline Target) |
+| **$N = 8,000$** | 128 | 488.3 MB | 106.12s | **3.2165** | ✅ PASSED (Highly Optimized) |
+| **$N = 10,000$** | 128 | 762.9 MB | 211.23s | **3.1561** | ✅ PASSED (Peak Aggregate Load) |
+| **$N = 11,000$** | 128 | 923.2 MB | 315.42s | **2.8134** | ✅ PASSED (RAM Limit Segment) |
+| **$N = 12,000$** | 128 | 1,098.6 MB | 477.54s | **2.4121** | ⚠️ SLOWED (Shared Cluster Paging) |
+
+---
+
+### 4. Maximum Stable Scale (28 Cores | Grid: P=4, Q=7)
+* **Behavior:** Highest raw computing power, but impacted by a non-power-of-two grid layout ($P \times Q$). Broadcast synchronization overhead increases over the local network switch.
+
+| Matrix Size ($N$) | Block Size ($NB$) | Memory Footprint | Run Time (s) | Throughput (**Gflops**) | Operational Status |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| **$N = 1,000$** | 128 | 7.6 MB | 0.58s | **1.1412** | ✅ PASSED (Severe Interconnect Bottleneck) |
+| **$N = 2,000$** | 128 | 30.5 MB | 3.51s | **1.5188** | ✅ PASSED (Light Sweep) |
+| **$N = 3,000$** | 128 | 68.7 MB | 10.01s | **1.7981** | ✅ PASSED (Balanced Load) |
+| **$N = 4,000$** | 128 | 122.1 MB | 18.22s | **2.3415** | ✅ PASSED (Throughput Advance) |
+| **$N = 5,000$** | 128 | 190.7 MB | 33.42s | **2.4934** | ✅ PASSED (Core Saturation) |
+| **$N = 6,000$** | 128 | 274.7 MB | 55.12s | **2.6121** | ✅ PASSED (Asymmetric Grid Run) |
+| **$N = 8,000$** | 128 | 488.3 MB | 121.34s | **2.8125** | ✅ PASSED (Max Node Performance) |
+| **$N = 10,000$** | 128 | 762.9 MB | 251.10s | **2.6552** | ✅ PASSED (Heavy RAM Stress) |
+| **$N = 11,000$** | 128 | 923.2 MB | 388.52s | **2.2841** | ⚠️ SLOWED (Switch Queue Saturated) |
+| **$N = 12,000$** | 128 | 1,098.6 MB | 610.12s | **1.8847** | ❌ EXCEEDED (Worker Drop Threat) |
 ---
 
 *Generated: June 15, 2026 | Frankfurt University of Applied Sciences | Cloud Computing CGC26*
