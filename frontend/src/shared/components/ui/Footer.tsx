@@ -22,8 +22,8 @@ export default function Footer() {
           </div>
 
           <div className="col-span-2 md:col-span-4 lg:col-span-1 lg:text-right inset-x-0 bottom-0">
-            <div className="mb-3 flex justify-end">
-              <img src="/favicon.svg" alt="ThreatOff logo" width={32} height={32}/>
+            <div className="mb-12 flex justify-end">
+              <img src="/favicon.svg" alt="ThreatOff logo" width={64} height={64}/>
             </div>
             <div className="text-sm">
               <p className="mb-3 text-brand-alabaster-grey-500">
@@ -39,7 +39,7 @@ export default function Footer() {
                 </a>
               </p>
               <a
-                  className="inline-flex text-brand-light-green-500 transition hover:text-brand-light-green-400"
+                  className="inline-flex text-brand-alabaster-grey-500 transition hover:text-brand-alabaster-grey-400"
                   href={githubLink ? githubLink.url.href : 'https://github.com'}
                   target="_blank"
                   aria-label={githubLink?.tag}
