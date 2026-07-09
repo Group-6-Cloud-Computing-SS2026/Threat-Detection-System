@@ -72,10 +72,14 @@ async def mqtt_subscriber():
                     settings.MQTT_BROKER_PORT,
                 )
 
-                await client.subscribe(settings.MQTT_TOPIC_DETECTIONS)
-                await client.subscribe(settings.MQTT_TOPIC_HEALTH)
-                await client.subscribe(settings.MQTT_TOPIC_CAMERA)
-                logger.info("Subscribed to MQTT topics")
+                # Use shared subscriptions for database-modifying events so only 1 replica processes each event
+                await client.subscribe(f"$share/api-group/{settings.MQTT_TOPIC_DETECTIONS}")
+                await client.subscribe(f"$share/api-group/{settings.MQTT_TOPIC_HEALTH}")
+                
+                # Split camera topic: stream goes to all pods (for WS broadcast), events goes to 1 pod (for storage)
+                await client.subscribe("cluster/camera/stream")
+                await client.subscribe("$share/api-group/cluster/camera/events")
+                logger.info("Subscribed to shared and standard MQTT topics")
 
                 async for message in client.messages:
                     try:
