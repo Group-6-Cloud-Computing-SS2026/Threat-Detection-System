@@ -6,7 +6,7 @@ export default function PageIllustration({
   return (
     <>
       <div
-        className="pointer-events-none absolute left-1/2 top-0 -z-10 -translate-x-1/4"
+        className="pointer-events-none absolute top-0 left-1/2 -z-10 -translate-x-1/4"
         aria-hidden="true"
       >
         <img
@@ -20,7 +20,7 @@ export default function PageIllustration({
       {multiple && (
         <>
           <div
-            className="pointer-events-none absolute left-1/2 top-[400px] -z-10 -mt-20 -translate-x-full opacity-50"
+            className="pointer-events-none absolute top-[400px] left-1/2 -z-10 -mt-20 -translate-x-full opacity-50"
             aria-hidden="true"
           >
             <img
@@ -32,7 +32,7 @@ export default function PageIllustration({
             />
           </div>
           <div
-            className="pointer-events-none absolute left-1/2 top-[440px] -z-10 -translate-x-1/3"
+            className="pointer-events-none absolute top-[440px] left-1/2 -z-10 -translate-x-1/3"
             aria-hidden="true"
           >
             <img

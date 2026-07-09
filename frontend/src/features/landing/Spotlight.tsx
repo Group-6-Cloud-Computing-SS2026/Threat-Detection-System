@@ -21,9 +21,9 @@ export default function Spotlight({
   useEffect(() => {
     if (containerRef.current) {
       setBoxes(
-          Array.from(containerRef.current.children).map(
-              (el) => el as HTMLElement
-          )
+        Array.from(containerRef.current.children).map(
+          (el) => el as HTMLElement,
+        ),
       );
     }
   }, []);

@@ -1,6 +1,6 @@
-@import 'tailwindcss';
-@import './additional-styles/utility-patterns.css' layer(components);
-@import './additional-styles/theme.css';
+@import "tailwindcss";
+@import "./additional-styles/utility-patterns.css" layer(components);
+@import "./additional-styles/theme.css";
 @plugin "@tailwindcss/forms";
 
 @theme {
@@ -127,7 +127,6 @@
       background-position: 200% center;
     }
   }
-
 }
 
 @font-face {
@@ -162,7 +161,8 @@
   src: url("public/fonts/nacelle-semibolditalic.woff2") format("woff2");
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   overscroll-behavior: none;

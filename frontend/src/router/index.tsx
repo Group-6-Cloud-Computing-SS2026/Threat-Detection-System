@@ -11,51 +11,51 @@ import HomePage from "../features/home/HomePage.tsx";
 import LandingPage from "../features/landing/LandingPage.tsx";
 
 const router = createBrowserRouter([
-    {
-        Component: Root,
-        ErrorBoundary: RouteErrorPage,
+  {
+    Component: Root,
+    ErrorBoundary: RouteErrorPage,
+    children: [
+      {
+        path: "landing",
+        Component: LandingPage,
+      },
+      {
+        path: "docs",
+        Component: DocsPage,
+      },
+    ],
+  },
+  {
+    Component: RedirectIfAuthed,
+    ErrorBoundary: RouteErrorPage,
+    children: [
+      {
+        Component: AuthLayout,
         children: [
-            {
-                path: "landing",
-                Component: LandingPage,
-            },
-            {
-                path: "docs",
-                Component: DocsPage,
-            },
+          {
+            path: "login",
+            Component: LoginPage,
+          },
         ],
-    },
-    {
-        Component: RedirectIfAuthed,
-        ErrorBoundary: RouteErrorPage,
+      },
+    ],
+  },
+  {
+    path: "/",
+    Component: RequireAuth,
+    ErrorBoundary: RouteErrorPage,
+    children: [
+      {
+        Component: AppLayout,
         children: [
-            {
-                Component: AuthLayout,
-                children: [
-                    {
-                        path: "login",
-                        Component: LoginPage,
-                    },
-                ],
-            },
+          {
+            index: true,
+            Component: HomePage,
+          },
         ],
-    },
-    {
-        path: "/",
-        Component: RequireAuth,
-        ErrorBoundary: RouteErrorPage,
-        children: [
-            {
-                Component: AppLayout,
-                children: [
-                    {
-                        index: true,
-                        Component: HomePage,
-                    }
-                ],
-            },
-        ],
-    },
+      },
+    ],
+  },
 ]);
 
 export default router;

@@ -21,16 +21,16 @@ export default function Cta() {
         />
       </div>
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="bg-linear-to-r from-transparent via-brand-carbon-black-800/50 py-12 md:py-20">
+        <div className="via-brand-carbon-black-800/50 bg-linear-to-r from-transparent py-12 md:py-20">
           <div className="mx-auto max-w-3xl text-center">
             <h2
-              className="pb-4 font-nacelle text-3xl font-semibold text-brand-alabaster-grey-100 md:text-4xl"
+              className="font-nacelle text-brand-alabaster-grey-100 pb-4 text-3xl font-semibold md:text-4xl"
               data-aos="fade-up"
             >
               See ThreatOff in action
             </h2>
             <p
-              className="mx-auto mb-8 max-w-2xl text-lg text-brand-alabaster-grey-600/80"
+              className="text-brand-alabaster-grey-600/80 mx-auto mb-8 max-w-2xl text-lg"
               data-aos="fade-up"
               data-aos-delay={200}
             >
@@ -54,7 +54,11 @@ export default function Cta() {
                 <Button
                   variant="secondary"
                   className="w-full sm:w-auto"
-                  href={teacherPageLink ? teacherPageLink.url.href : "https://www.christianbaun.de/"}
+                  href={
+                    teacherPageLink
+                      ? teacherPageLink.url.href
+                      : "https://www.christianbaun.de/"
+                  }
                   target="_blank"
                   rel="noreferrer"
                 >
