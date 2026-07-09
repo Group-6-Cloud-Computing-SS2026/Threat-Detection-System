@@ -123,8 +123,8 @@ class DetectionService:
         return event
 
     async def get_event_detail(self, event_id: UUID):
-        """Get event with images."""
-        event = await self.event_repo.get_by_id(event_id)
+        """Get event with images and sensor node (eagerly loaded to avoid async lazy-load errors)."""
+        event = await self.event_repo.get_by_id_with_sensor_node(event_id)
         if not event:
             raise NotFoundException("DetectionEvent", event_id)
         images = await self.image_repo.get_by_event_id(event_id)

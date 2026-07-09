@@ -213,6 +213,26 @@ function IconChevron({ up }: { up?: boolean }) {
     </svg>
   )
 }
+function IconBarChart() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="18" y1="20" x2="18" y2="10" />
+      <line x1="12" y1="20" x2="12" y2="4" />
+      <line x1="6" y1="20" x2="6" y2="14" />
+      <line x1="2" y1="20" x2="22" y2="20" />
+    </svg>
+  )
+}
+function IconGrafana() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M8 12h4" />
+      <path d="M12 12v4" />
+      <circle cx="12" cy="8" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  )
+}
 
 /* ═══════════════════════════════════════
    MAIN APP
@@ -435,10 +455,6 @@ function App() {
     setFilterTotals({ total: 0, skip: 0, limit: 50 })
   }
 
-  function clearPersonFilter() {
-    setQuery((current) => ({ ...current, eventType: '' }))
-    void fetchFilteredEvents()
-  }
 
   if (!authState) {
     return <LoginPage apiBaseUrl={settings.apiBaseUrl} onLogin={handleLogin} />
@@ -479,11 +495,19 @@ function App() {
           <a className="nav-item" href="/docs" target="_blank" rel="noreferrer">
             <IconDocs /> API Docs
           </a>
+          <a className="nav-item" href="/guides/task_4_graphs" target="_blank" rel="noreferrer">
+            <IconBarChart /> Task 4 Graphs
+          </a>
+          <a
+            className="nav-item"
+            href="http://192.168.1.50:3000/d/rpi-cluster-v4/raspberry-pi-cluster-e28094-monitoring?orgId=1&refresh=1m"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <IconGrafana /> Grafana
+          </a>
 
-          <div className="nav-section-label">Actions</div>
-          <button className="nav-item" onClick={clearPersonFilter}>
-            <IconRefresh /> Clear Person Filter
-          </button>
+          <div className="nav-section-label">Account</div>
           <button className="nav-item danger" onClick={handleLogout}>
             <IconLogout /> Sign Out
           </button>
