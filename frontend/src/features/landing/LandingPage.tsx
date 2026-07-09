@@ -1,16 +1,20 @@
 export default function LandingPage() {
-  return (
-    <>
-      <title>Threat Detection System</title>
-      <meta property="og:title" content="Threat Detection System" />
-      <meta
-        name="description"
-        content="An edge-computing platform for real-time threat detection and monitoring."
-      />
+    return (
+        <>
+            <title>ThreatOff — Edge Computing Threat Detection</title>
+            <meta property="og:title" content="ThreatOff — Edge Computing Threat Detection" />
+            <meta
+                name="description"
+                content="An edge-computing platform that detects people and identifies threats — theft, fire, vandalism — in real time from Raspberry Pi sensor nodes."
+            />
 
-      <section>
-        <h1 className="text-3xl font-bold">Landing</h1>
-      </section>
-    </>
-  );
+            <section id="landing-page" className="relative">
+                <PageIllustration />
+                <HeroHome />
+                <Workflows />
+                <Features />
+                <Cta />
+            </section>
+        </>
+    );
 }
