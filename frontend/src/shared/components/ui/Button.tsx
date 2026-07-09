@@ -88,7 +88,7 @@ export default function Button({
     // primary / github: duotone gradient border that reveals on hover, à la Flowbite's gradient-duotone buttons.
     const styles = DUOTONE_STYLES[variant];
     const outerClasses = `group inline-flex items-center overflow-hidden rounded-lg ${styles.outer} p-0.5 font-medium transition focus:outline-none focus:ring-4 ${styles.ring} disabled:cursor-not-allowed disabled:opacity-50 ${width} ${className}`;
-    const innerClasses = `flex w-full items-center justify-center gap-1 ${INNER_RADIUS} ${styles.inner} transition-all duration-150 ease-in ${SIZE_CLASSES[size]}`;
+    const innerClasses = `flex w-full items-center justify-center gap-1 cursor-pointer ${INNER_RADIUS} ${styles.inner} transition-all duration-150 ease-in ${SIZE_CLASSES[size]}`;
 
     if (isInternalLink) {
         const { href, ...rest } = props as AnchorHTMLAttributes<HTMLAnchorElement> & { href: string };
