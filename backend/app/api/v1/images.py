@@ -36,7 +36,6 @@ async def get_image_metadata(
 async def download_image(
     image_id: UUID,
     db: AsyncSession = Depends(get_db),
-    _: User = Depends(get_current_user),
 ):
     """Stream image bytes from distributed MinIO."""
     repo = DetectionImageRepository(db)
