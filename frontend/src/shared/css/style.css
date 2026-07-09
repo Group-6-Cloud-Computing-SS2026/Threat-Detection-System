@@ -162,6 +162,13 @@
   src: url("public/fonts/nacelle-semibolditalic.woff2") format("woff2");
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  overscroll-behavior: none;
+  background-color: #0a0903;
+}
+
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
