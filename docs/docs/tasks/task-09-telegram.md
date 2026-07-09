@@ -60,5 +60,5 @@ To verify that Telegram notifications are working:
 - Trigger a threat manually by presenting a weapon (e.g. scissors/knife) or fire (e.g. a match) to the camera.
 - The bot will send a notification structured as follows:
   > **⚠️ CRITICAL threat detected: EventType.FIRE (confidence: 96%)**  
-  > *[Annotated JPEG attachment displaying the detected bounding boxes]*
+  > *[JPEG attachment]*
 
