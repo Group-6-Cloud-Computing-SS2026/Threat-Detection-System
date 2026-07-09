@@ -14,7 +14,7 @@ NODE = "pi4-edge"
 TOPIC_EVENTS = "cluster/camera/events"
 TOPIC_STREAM = "cluster/camera/stream"
 POST_PROCESS_FILE = "/home/cc123/imx500_yolo.json"
-DETECTION_INTERVAL = 2.0  # seconds
+DETECTION_INTERVAL = float(os.getenv("DETECTION_INTERVAL", "10.0"))  # seconds
 
 # Global reference to the latest captured frame bytes
 latest_frame_base64 = None
