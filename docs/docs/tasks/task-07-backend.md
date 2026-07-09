@@ -45,3 +45,16 @@ The Threat Detection System backend implements a decoupled, event-driven, high-a
 ## 4. Verification & Operational Reference
 * **Interactive API Playground**: Access interactive Swagger UI endpoints at `http://192.168.1.50/docs` (load-balanced on default port 80).
 * **Step-by-step Setup**: See the [Distributed k3s Kubernetes Deployment Guide](../guides/k3s-deployment.md) for NFS bind mounting, image building, and deep system diagnostics.
+
+---
+
+## 5. Core Fixes & Troubleshooting History
+
+To establish stable operational service, the following structural fixes were implemented in the backend:
+
+1. **Unauthenticated Image Downloads**: Bypassed JWT auth checks on `/api/v1/images/{image_id}/download` inside [images.py](file:///Users/hanan/personal-projects/Threat-Detection-System/backend/app/api/v1/images.py). This allows standard HTML `<img>` elements in the browser dashboard to render captured threat photos without needing to inject request headers.
+2. **WebSocket CORS Restoration**: Configured the backend with the environment variable `BACKEND_CORS_ORIGINS` in [backend.yaml](file:///Users/hanan/personal-projects/Threat-Detection-System/k8s/backend.yaml) to whitelist `http://192.168.1.50/`. This resolves CORS checks on the live MJPEG camera stream WebSocket handshake (`/api/v1/stream/ws`).
+3. **Prometheus fastapi Middleware Crash**: Setting `PROMETHEUS_ENABLED="false"` resolved a routing crash loop (`AttributeError: '_IncludedRouter' object has no attribute 'path'`) caused by a package mismatch inside the metrics middleware.
+4. **Worker Registry Access**: Configured `/etc/rancher/k3s/registries.yaml` on all 8 worker nodes using Ansible to mirror `localhost:5000` pulls to the master registry at `http://192.168.1.50:5000`. This enables workers to pull backend API updates seamlessly.
+5. **Multi-replica Message Duplication (Shared Subscriptions)**: Implemented MQTT v5 Shared Subscriptions (`$share/api-group/...`) in [mqtt_service.py](file:///Users/hanan/personal-projects/Threat-Detection-System/backend/app/services/mqtt_service.py) for events and health metrics to ensure exactly one replica processes database writes and dispatches the Telegram bot notifications, while maintaining standard broadcast for video frames.
+
