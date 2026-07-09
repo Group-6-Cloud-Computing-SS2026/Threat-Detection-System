@@ -235,6 +235,11 @@ button.secondary {
 	background: rgba(239, 68, 68, 0.12);
 }
 
+.status-pending {
+	color: #fde047;
+	background: rgba(234, 179, 8, 0.12);
+}
+
 .chip {
 	background: rgba(15, 23, 42, 0.92);
 	border: 1px solid rgba(148, 163, 184, 0.16);

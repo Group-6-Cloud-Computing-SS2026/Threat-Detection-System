@@ -155,6 +155,11 @@ function App() {
   const [searchError, setSearchError] = useState<string | null>(null)
   const [lastUpdated, setLastUpdated] = useState<string | null>(null)
   const [authState, setAuthState] = useState<AuthState | null>(loadSavedAuth)
+  const [streamImageSrc, setStreamImageSrc] = useState<string | null>(null)
+  const [streamStatus, setStreamStatus] = useState<'connected' | 'disconnected' | 'connecting'>('disconnected')
+  const [latency, setLatency] = useState<number | null>(null)
+  const [renderFps, setRenderFps] = useState<number | null>(null)
+  const [totalFrames, setTotalFrames] = useState<number>(0)
 
   function handleLogin(token: string, username: string) {
     const auth: AuthState = { token, username }
@@ -311,6 +316,93 @@ function App() {
     return () => window.clearInterval(timer)
   }, [autoRefresh, settings.apiBaseUrl, settings.token])
 
+  useEffect(() => {
+    let socket: WebSocket | null = null
+    let isMounted = true
+    let frameCount = 0
+    let lastFrameTime = performance.now()
+    const fpsSamples: number[] = []
+
+    const connectSocket = () => {
+      if (!authState?.token) return
+      
+      setStreamStatus('connecting')
+      const apiOrigin = settings.apiBaseUrl.replace(/\/$/, '')
+      let wsUrl = ''
+      if (apiOrigin.startsWith('http://') || apiOrigin.startsWith('https://')) {
+        wsUrl = apiOrigin.replace(/^http/, 'ws') + '/stream/ws'
+      } else {
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+        wsUrl = `${protocol}//${window.location.host}${apiOrigin}/stream/ws`
+      }
+      wsUrl += `?token=${authState.token}`
+
+      socket = new WebSocket(wsUrl)
+
+      socket.onopen = () => {
+        if (!isMounted) return
+        setStreamStatus('connected')
+      }
+
+      socket.onmessage = (event) => {
+        if (!isMounted) return
+        try {
+          const payload = JSON.parse(event.data)
+          const base64Data = payload.image || payload.image_base64
+          if (base64Data) {
+            setStreamImageSrc(`data:image/jpeg;base64,${base64Data}`)
+            
+            // Calculate latency
+            if (payload.timestamp) {
+              const sentTime = new Date(payload.timestamp).getTime()
+              const receiveTime = Date.now()
+              setLatency(receiveTime - sentTime)
+            }
+
+            // Calculate FPS
+            const now = performance.now()
+            const delta = now - lastFrameTime
+            lastFrameTime = now
+            const currentFps = Math.round(1000 / delta)
+            fpsSamples.push(currentFps)
+            if (fpsSamples.length > 10) fpsSamples.shift()
+            const avgFps = Math.round(fpsSamples.reduce((a, b) => a + b, 0) / fpsSamples.length)
+            setRenderFps(avgFps)
+
+            frameCount++
+            setTotalFrames(frameCount)
+          }
+        } catch (err) {
+          console.error("Error parsing websocket frame", err)
+        }
+      }
+
+      socket.onerror = () => {
+        if (!isMounted) return
+        setStreamStatus('disconnected')
+      }
+
+      socket.onclose = () => {
+        if (!isMounted) return
+        setStreamStatus('disconnected')
+        setStreamImageSrc(null)
+        // Auto-reconnect after 5 seconds
+        setTimeout(() => {
+          if (isMounted) connectSocket()
+        }, 5000)
+      }
+    }
+
+    connectSocket()
+
+    return () => {
+      isMounted = false
+      if (socket) {
+        socket.close()
+      }
+    }
+  }, [authState, settings.apiBaseUrl])
+
   function saveConnectionSettings() {
     setSettings((current) => ({
       ...current,
@@ -365,9 +457,6 @@ function App() {
             <button className="secondary" onClick={clearPersonFilter}>
               Clear person filter
             </button>
-            <a className="inline-link" href="/camera_stream.html" target="_blank" rel="noreferrer">
-              Open camera preview
-            </a>
             <a className="inline-link" href="/docs" target="_blank" rel="noreferrer">
               Open Swagger API
             </a>
@@ -427,20 +516,36 @@ function App() {
           <div className="section-head">
             <div>
               <h2>Camera preview</h2>
-              <p>Embedded live stream from camera_stream.html.</p>
+              <p>Live edge telemetry stream via WebSocket.</p>
             </div>
-            <a className="inline-link" href="/camera_stream.html" target="_blank" rel="noreferrer">
-              Open in new tab
-            </a>
+            <span className={`status-pill ${streamStatus === 'connected' ? 'status-on' : streamStatus === 'connecting' ? 'status-pending' : 'status-off'}`}>
+              {streamStatus === 'connected' ? 'Live' : streamStatus === 'connecting' ? 'Connecting...' : 'Disconnected'}
+            </span>
           </div>
 
           <div className="preview-frame-wrap">
-            <iframe
-              className="preview-frame"
-              src="/camera_stream.html"
-              title="Live camera preview"
-              loading="lazy"
-            />
+            {streamImageSrc ? (
+              <img
+                className="preview-image"
+                src={streamImageSrc}
+                alt="Live camera preview"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            ) : (
+              <div className="preview-placeholder" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: 200, color: 'var(--text-muted)' }}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: 48, height: 48, marginBottom: 16 }}>
+                  <path d="M23 7a2 2 0 0 0-2.45-1.45L16 7V5a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2l5 1.45A2 2 0 0 0 23 17V7Z"/>
+                  <path d="m10 11 2 2 4-4"/>
+                </svg>
+                <p>{streamStatus === 'connecting' ? 'Connecting to live stream...' : 'Stream disconnected. Awaiting edge node stream...'}</p>
+              </div>
+            )}
+          </div>
+
+          <div className="telemetry-row" style={{ display: 'flex', gap: 16, marginTop: 12, fontSize: 12, color: 'var(--text-muted)' }}>
+            <div>Latency: <strong>{latency !== null ? `${latency}ms` : '--'}</strong></div>
+            <div>Render FPS: <strong>{renderFps !== null ? `${renderFps}fps` : '--'}</strong></div>
+            <div>Total Frames: <strong>{totalFrames}</strong></div>
           </div>
         </section>
 

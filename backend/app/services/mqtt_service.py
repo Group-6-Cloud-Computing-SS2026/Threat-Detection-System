@@ -11,6 +11,7 @@ from datetime import datetime, timedelta, timezone
 from uuid import UUID
 
 import aiomqtt
+from fastapi import WebSocket
 
 from app.config import settings
 from app.database import async_session_factory
@@ -29,6 +30,29 @@ logger = logging.getLogger(__name__)
 mqtt_connected: bool = False
 # Last known camera stream frame per node so detection events without images can still be archived.
 _latest_camera_stream_frames: dict[str, dict[str, object]] = {}
+
+
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: list[WebSocket] = []
+
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections.append(websocket)
+
+    def disconnect(self, websocket: WebSocket):
+        if websocket in self.active_connections:
+            self.active_connections.remove(websocket)
+
+    async def broadcast(self, message: str):
+        for connection in list(self.active_connections):
+            try:
+                await connection.send_text(message)
+            except Exception:
+                self.disconnect(connection)
+
+
+manager = ConnectionManager()
 
 
 async def mqtt_subscriber():
@@ -81,6 +105,7 @@ async def _handle_message(message: aiomqtt.Message) -> None:
 
     if topic == "cluster/camera/stream":
         _cache_camera_stream_frame(payload)
+        await manager.broadcast(json.dumps(payload))
         return
 
     # Route camera detection events: cluster/camera/{sub-topic}

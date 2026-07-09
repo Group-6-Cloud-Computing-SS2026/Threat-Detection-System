@@ -5,15 +5,16 @@ Detection service — business logic for detection event ingestion and querying.
 import base64
 import logging
 from datetime import datetime
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.models.detection_event import DetectionEvent
 from app.repositories.detection_event_repo import DetectionEventRepository
 from app.repositories.detection_image_repo import DetectionImageRepository
 from app.schemas.detection_event import DetectionEventCreate
 from app.services.image_storage_service import ImageStorageService
-from app.utils.enums import ImageType, NotificationChannel, NotificationType, Severity
+from app.utils.enums import EventType, ImageType, NotificationChannel, NotificationType, Severity
 from app.utils.exceptions import NotFoundException
 from app.utils.time_utils import utc_now
 
@@ -48,6 +49,29 @@ class DetectionService:
     async def ingest_detection(self, data: DetectionEventCreate):
         """Process an incoming detection: create event, store image, create notification."""
         now = utc_now()
+        
+        # Threat checking
+        is_threat = data.event_type in (EventType.THEFT, EventType.FIRE, EventType.VANDALISM, EventType.WEAPON)
+        
+        if not is_threat:
+            logger.info("Skipping storage for non-threat event type: %s", data.event_type)
+            event = DetectionEvent(
+                id=uuid4(),
+                sensor_node_id=data.sensor_node_id,
+                event_type=data.event_type.value if hasattr(data.event_type, 'value') else data.event_type,
+                severity=data.severity,
+                confidence=data.confidence,
+                raw_detections=data.raw_detections,
+                metadata_=data.metadata,
+                acknowledged=False,
+                acknowledged_by=None,
+                detected_at=data.detected_at,
+                received_at=now,
+                created_at=now,
+            )
+            setattr(event, "preview_image_url", None)
+            return event
+
         event = await self.event_repo.create({
             "sensor_node_id": data.sensor_node_id,
             "event_type": data.event_type,
