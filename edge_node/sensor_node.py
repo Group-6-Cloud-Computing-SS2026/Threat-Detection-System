@@ -54,12 +54,16 @@ def parse_stderr_detections(stderr_stream):
                 break
             next_line_str = next_line.decode("utf-8", errors="ignore").strip()
 
-            # Format is usually e.g., "person : [confidence]" or similar
+            # Format is usually e.g., "Inference output : person [confidence]" or similar
             label = "unknown"
             if " : " in next_line_str:
-                label = next_line_str.split(" : ")[0].strip()
+                label = next_line_str.split(" : ")[1].strip()
+                if "[" in label:
+                    label = label.split("[")[0].strip()
             elif next_line_str:
                 label = next_line_str.strip()
+                if "[" in label:
+                    label = label.split("[")[0].strip()
 
             # Enforce the 2-second publish interval
             current_time = time.time()
