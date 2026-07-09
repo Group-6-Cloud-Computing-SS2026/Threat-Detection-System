@@ -15,10 +15,10 @@ The following table summarizes the work packages defined for this project, who i
 
 | Task | Category | Lead Developer | Status | Core Focus / Deliverables |
 |---|---|---|---|---|
-| **Task 1** | [Edge Infrastructure](task-01-edge-computing-infrastructure.md) | **Mohsin Abbasi** | Completed | PXE network booting configuration, shared OS image overlays, chrony synchronization, and AI camera MQTT setup. |
-| **Task 2** | [HPL Performance](task-02-hpl.md) | **Fatima Athar** | In Progress | HPL/LINPACK benchmarks on 2/4/7 nodes. 8-node tests blocked by admin/TCP issues. Results in `performance_using_hpl.md`. |
+| **Task 1** | [Edge Infrastructure](task-01-edge-computing-infrastructure.md) | **Mohsin Abbasi / Hafiza Fatima Athar** | Completed | PXE network booting configuration, shared OS image overlays, chrony synchronization, and AI camera MQTT setup. |
+| **Task 2** | [HPL Performance](task-02-hpl.md) | **Maham Anis** | In Progress | HPL/LINPACK benchmarks on 2/4/7 nodes. 8-node tests blocked by admin/TCP issues. Results in `performance_using_hpl.md`. |
 | **Task 3** | [MPI Cluster](task-03-mpi.md) | **Sadia Saeed** | In Progress | MPI deployment, native C benchmarks, Amdahl's/Gustafson's Laws on 32 cores. Metrics on master SSD. |
-| **Task 4** | [Non-MPI Scaling](task-04-scaling-laws.md) | **Maham Anis** | In Progress | Task distributor: repo setup, worker deployment, scalability law benchmarks. Results on SSD. |
+| **Task 4** | [Non-MPI Scaling](task-04-scaling-laws.md) | **Sadia Saeed** | In Progress | Task distributor: repo setup, worker deployment, scalability law benchmarks. Results on SSD. |
 | **Task 5** | [Monitoring](task-05-monitoring.md) | **Awais Yaseen** | In Progress | Deploying Prometheus and Grafana on the Pi 5 Master with a flexible setup, allowing us to choose the easiest worker metrics collection method later without disrupting cluster operations. |
 | **Task 6** | [Model Training](task-06-model-training.md) | **Muhammad Musfir** | Almost Done | YOLO11n/YOLO8n python scripts and weights, Roboflow dataset, YOLO8n RPI4 configuration and performance metrics. |
 | **Task 7** | [Backend](task-07-backend.md) | **Abdul Hanan Javaid** | Almost Done | FastAPI service-repository backend, 9 replicas on K3s, and distributed MinIO S3 storage. |
@@ -33,7 +33,7 @@ The following table summarizes the work packages defined for this project, who i
 ---
 
 ### Task 1 — Sensor Nodes & PXE Boot Setup
-*   **Lead Developer:** Mohsin Abbasi
+*   **Lead Developer:** Mohsin Abbasi / Hafiza Fatima Athar
 *   **Proposed Approach & Solution:**
     *   **Diskless Network Booting:** Configure a Raspberry Pi 5 Master with DHCP, TFTP, and NFS service suites to boot 8 Raspberry Pi 3 workers over a private switch subnet, mounting writable RAM overlays for private states.
     *   **Time & Camera Services:** Coordinate NTP sync using chrony client-server configurations. Integrate a Pi 4 with an AI camera to publish object detection event telemetry natively over MQTT.
@@ -43,7 +43,7 @@ The following table summarizes the work packages defined for this project, who i
 ---
 
 ### Task 2 — HPL Benchmarking
-*   **Lead Developer:** Fatima Athar
+*   **Lead Developer:** Maham Anis
 *   **Proposed Approach & Solution:**
     *   **LINPACK Suite Compilation:** Compile HPL 2.3 using OpenBLAS and OpenMPI libraries across the ARM64 cluster architecture.
     *   **Performance Evaluation:** Execute floating-point benchmark runs across multiple grid shapes and worker nodes to analyze cluster performance (Gflops).
@@ -63,7 +63,7 @@ The following table summarizes the work packages defined for this project, who i
 ---
 
 ### Task 4 — Non-MPI Scaling Laws (Task Distributor)
-*   **Lead Developer:** Maham Anis
+*   **Lead Developer:** Sadia Saeed
 *   **Proposed Approach & Solution:**
     *   **Distributed Rendering Scheduler:** Use Christian Baun's task-distributor tool to coordinate POV-Ray image rendering in parallel over SSH and shared NFS storage.
     *   **Experimentation:** Evaluate scaling efficiency using fixed resolution and scaled image dimensions to contrast Amdahl's and Gustafson's limits.
