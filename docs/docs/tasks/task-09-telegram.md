@@ -35,10 +35,10 @@ sequenceDiagram
 
 The Telegram integration is configured in [backend.yaml](../../k8s/backend.yaml) via the following environment variables:
 
-| Variable | Description | Example / Current Configuration |
+| Variable | Description | Source / Reference |
 | :--- | :--- | :--- |
-| `TELEGRAM_BOT_TOKEN` | The unique API HTTP Token of your bot from `@BotFather`. | `8871622371:AAGil8N_HGda8GtvW637wImW8wA_gJI4s0c` |
-| `TELEGRAM_CHAT_ID` | Your Telegram User ID or Group Chat ID. | `8488162758` |
+| `TELEGRAM_BOT_TOKEN` | The unique API HTTP Token of your bot from `@BotFather`. | Loaded securely from Kubernetes Secret `telegram-credentials` |
+| `TELEGRAM_CHAT_ID` | Your Telegram User ID or Group Chat ID. | Loaded securely from Kubernetes Secret `telegram-credentials` |
 
 ---
 
