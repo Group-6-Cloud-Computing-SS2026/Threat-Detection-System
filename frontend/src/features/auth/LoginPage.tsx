@@ -1,5 +1,5 @@
 import { useState, type SubmitEvent } from "react";
-import { NavLink, useNavigate } from "react-router";
+import { NavLink, useNavigate, useSearchParams } from "react-router";
 import Button from "../../shared/components/ui/Button.tsx";
 import { useApiSettings } from "../home/useApiSettings.ts";
 import { useAuth } from "./AuthContext.tsx";
@@ -14,8 +14,9 @@ export default function LoginPage() {
     const navigate = useNavigate();
     const { login } = useAuth();
     const { apiBaseUrl } = useApiSettings();
+    const [searchParams] = useSearchParams();
 
-    const [tab, setTab] = useState<Tab>("login");
+    const [tab, setTab] = useState<Tab>(searchParams.get("tab") === "register" ? "register" : "login");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
