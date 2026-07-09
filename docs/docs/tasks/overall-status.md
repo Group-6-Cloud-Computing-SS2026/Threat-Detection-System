@@ -19,11 +19,11 @@ The following table summarizes the work packages defined for this project, who i
 | **Task 2** | [HPL Performance](task-02-hpl.md) | **Maham Anis** | In Progress | HPL/LINPACK benchmarks on 2/4/7 nodes. 8-node tests blocked by admin/TCP issues. Results in `performance_using_hpl.md`. |
 | **Task 3** | [MPI Cluster](task-03-mpi.md) | **Sadia Saeed** | In Progress | MPI deployment, native C benchmarks, Amdahl's/Gustafson's Laws on 32 cores. Metrics on master SSD. |
 | **Task 4** | [Non-MPI Scaling](task-04-scaling-laws.md) | **Sadia Saeed** | In Progress | Task distributor: repo setup, worker deployment, scalability law benchmarks. Results on SSD. |
-| **Task 5** | [Monitoring](task-05-monitoring.md) | **Awais Yaseen** | In Progress | Deploying Prometheus and Grafana on the Pi 5 Master with a flexible setup, allowing us to choose the easiest worker metrics collection method later without disrupting cluster operations. |
+| **Task 5** | [Monitoring](task-05-monitoring.md) | **Awais Yaseen** | Done | Deploying Prometheus and Grafana on the Pi 5 Master with a flexible setup, allowing us to choose the easiest worker metrics collection method later without disrupting cluster operations. |
 | **Task 6** | [Model Training](task-06-model-training.md) | **Muhammad Musfir** | Almost Done | YOLO11n/YOLO8n python scripts and weights, Roboflow dataset, YOLO8n RPI4 configuration and performance metrics. |
-| **Task 7** | [Backend](task-07-backend.md) | **Abdul Hanan Javaid** | Almost Done | FastAPI service-repository backend, 9 replicas on K3s, and distributed MinIO S3 storage. |
+| **Task 7** | [Backend](task-07-backend.md) | **Abdul Hanan Javaid & Md. Forman Ullah Sajib** | Done | FastAPI service-repository backend, 9 replicas on K3s, and distributed MinIO S3 storage. |
 | **Task 8** | [Frontend](task-08-frontend.md) | **Javier de Santiago Soto** | In Progress | React + TypeScript web client, TailwindCSS layout, React Router, live telemetry dashboard, and Google Maps alerts. |
-| **Task 9** | [Telegram Bot](task-09-telegram.md) | **Md. Forman Ullah Sajib** | Almost Done | Send real-time messages, images, and health status alerts using a Telegram bot. |
+| **Task 9** | [Telegram Bot](task-09-telegram.md) | **Abdul Hanan Javaid** | Done | Send real-time messages, images, and health status alerts using a Telegram bot. |
 | **Task 10** | Documentation | Complete Team | In Progress | Static site with Material theme, automated builds, and GitHub Pages hosting. |
 
 ---
