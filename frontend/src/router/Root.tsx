@@ -23,7 +23,7 @@ export default function Root() {
                 <header id="header">
                     <Header />
                 </header>
-                <main id="app" className="relative flex grow flex-col">
+                <main id="app" className="relative flex grow flex-col pt-16">
                     <Outlet />
                 </main>
                 <footer id="footer">
