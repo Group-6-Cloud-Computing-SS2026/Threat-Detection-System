@@ -306,3 +306,5 @@ $$S_G = P - s(P - 1)$$
 Reviewing Tables 6 through 10 confirms that Gustafson's Law completely bypasses the fixed-workload efficiency drop. By keeping the computing load consistent *per core*, total execution times remain incredibly flat across all sweeps, shifting by only minor margins even as the overall system handles up to **6.4 Billion calculations simultaneously**.
 
 No matter how large the baseline footprint gets (ranging from 1M to 200M steps per core), the cluster node efficiency consistently holds within an exceptional **87.0% to 93.5%** corridor. This confirms near-perfect horizontal capacity scaling and validates that the 8-node cluster can handle massive problem spaces effortlessly when scaled outward.
+
+
