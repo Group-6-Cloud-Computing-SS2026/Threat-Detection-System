@@ -311,7 +311,7 @@ function App() {
 
     const timer = window.setInterval(() => {
       void fetchRecentEvents()
-    }, 5000)
+    }, 10000)
 
     return () => window.clearInterval(timer)
   }, [autoRefresh, settings.apiBaseUrl, settings.token])
@@ -553,7 +553,7 @@ function App() {
           <div className="section-head">
             <div>
               <h2>Live detections</h2>
-              <p>Polling /detections/recent every 5 seconds.</p>
+              <p>Polling /detections/recent every 10 seconds.</p>
             </div>
             <span className={`status-pill ${autoRefresh ? 'status-on' : 'status-off'}`}>
               {autoRefresh ? 'Auto refresh on' : 'Auto refresh off'}
