@@ -287,10 +287,6 @@ function App() {
     () => liveEvents.filter((e) => e.severity === 'critical').length,
     [liveEvents]
   )
-  const unackedCount = useMemo(
-    () => liveEvents.filter((e) => !e.acknowledged).length,
-    [liveEvents]
-  )
 
   useEffect(() => { localStorage.setItem(storageKey, JSON.stringify(settings)) }, [settings])
   useEffect(() => { setDraftSettings(settings) }, [settings])
@@ -580,11 +576,6 @@ function App() {
                   <div className="stat-tile-label">Critical Events</div>
                   <div className="stat-tile-value">{criticalCount}</div>
                   <div className="stat-tile-sub">Requires attention</div>
-                </div>
-                <div className="stat-tile">
-                  <div className="stat-tile-label">Unacknowledged</div>
-                  <div className="stat-tile-value">{unackedCount}</div>
-                  <div className="stat-tile-sub">Pending review</div>
                 </div>
                 <div className="stat-tile accent-teal">
                   <div className="stat-tile-label">Stream FPS</div>
