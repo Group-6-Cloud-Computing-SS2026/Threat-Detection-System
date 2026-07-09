@@ -31,7 +31,7 @@ spec:
       containers:
         - name: api
           image: localhost:5000/tds-api:latest  # Assumes local container registry inside k3s
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8001
               name: http
