@@ -1,3 +1,5 @@
+import Dashboard from "./Dashboard.tsx";
+
 export default function HomePage() {
     return (
         <>
@@ -8,9 +10,7 @@ export default function HomePage() {
                 content="Overview dashboard for the Threat Detection System."
             />
 
-            <section>
-                <h1 className="text-3xl font-bold">Home</h1>
-            </section>
+            <Dashboard />
         </>
     );
 }
