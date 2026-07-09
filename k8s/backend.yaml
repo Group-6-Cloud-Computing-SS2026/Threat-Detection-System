@@ -40,6 +40,8 @@ spec:
               value: "development"
             - name: DEBUG
               value: "true"
+            - name: PROMETHEUS_ENABLED
+              value: "false"
             - name: JWT_SECRET_KEY
               value: "dev-secret-change-in-production"
             
