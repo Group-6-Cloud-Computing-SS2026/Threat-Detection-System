@@ -5,8 +5,8 @@ import { useApiSettings } from "../home/useApiSettings.ts";
 import { useAuth } from "./AuthContext.tsx";
 
 const inputClass =
-    "w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 outline-none transition focus:border-brand-light-green-600 focus:ring-2 focus:ring-brand-light-green-600/20";
-const labelClass = "text-sm font-medium text-gray-700";
+    "w-full rounded-lg border border-brand-alabaster-grey-300 bg-brand-alabaster-grey-50 px-3 py-2 text-brand-carbon-black-900 outline-none transition focus:border-brand-light-green-600 focus:ring-2 focus:ring-brand-light-green-600/20";
+const labelClass = "text-sm font-medium text-brand-carbon-black-700";
 
 type Tab = "login" | "register";
 
@@ -42,9 +42,11 @@ export default function LoginPage() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password }),
             });
-            const data = (await response.json()) as { access_token?: string; detail?: string };
-            if (!response.ok || !data.access_token) {
-                throw new Error(data.detail ?? `${response.status} ${response.statusText}`);
+            const data = (await response.json().catch(() => null)) as { access_token?: string; detail?: string } | null;
+            if (!response.ok || !data?.access_token) {
+                throw new Error(
+                    data?.detail ?? `Sign-in failed (${response.status}). Is the API reachable at "${apiBaseUrl}"?`,
+                );
             }
 
             login(data.access_token, username);
@@ -70,7 +72,7 @@ export default function LoginPage() {
             });
             const data = (await response.json().catch(() => ({}))) as { detail?: string };
             if (!response.ok) {
-                throw new Error(data.detail ?? `${response.status} ${response.statusText}`);
+                throw new Error(data.detail ?? `Registration failed (${response.status}). Is the API reachable at "${apiBaseUrl}"?`);
             }
 
             setSuccess("Account created! You can now sign in.");
@@ -92,24 +94,21 @@ export default function LoginPage() {
                 content="Sign in to access the Threat Detection System dashboard."
             />
 
-            <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-2xl sm:p-10">
+            <div
+                className={`w-full rounded-2xl bg-brand-alabaster-grey-50 p-8 shadow-2xl sm:p-10 ${
+                    tab === "login" ? "max-w-sm" : "max-w-sm lg:max-w-xl"
+                }`}
+            >
                 <NavLink to="/landing" className="mb-8 flex justify-center">
-                    <img src="/images/wordmark-light.svg" alt="ThreatOff" className="h-8 w-auto" />
+                    <img src="/images/wordmark-light.svg" alt="ThreatOff" className="h-32     w-auto" />
                 </NavLink>
 
-                <h1 id="login-title" className="mb-1 text-center text-xl font-semibold text-gray-900">
-                    {tab === "login" ? "Welcome back" : "Create an account"}
-                </h1>
-                <p className="mb-6 text-center text-sm text-gray-500">
-                    {tab === "login" ? "Sign in to access your dashboard" : "Join the ThreatOff monitoring team"}
-                </p>
-
-                <div className="mb-6 flex rounded-lg bg-gray-100 p-1 text-sm font-medium">
+                <div className="mb-6 flex rounded-lg bg-brand-alabaster-grey-100 p-1 text-sm font-medium">
                     <button
                         type="button"
                         onClick={() => switchTab("login")}
-                        className={`flex-1 rounded-md py-1.5 transition ${
-                            tab === "login" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500"
+                        className={`flex-1 cursor-pointer rounded-md py-1.5 transition hover:text-brand-alabaster-grey-500 ${
+                            tab === "login" ? "bg-brand-alabaster-grey-50 text-brand-carbon-black-900 shadow-sm" : "text-brand-alabaster-grey-950"
                         }`}
                     >
                         Sign In
@@ -117,8 +116,8 @@ export default function LoginPage() {
                     <button
                         type="button"
                         onClick={() => switchTab("register")}
-                        className={`flex-1 rounded-md py-1.5 transition ${
-                            tab === "register" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500"
+                        className={`flex-1 cursor-pointer rounded-md py-1.5 transition hover:text-brand-alabaster-grey-500 ${
+                            tab === "register" ? "bg-brand-alabaster-grey-50 text-brand-carbon-black-900 shadow-sm" : "text-brand-alabaster-grey-950"
                         }`}
                     >
                         Register
@@ -143,104 +142,110 @@ export default function LoginPage() {
 
                 {tab === "login" ? (
                     <form className="space-y-4" onSubmit={handleLogin} aria-labelledby="login-title" noValidate>
-                        <div className="space-y-1.5">
-                            <label htmlFor="username" className={labelClass}>
-                                Username
-                            </label>
-                            <input
-                                id="username"
-                                type="text"
-                                placeholder="Who are you?"
-                                autoComplete="username"
-                                required
-                                value={username}
-                                onChange={(event) => setUsername(event.target.value)}
-                                className={inputClass}
-                            />
+                        <div className="grid gap-4">
+                            <div className="space-y-1.5">
+                                <label htmlFor="username" className={labelClass}>
+                                    Username
+                                </label>
+                                <input
+                                    id="username"
+                                    type="text"
+                                    placeholder="Who are you?"
+                                    autoComplete="username"
+                                    required
+                                    value={username}
+                                    onChange={(event) => setUsername(event.target.value)}
+                                    className={inputClass}
+                                />
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <label htmlFor="password" className={labelClass}>
+                                    Password
+                                </label>
+                                <input
+                                    id="password"
+                                    type="password"
+                                    autoComplete="current-password"
+                                    required
+                                    value={password}
+                                    onChange={(event) => setPassword(event.target.value)}
+                                    className={inputClass}
+                                />
+                            </div>
                         </div>
 
-                        <div className="space-y-1.5">
-                            <label htmlFor="password" className={labelClass}>
-                                Password
-                            </label>
-                            <input
-                                id="password"
-                                type="password"
-                                autoComplete="current-password"
-                                required
-                                value={password}
-                                onChange={(event) => setPassword(event.target.value)}
-                                className={inputClass}
-                            />
-                        </div>
-
+                        <div className="flex h-3"></div>
                         <Button type="submit" disabled={isSubmitting} fullWidth>
                             {isSubmitting ? "Signing in..." : "Sign In"}
                         </Button>
                     </form>
                 ) : (
                     <form className="space-y-4" onSubmit={handleRegister} aria-labelledby="login-title" noValidate>
-                        <div className="space-y-1.5">
-                            <label htmlFor="reg-username" className={labelClass}>
-                                Username
-                            </label>
-                            <input
-                                id="reg-username"
-                                type="text"
-                                autoComplete="username"
-                                required
-                                value={username}
-                                onChange={(event) => setUsername(event.target.value)}
-                                className={inputClass}
-                            />
+                        <div className="grid gap-4 lg:grid-cols-2">
+                            <div className="space-y-1.5">
+                                <label htmlFor="reg-username" className={labelClass}>
+                                    Username
+                                </label>
+                                <input
+                                    id="reg-username"
+                                    type="text"
+                                    autoComplete="username"
+                                    required
+                                    value={username}
+                                    onChange={(event) => setUsername(event.target.value)}
+                                    className={inputClass}
+                                />
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <label htmlFor="reg-email" className={labelClass}>
+                                    Email
+                                </label>
+                                <input
+                                    id="reg-email"
+                                    type="email"
+                                    autoComplete="email"
+                                    required
+                                    value={email}
+                                    onChange={(event) => setEmail(event.target.value)}
+                                    className={inputClass}
+                                />
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <label htmlFor="reg-password" className={labelClass}>
+                                    Password
+                                </label>
+                                <input
+                                    id="reg-password"
+                                    type="password"
+                                    autoComplete="new-password"
+                                    required
+                                    value={password}
+                                    onChange={(event) => setPassword(event.target.value)}
+                                    className={inputClass}
+                                />
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <label htmlFor="reg-role" className={labelClass}>
+                                    Role
+                                </label>
+                                <select
+                                    id="reg-role"
+                                    value={role}
+                                    onChange={(event) => setRole(event.target.value)}
+                                    className={inputClass}
+                                >
+                                    <option value="viewer">Viewer</option>
+                                    <option value="operator">Operator</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div className="space-y-1.5">
-                            <label htmlFor="reg-email" className={labelClass}>
-                                Email
-                            </label>
-                            <input
-                                id="reg-email"
-                                type="email"
-                                autoComplete="email"
-                                required
-                                value={email}
-                                onChange={(event) => setEmail(event.target.value)}
-                                className={inputClass}
-                            />
-                        </div>
-
-                        <div className="space-y-1.5">
-                            <label htmlFor="reg-password" className={labelClass}>
-                                Password
-                            </label>
-                            <input
-                                id="reg-password"
-                                type="password"
-                                autoComplete="new-password"
-                                required
-                                value={password}
-                                onChange={(event) => setPassword(event.target.value)}
-                                className={inputClass}
-                            />
-                        </div>
-
-                        <div className="space-y-1.5">
-                            <label htmlFor="reg-role" className={labelClass}>
-                                Role
-                            </label>
-                            <select
-                                id="reg-role"
-                                value={role}
-                                onChange={(event) => setRole(event.target.value)}
-                                className={inputClass}
-                            >
-                                <option value="viewer">Viewer</option>
-                                <option value="operator">Operator</option>
-                                <option value="admin">Admin</option>
-                            </select>
-                        </div>
-
+                        <div className="flex h-3"></div>
                         <Button type="submit" disabled={isSubmitting} fullWidth>
                             {isSubmitting ? "Creating account..." : "Create account"}
                         </Button>
