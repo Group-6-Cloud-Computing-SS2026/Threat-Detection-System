@@ -43,9 +43,12 @@ def parse_stderr_detections(stderr_stream):
                 parts = line_str.split(":")
                 count = int(parts[1].strip())
             except (ValueError, IndexError):
-                count = 1
+                count = 0
 
-            # Read the next line to extract the active label
+            if count <= 0:
+                continue
+
+            # Read the next line to extract the active label (only if count > 0)
             next_line = stderr_stream.readline()
             if not next_line:
                 break
