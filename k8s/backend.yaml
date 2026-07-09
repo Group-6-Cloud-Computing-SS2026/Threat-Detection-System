@@ -46,6 +46,10 @@ spec:
               value: "dev-secret-change-in-production"
             - name: BACKEND_CORS_ORIGINS
               value: '["http://192.168.1.50", "http://localhost", "http://127.0.0.1", "http://localhost:5173", "http://localhost:3000"]'
+            - name: TELEGRAM_BOT_TOKEN
+              value: "8871622371:AAGil8N_HGda8GtvW637wImW8wA_gJI4s0c"
+            - name: TELEGRAM_CHAT_ID
+              value: "8488162758"
             
             # Databases & Services linked to k8s Services DNS names
             - name: POSTGRES_HOST
