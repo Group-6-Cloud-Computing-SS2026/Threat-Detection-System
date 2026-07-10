@@ -160,11 +160,11 @@ if [ -f "$HOSTS_INI" ]; then
     success "Worker clocks synchronized!"
 
     # --------------------------------------------------------------------------
-    # 8. Reload Systemd and Restart K3s-agent on Workers
+    # 8. Reload Systemd and Restart K3s-agent on Workers (Skipped)
     # --------------------------------------------------------------------------
-    log "Reloading systemd and restarting k3s-agent on all workers..."
-    sudo -u cc123 ansible workers -i "$HOSTS_INI" -m shell -a "systemctl daemon-reload && systemctl restart k3s-agent" --become || warn "Failed to restart worker agents."
-    success "All worker K3s agents reloaded and restarted!"
+    # We no longer force-restart the k3s-agent on every boot. This prevents the
+    # boot recovery script from terminating pods that have already started running.
+    log "Skipping worker agent restart (already active with baked configurations)."
 else
     warn "Ansible hosts.ini not found! Skipping worker clock-sync. Please sync workers manually using Ansible."
 fi
