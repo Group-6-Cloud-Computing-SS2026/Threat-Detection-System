@@ -9,7 +9,7 @@ The backend layer of the Threat Detection System (TDS) is designed as a highly a
 This diagram illustrates how data flows from the physical camera on the Edge node, through the message broker, across the load-balanced compute nodes (FastAPI replicas), and into the SSD-backed databases.
 
 ```mermaid
-graph TD
+graph LR
     subgraph "Edge Node (Pi 4)"
         Cam["RPi Camera (rpicam-vid)"]
         TPU["Sony IMX500 Hardware TPU (YOLO)"]
