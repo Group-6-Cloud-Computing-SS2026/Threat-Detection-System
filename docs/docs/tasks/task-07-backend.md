@@ -14,16 +14,15 @@ graph TD
         Cam["RPi Camera (rpicam-vid)"]
         TPU["Sony IMX500 Hardware TPU (YOLO)"]
         Node["Edge Node Agent (sensor_node.py)"]
-        Cam -->|Raw Frames| Node
-        TPU -->|JSON Detections| Node
+        Cam -->|"Raw Frames"| Node
+        TPU -->|"JSON Detections"| Node
     end
 
     subgraph "Event Broker (Pi 5 Master)"
         Broker["tds-mqtt (Mosquitto)"]
     end
     
-    Node -->|Publish telemetry on topic: cluster/camera/stream| Broker
-    Node -->|Publish detections on topic: sensors/pi4-edge/detections| Broker
+    Node -->|"Publish telemetry & detections"| Broker
 
     subgraph "Distributed Compute Layer (Pi 5 & 8x Pi 3)"
         API1["tds-api Pod 1 (pi5-master)"]
@@ -32,11 +31,17 @@ graph TD
         APIn["tds-api Pod 9 (worker8)"]
     end
 
-    Broker -->|Shared Event Topic: $share/api-group/sensors/+/detections| API1 & API2 & API3 & APIn
-    Broker -->|Broadcast Stream Topic: cluster/camera/stream| API1 & API2 & API3 & APIn
+    Broker -->|"Shared Event Topic: $share/api-group/sensors/+/detections"| API1
+    Broker -->|"Shared Event Topic: $share/api-group/sensors/+/detections"| API2
+    Broker -->|"Shared Event Topic: $share/api-group/sensors/+/detections"| API3
+    Broker -->|"Shared Event Topic: $share/api-group/sensors/+/detections"| APIn
+    Broker -->|"Broadcast Stream Topic: cluster/camera/stream"| API1
+    Broker -->|"Broadcast Stream Topic: cluster/camera/stream"| API2
+    Broker -->|"Broadcast Stream Topic: cluster/camera/stream"| API3
+    Broker -->|"Broadcast Stream Topic: cluster/camera/stream"| APIn
 
     subgraph "Stateful Storage (SSD)"
-        DB[("tds-postgres (PostgreSQL 16)")]
+        DB[("tds-postgres - PostgreSQL 16")]
         subgraph "4-Node Distributed MinIO Cluster"
             MinIO0["tds-minio-0 (pi5-master)"]
             MinIO1["tds-minio-1 (worker1)"]
@@ -45,8 +50,14 @@ graph TD
         end
     end
 
-    API1 & API2 & API3 & APIn -->|Write Event Metadata| DB
-    API1 & API2 & API3 & APIn -->|Write JPEG Images (S3 API)| MinIO0 & MinIO1 & MinIO2 & MinIO3
+    API1 -->|"Write Event Metadata"| DB
+    API1 -->|"Write JPEG Images"| MinIO0
+    API2 -->|"Write Event Metadata"| DB
+    API2 -->|"Write JPEG Images"| MinIO1
+    API3 -->|"Write Event Metadata"| DB
+    API3 -->|"Write JPEG Images"| MinIO2
+    APIn -->|"Write Event Metadata"| DB
+    APIn -->|"Write JPEG Images"| MinIO3
 ```
 
 ### Shared Subscriptions ($share)
