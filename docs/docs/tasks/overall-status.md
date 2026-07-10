@@ -24,7 +24,7 @@ The following table summarizes the work packages defined for this project, who i
 | **Task 7** | [Backend](task-07-backend.md) | **Abdul Hanan Javaid & Md. Forman Ullah Sajib** | Done | FastAPI service-repository backend, 9 replicas on K3s, and distributed MinIO S3 storage. |
 | **Task 8** | [Frontend](task-08-frontend.md) | **Javier de Santiago Soto** | In Progress | React + TypeScript web client, TailwindCSS layout, React Router, live telemetry dashboard, and Google Maps alerts. |
 | **Task 9** | [Telegram Bot](task-09-telegram.md) | **Abdul Hanan Javaid** | Done | Send real-time messages, images, and health status alerts using a Telegram bot. |
-| **Task 10** | Documentation | Complete Team | In Progress | Static site with Material theme, automated builds, and GitHub Pages hosting. |
+| **Task 10** | [Documentation](task-10-documentation.md) | Complete Team | Completed | Static site with Material theme, automated builds, and GitHub Pages hosting. |
 
 ---
 

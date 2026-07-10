@@ -82,4 +82,5 @@ nav:
       - "Task 7 — Backend": tasks/task-07-backend.md
       - "Task 8 — Frontend": tasks/task-08-frontend.md
       - "Task 9 — Telegram Notifications": tasks/task-09-telegram.md
+      - "Task 10 — Project Documentation": tasks/task-10-documentation.md
   - Architecture: architecture.md
