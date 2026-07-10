@@ -234,32 +234,37 @@ The Pi 5 Master is connected to both **Wi-Fi** (`wlan0` - internet, `192.168.1.x
 
 ### 8.6 — Permanent Offline Image Baking (Bad-Boot Resiliency)
 * **The Blocker**: In a "bad boot" scenario (sudden power cuts or unclean shutdowns), the volatile/overlay NFS filesystems on the workers can experience containerd database lock corruptions or Kubelet garbage collection prunes, deleting all cached images. Re-downloading and extracting images (like the 820MB `tds-api:latest`, `minio:latest`, or the CNI `pause` sandbox) over 100Mbps Ethernet takes 3–4 minutes per node, saturating the network switch.
-* **The Solution (Image Baking)**:
-  Baking the critical container images directly into the shared worker NFS base OS (`/nfs/rootfs64/var/lib/rancher/k3s/agent/images/`) as `.tar` archives.
-  On startup, the K3s agent daemon automatically scans this directory, imports the images locally, and runs them 100% offline.
-* **Baking Commands (on Master)**:
-  ```bash
-  # Create the agent image directory if it doesn't exist
-  sudo mkdir -p /nfs/rootfs64/var/lib/rancher/k3s/agent/images/
-
-  # Bake API Image
-  docker save localhost:5000/tds-api:latest -o /tmp/tds-api.tar
-  sudo mv /tmp/tds-api.tar /nfs/rootfs64/var/lib/rancher/k3s/agent/images/tds-api.tar
-
-  # Bake MinIO Image
-  docker pull minio/minio:latest
-  docker save minio/minio:latest -o /tmp/minio.tar
-  sudo mv /tmp/minio.tar /nfs/rootfs64/var/lib/rancher/k3s/agent/images/minio.tar
-
-  # Bake Sandbox (Pause) Image
-  docker pull rancher/mirrored-pause:3.6
-  docker save rancher/mirrored-pause:3.6 -o /tmp/pause.tar
-  sudo mv /tmp/pause.tar /nfs/rootfs64/var/lib/rancher/k3s/agent/images/pause.tar
-  ```
+  Additionally, because the worker's `/var/lib/rancher/` is mounted as a volatile `tmpfs` RAM disk on boot, placing the `.tar` files directly inside `/nfs/rootfs64/var/lib/rancher/k3s/agent/images/` results in them being **masked (hidden)** by the empty RAM disk mount.
+* **The Solution (Image Baking & Dynamic Symlinking)**:
+  Baking the critical container images as `.tar` archives in the unmasked directory `/opt/images/` on the read-only NFS rootfs.
+* **Baking Setup (on Master)**:
+  1. Save the required container images as `.tar` files in `/nfs/rootfs64/opt/images/`:
+     * `tds-api:latest`
+     * `minio/minio:latest`
+     * `rancher/mirrored-pause:3.6`
+  2. Set permissions on the `.tar` files to `644` so they are readable by the workers' NFS client.
+  3. Edit the worker `k3s-agent.service` systemd file to dynamically recreate the symlinks on the RAM disk during startup:
+     ```ini
+     ExecStartPre=/usr/bin/mkdir -p /var/lib/rancher/k3s/agent/images
+     ExecStartPre=/bin/sh -c "/usr/bin/ln -sf /opt/images/*.tar /var/lib/rancher/k3s/agent/images/"
+     ```
 * **Validation Benchmark (Power Cut Recovery Test)**:
-  During our bad-boot recovery test:
-  * **Without Baking**: Pod image pulls took **59.233 seconds** over the network.
-  * **With Baking**: Pod image pulls hit the local baked cache in **268 milliseconds** (a **99.5% reduction** in network delay)! Pods transitioned to ready states instantaneously.
+  During our bad-boot recovery tests:
+  * **Without Baking**: Pod image pulls took **58 to 59 seconds** over the network, overloading the local switch:
+    ```text
+    Normal  Pulling    3m9s   kubelet  spec.containers{api}: Pulling image "localhost:5000/tds-api:latest"
+    Normal  Pulled     2m10s  kubelet  spec.containers{api}: Successfully pulled image "localhost:5000/tds-api:latest" in 58.635s (58.635s including waiting)
+    ```
+  * **With Baking (Warm Cache)**: Pod image pulls hit the local in-memory containerd cache in **268 milliseconds** (a **99.5% reduction**):
+    ```text
+    Normal  Pulling    65s    kubelet  spec.containers{api}: Pulling image "localhost:5000/tds-api:latest"
+    Normal  Pulled     65s    kubelet  spec.containers{api}: Successfully pulled image "localhost:5000/tds-api:latest" in 268ms (268ms including waiting)
+    ```
+  * **With Baking (Cold Boot Symlink Import)**: Pod image pulls hit the local baked filesystem cache (via `/opt/images/` symlinks) in **2.78 seconds** (a **95% reduction**), running 100% offline without network registry queries:
+    ```text
+    Normal  Pulling    29s    kubelet  spec.containers{api}: Pulling image "localhost:5000/tds-api:latest"
+    Normal  Pulled     26s    kubelet  spec.containers{api}: Successfully pulled image "localhost:5000/tds-api:latest" in 2.78s (2.78s including waiting)
+    ```
 
 ---
 
