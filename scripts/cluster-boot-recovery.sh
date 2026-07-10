@@ -198,6 +198,8 @@ if [ -n "$STUCK_LIST" ]; then
     success "All stuck/ghost pods cleared!"
 else
     success "No stuck/ghost pods detected. Clean boot!"
+fi
+
 # ------------------------------------------------------------------------------
 # 10. Prevent Parallel API Migration Deadlocks
 # ------------------------------------------------------------------------------
