@@ -133,3 +133,26 @@ To upgrade to an 8-node MinIO cluster:
    `http://tds-minio-{0...7}.minio-sys.default.svc.cluster.local/data`
 3. *Note: Changing erasure coding layout requires re-initializing the persistent volumes (PVs) as MinIO cannot dynamically expand an existing set size.*
 
+---
+
+## 6. Auditing Physical Image Files on the Master Node
+
+Because all worker nodes network-boot (PXE) their operating systems and run diskless, any data written to their local persistent volumes (including MinIO local storage paths) is physically stored on the Master Pi 5's SSD inside the shared NFS root directories.
+
+You can audit, find, or count the physical `annotated.jpg` files directly from the **Pi 5 Master** terminal:
+
+### Find all saved threat detection images:
+```bash
+sudo find /nfs/nodes/ -name "annotated.jpg"
+```
+
+### Count the total number of saved threat detection images:
+```bash
+sudo find /nfs/nodes/ -name "annotated.jpg" | wc -l
+```
+
+### Path structure breakdown:
+The files are stored inside each worker's local storage PV volume root:
+`/nfs/nodes/<worker-hostname-hash>/var/lib/rancher/k3s/storage/pvc-<pvc-uuid>_default_data-tds-minio-<pod-index>/detection-images/detections/<event-uuid>/annotated.jpg`
+
+
