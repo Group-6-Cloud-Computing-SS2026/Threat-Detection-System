@@ -9,7 +9,7 @@ The backend layer of the Threat Detection System (TDS) is designed as a highly a
 This diagram illustrates how data flows from the physical camera on the Edge node, through the message broker, across the load-balanced compute nodes (FastAPI replicas), and into the SSD-backed databases.
 
 ```mermaid
-graph LR
+graph TD
     subgraph "Edge Node (Pi 4)"
         Cam["RPi Camera (rpicam-vid)"]
         TPU["Sony IMX500 Hardware TPU (YOLO)"]
@@ -19,30 +19,34 @@ graph LR
     end
 
     subgraph "Event Broker (Pi 5 Master)"
-        Broker["tds-mqtt (Mosquitto)"]
+        Broker["tds-mqtt Broker (Mosquitto)"]
     end
     
-    Node -->|"Publish telemetry & detections"| Broker
+    Node -->|"Publish stream & events"| Broker
 
-    subgraph "Distributed Compute Layer (Pi 5 & 8x Pi 3)"
+    subgraph "Distributed Compute Layer (k3s Cluster)"
         API1["tds-api Pod 1 (pi5-master)"]
         API2["tds-api Pod 2 (worker1)"]
         API3["tds-api Pod 3 (worker2)"]
         APIn["tds-api Pod 9 (worker8)"]
     end
 
-    Broker -->|"Shared Event Topic: $share/api-group/sensors/+/detections"| API1
-    Broker -->|"Shared Event Topic: $share/api-group/sensors/+/detections"| API2
-    Broker -->|"Shared Event Topic: $share/api-group/sensors/+/detections"| API3
-    Broker -->|"Shared Event Topic: $share/api-group/sensors/+/detections"| APIn
-    Broker -->|"Broadcast Stream Topic: cluster/camera/stream"| API1
-    Broker -->|"Broadcast Stream Topic: cluster/camera/stream"| API2
-    Broker -->|"Broadcast Stream Topic: cluster/camera/stream"| API3
-    Broker -->|"Broadcast Stream Topic: cluster/camera/stream"| APIn
+    Broker -->|"Shared topic: $share/api-group/sensors/+/detections"| API1
+    Broker -->|"Shared topic: $share/api-group/sensors/+/detections"| API2
+    Broker -->|"Shared topic: $share/api-group/sensors/+/detections"| API3
+    Broker -->|"Shared topic: $share/api-group/sensors/+/detections"| APIn
 
-    subgraph "Stateful Storage (SSD)"
-        DB[("tds-postgres - PostgreSQL 16")]
-        subgraph "4-Node Distributed MinIO Cluster"
+    subgraph "Kubernetes Network Services"
+        PostgresSvc["postgres Service (Port 5432)"]
+        MinioSvc["minio LoadBalancer (Port 9000)"]
+    end
+
+    API1 & API2 & API3 & APIn --> PostgresSvc
+    API1 & API2 & API3 & APIn --> MinioSvc
+
+    subgraph "Stateful Storage Layer (SSD)"
+        DB[("tds-postgres Database")]
+        subgraph "4-Node MinIO Cluster"
             MinIO0["tds-minio-0 (pi5-master)"]
             MinIO1["tds-minio-1 (worker1)"]
             MinIO2["tds-minio-2 (worker2)"]
@@ -50,14 +54,8 @@ graph LR
         end
     end
 
-    API1 -->|"Write Event Metadata"| DB
-    API1 -->|"Write JPEG Images"| MinIO0
-    API2 -->|"Write Event Metadata"| DB
-    API2 -->|"Write JPEG Images"| MinIO1
-    API3 -->|"Write Event Metadata"| DB
-    API3 -->|"Write JPEG Images"| MinIO2
-    APIn -->|"Write Event Metadata"| DB
-    APIn -->|"Write JPEG Images"| MinIO3
+    PostgresSvc --> DB
+    MinioSvc --> MinIO0 & MinIO1 & MinIO2 & MinIO3
 ```
 
 ### Shared Subscriptions ($share)

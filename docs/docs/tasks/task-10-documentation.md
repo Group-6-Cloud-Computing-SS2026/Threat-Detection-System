@@ -32,7 +32,7 @@ graph TD
 To guarantee that the documentation is always synchronized, we implemented an automated continuous deployment pipeline using GitHub Actions.
 
 ```mermaid
-graph LR
+graph TD
     Push([git push to main]) --> Trigger["GitHub Actions (docs.yml)"]
     Trigger --> VM["Ubuntu-Latest Runner VM"]
     VM --> Checkout["Checkout Code (actions/checkout)"]
