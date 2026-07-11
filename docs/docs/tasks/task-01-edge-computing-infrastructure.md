@@ -35,7 +35,7 @@ All devices are connected to a single Gigabit switch on the private subnet `192.
   |   +-------------+             +-----------+    +------------+  |
   |   | Pi 4 +      |   MQTT      |  Pi 5     |    | Pi3 #1     |  |
   |   | AI Camera   |-----------> |  Master   |--->| Pi3 #2     |  |
-  |   | (IMX500)    |  events     |           |    | ...        |  |
+  |   | (IMX500)    |  events     | SD + SSD  |    | ...        |  |
   |   +-------------+             +-----------+    | Pi3 #8     |  |
   |                                               +------------+  |
   +---------------------------------------------------------------+
@@ -46,22 +46,36 @@ All devices are connected to a single Gigabit switch on the private subnet `192.
 
 | Role | Device | Hostname | IP address |
 |------|--------|----------|------------|
-| Master | Raspberry Pi 5 | `pi5-master` | `192.168.1.50` |
+| Master | Raspberry Pi 5 (SD + SSD) | `pi5-master` | `192.168.1.50` |
 | Sensor | Raspberry Pi 4 + AI Camera | `pi4-edge` | `192.168.1.2` |
-| Worker 1 | Raspberry Pi 3 | `worker1` | `192.168.1.58` |
-| Worker 2 | Raspberry Pi 3 | `worker2` | `192.168.1.54` |
-| Worker 3 | Raspberry Pi 3 | `worker3` | `192.168.1.104` |
-| Worker 4 | Raspberry Pi 3 | `worker4` | `192.168.1.136` |
-| Worker 5 | Raspberry Pi 3 | `worker5` | `192.168.1.86` |
-| Worker 6 | Raspberry Pi 3 | `worker6` | `192.168.1.117` |
-| Worker 7 | Raspberry Pi 3 | `worker7` | `192.168.1.83` |
-| Worker 8 | Raspberry Pi 3 | `worker8` | `192.168.1.133` |
+| Worker 1 | Raspberry Pi 3 (diskless) | `worker1` | `192.168.1.58` |
+| Worker 2 | Raspberry Pi 3 (diskless) | `worker2` | `192.168.1.54` |
+| Worker 3 | Raspberry Pi 3 (diskless) | `worker3` | `192.168.1.104` |
+| Worker 4 | Raspberry Pi 3 (diskless) | `worker4` | `192.168.1.136` |
+| Worker 5 | Raspberry Pi 3 (diskless) | `worker5` | `192.168.1.86` |
+| Worker 6 | Raspberry Pi 3 (diskless) | `worker6` | `192.168.1.117` |
+| Worker 7 | Raspberry Pi 3 (diskless) | `worker7` | `192.168.1.83` |
+| Worker 8 | Raspberry Pi 3 (diskless) | `worker8` | `192.168.1.133` |
+
+### Task 1 at a glance
+
+| Metric | Result |
+|---|---|
+| SD cards on worker nodes | **0** (down from 8) |
+| OS images to maintain | **1** shared (down from 8) |
+| Architecture | **64-bit** (`aarch64`) on all nodes |
+| Worker compute available | **32 cores**, 8 GB RAM total |
+| Cold boot, all 8 workers together | **~2 minutes** (from ~5, after tuning) |
+| Time sync offset to master | **microsecond-level** |
+| Software rollout | install **once** → live on all 8 workers |
 
 ---
 
 ## 2. Diskless Network Boot (PXE)
 
 Rather than maintaining eight separate SD cards, the worker nodes boot over the network from a single operating system image hosted on the master. This is the consolidation approach the task asked us to investigate: it simplifies administration (one image to patch and update) and demonstrates a realistic HPC-style provisioning model.
+
+![Administration effort for 8 nodes: one shared image replaces eight SD cards](task1-consolidation.png)
 
 ### How a worker boots
 
@@ -77,7 +91,7 @@ Power on Pi3 (no SD card)
    |
    |-- DHCP request --------------> dnsmasq replies (IP, gateway, TFTP server)
    |-- TFTP download -------------> bootcode.bin, kernel8.img, dtb, cmdline.txt
-   |-- NFS mount / (read) --------> /nfs/rootfs64  (shared OS image)
+   |-- NFS mount / --------------> /nfs/rootfs64  (shared OS image)
    |-- mount /etc /var /home -----> /nfs/nodes/<serial>/  (per-node, writable)
    v
 Worker is up, SSH reachable
@@ -99,29 +113,51 @@ This is the standard HPC pattern: one operating system, many machines, each with
 
 > **Node identity.** Each Raspberry Pi 3 is identified by its hardware serial number (the last 8 hex digits, e.g. `a7b7e022`). The master keeps one directory per serial under `/nfs/nodes/` and one boot directory per serial under `/nfs/boot64/`, so each node receives its own hostname and private storage while sharing the same OS.
 
+### Physical storage: SD card + SSD
+
+The master's storage is split across two physical devices:
+
+| Device | Holds |
+|--------|-------|
+| **SD card** (master) | The master's own OS, plus the shared worker image `/nfs/rootfs64` and the boot files `/nfs/boot64` |
+| **SSD** (master) | The per-node private storage `/nfs/nodes/<serial>/` — every worker's `/etc`, `/var` and `/home` |
+
+**Why the per-node directories live on the SSD.** The shared image is mostly read; the per-node directories are where all eight workers *write* continuously — logs, service state, temporary files, caches. Concentrating eight nodes' worth of small random writes on an SD card would be both slow and hard on the card's limited write endurance. Moving that write-heavy traffic to an SSD gives markedly better random-write performance and endurance, and keeps the wear off the card that holds the operating system image.
+
 ### Directory layout on the master
 
 ```
-/nfs/
-├── rootfs64/            Shared 64-bit OS image (mounted as / by all workers)
-├── boot64/              Network boot files
-│   ├── bootcode.bin     First-stage bootloader
-│   ├── kernel8.img      64-bit kernel
-│   ├── cmdline.txt      Default kernel command line
-│   └── <serial>/        Per-node boot directory
-│       └── cmdline.txt  Per-node kernel command line (sets hostname)
-└── nodes/
-    └── <serial>/        Per-node private storage
-        ├── etc/         Node's /etc
-        ├── var/         Node's /var
-        └── home/        Node's /home
+SD card
+└── /nfs/
+    ├── rootfs64/            Shared 64-bit OS image (mounted as / by all workers)
+    └── boot64/              Network boot files
+        ├── bootcode.bin     First-stage bootloader
+        ├── kernel8.img      64-bit kernel
+        ├── cmdline.txt      Default kernel command line
+        └── <serial>/        Per-node boot directory
+            └── cmdline.txt  Per-node kernel command line (sets hostname)
+
+SSD
+└── /nfs/nodes/
+    └── <serial>/            Per-node private, writable storage
+        ├── etc/             Node's /etc
+        ├── var/             Node's /var
+        └── home/            Node's /home
 ```
+
+### Boot reliability
+
+Powering on all eight workers at the same time initially failed intermittently: the concurrent burst of TFTP requests and NFS mounts overwhelmed the master, and some nodes gave up before completing the transfer. This was resolved by moving TFTP to a dedicated server, raising the NFS thread count, and enlarging the kernel network buffers on the master.
+
+![Cold boot time for all 8 workers, before and after tuning](task1-boottime.png)
+
+The full cluster now cold-boots **reliably in roughly two minutes**.
 
 ---
 
 ## 3. Network Services on the Master
 
-A single `dnsmasq` instance on the master provides both DHCP and the boot information the nodes need. NFS exports the shared image and the per-node overlays. A separate TFTP daemon serves the boot files.
+A single `dnsmasq` instance on the master provides both DHCP and the boot information the nodes need. NFS exports the shared image and the per-node directories. A separate TFTP daemon serves the boot files.
 
 ### DHCP and boot configuration (`dnsmasq`)
 
@@ -152,16 +188,22 @@ dhcp-host=b8:27:eb:90:0a:eb,192.168.1.54,worker2
 The shared root and each per-node directory are exported to the cluster subnet.
 
 ```
-/nfs/rootfs64   192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash)
-/nfs/boot64     192.168.1.0/24(ro,sync,no_subtree_check,no_root_squash)
+/nfs/rootfs64        192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash)
+/nfs/boot64          192.168.1.0/24(ro,sync,no_subtree_check,no_root_squash)
 /nfs/nodes/<serial>  192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash)
 ```
+
+### Compute available to later tasks
+
+The eight workers together provide the parallel compute fabric that Tasks 2, 3, 4 and 7 run on.
+
+![Cluster compute footprint: 32 worker cores](task1-compute.png)
 
 ---
 
 ## 4. Time Synchronization
 
-Network booting is sensitive to clock errors: if the master's clock is in the past, freshly downloaded files can appear to have modification times "in the future," and TLS and logging misbehave. We therefore made reliable, automatic time synchronization part of the infrastructure.
+Network booting is sensitive to clock errors: if the master's clock is in the past, freshly downloaded files can appear to have modification times "in the future," and logging and TLS misbehave. We therefore made reliable, automatic time synchronization part of the infrastructure.
 
 We use **chrony** in a two-tier arrangement:
 
@@ -172,12 +214,12 @@ We use **chrony** in a two-tier arrangement:
 Internet NTP pool
        |
        v
-   Pi 5 master  (chrony server, stratum source for the cluster)
+   Pi 5 master  (chrony server, time source for the cluster)
        |
        +--> worker1 ... worker8   (chrony clients, sync from master)
 ```
 
-The master's timezone is set to `Europe/Berlin`. On boot, each worker starts chrony and performs an immediate step correction so the clock is right before any time-sensitive service starts.
+The master's timezone is set to `Europe/Berlin`. On boot, each worker starts chrony and performs an immediate step correction, so its clock is correct before any time-sensitive service starts. Measured offset between a worker and the master is at the **microsecond level**.
 
 ---
 
@@ -249,9 +291,26 @@ The master is the hub: it boots and feeds the workers, sources and serves time, 
 
 ## 7. Verification
 
-The infrastructure can be checked at any time with the following commands, run from the master.
+The infrastructure can be checked at any time with the following commands.
 
-**All workers are up and running 64-bit:**
+**Connect to the machines:**
+
+```bash
+ssh cc123@192.168.1.50     # master (Pi 5)
+ssh pi@192.168.1.58        # a worker (Pi 3)
+ssh cc123@192.168.1.2      # sensor node (Pi 4)
+```
+
+**All eight workers are reachable:**
+
+```bash
+for IP in 192.168.1.58 192.168.1.54 192.168.1.104 192.168.1.136 \
+          192.168.1.86 192.168.1.117 192.168.1.83 192.168.1.133; do
+  ping -c1 -W2 $IP >/dev/null && echo "$IP UP" || echo "$IP DOWN"
+done
+```
+
+**All workers are running 64-bit:**
 
 ```bash
 for IP in 192.168.1.58 192.168.1.54 192.168.1.104 192.168.1.136 \
@@ -262,7 +321,7 @@ done
 
 Each node should report its hostname and `aarch64` (64-bit ARM).
 
-**Shared OS image is reachable by all nodes:**
+**Shared storage is mounted by the nodes** (run on the master):
 
 ```bash
 sudo showmount -a        # lists nodes currently mounting the NFS exports
@@ -272,12 +331,15 @@ sudo exportfs -v         # shows the active exports and their options
 **Time is synchronized across the cluster:**
 
 ```bash
-chronyc tracking         # on the master: confirms sync to an NTP source
-chronyc clients          # on the master: lists workers syncing from it
-# On a worker, the Reference ID should be the master's address (192.168.1.50)
+# On the master:
+chronyc tracking         # confirms the master is synced to an NTP source
+chronyc clients          # lists the workers syncing from it
+
+# On a worker:
+chronyc tracking         # Reference ID should be the master (192.168.1.50)
 ```
 
-**Sensor events are flowing:**
+**Sensor events are flowing** (run on the master):
 
 ```bash
 mosquitto_sub -h localhost -t 'cluster/camera/events' -v
@@ -285,21 +347,33 @@ mosquitto_sub -h localhost -t 'cluster/camera/events' -v
 
 With an object in view of the camera, structured JSON events appear on this subscription.
 
+**Run any command across all workers:**
+
+```bash
+for IP in 192.168.1.58 192.168.1.54 192.168.1.104 192.168.1.136 \
+          192.168.1.86 192.168.1.117 192.168.1.83 192.168.1.133; do
+  ssh pi@$IP "uptime"
+done
+```
+
 ---
 
 ## 8. Outcome and Limitations
 
 **What Task 1 delivers:**
 
-- Eight diskless Raspberry Pi 3 workers booting a single shared 64-bit OS image over the network, each with private writable system directories.
-- A master node providing DHCP, TFTP, NFS, NTP, and MQTT for the whole cluster.
+- Eight diskless Raspberry Pi 3 workers booting a single shared 64-bit OS image over the network, each with private writable system directories — **zero SD cards** on the workers, **one image** to maintain instead of eight.
+- Storage split across the master's SD card (shared image, read-mostly) and an SSD (per-node writable state, write-heavy).
+- A master node providing DHCP, TFTP, NFS, NTP and MQTT for the whole cluster.
 - Automatic, internet-independent time synchronization across all nodes.
 - A sensor node performing on-camera object detection and publishing structured detection events to the cluster, running unattended as a service.
+- Reliable cold boot of the whole cluster in roughly two minutes.
 
 **Known limitations carried into later tasks:**
 
 - The current detection events report an **object count** but not the object **class**. Recognizing specific threat categories (e.g. a person, fire, an abandoned object) requires richer detection output and is addressed alongside the custom model work.
 - The sensor currently uses a **pre-trained** detection model supplied with the camera. The project requirement to train and deploy our **own** model is a separate task; the infrastructure here is model-agnostic and will accept the custom model once it is converted to the camera's format.
 - Continuous detections are published per qualifying frame. A debouncing / rate-limiting step is planned for the backend and alerting tasks to avoid flooding consumers with duplicate events.
+- Storage here is **master-served** shared storage, which is the right fit for diskless boot. Genuinely **distributed** storage (MinIO, erasure-coded across nodes) is introduced later, in the backend task.
 
 These limitations are deliberately scoped out of Task 1, which concerns the infrastructure itself; they are taken up by the model-training, backend, and notification tasks.
