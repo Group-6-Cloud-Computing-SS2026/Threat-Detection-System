@@ -7,6 +7,8 @@ nav_order: 0
 
 Welcome to the project task board and status overview. This dashboard lists all key milestones, design decisions, work packages, lead developers, and live progress indicators for the **Threat Detection System** edge-computing cluster.
 
+![System Architecture](../assets/overall_architecture.png)
+
 ---
 
 ## Tasks Progress Matrix
