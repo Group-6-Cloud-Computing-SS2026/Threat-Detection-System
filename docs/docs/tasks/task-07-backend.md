@@ -8,55 +8,7 @@ The backend layer of the Threat Detection System (TDS) is designed as a highly a
 
 This diagram illustrates how data flows from the physical camera on the Edge node, through the message broker, across the load-balanced compute nodes (FastAPI replicas), and into the SSD-backed databases.
 
-```mermaid
-graph TD
-    subgraph "Edge Node (Pi 4)"
-        Cam["RPi Camera (rpicam-vid)"]
-        TPU["Sony IMX500 Hardware TPU (YOLO)"]
-        Node["Edge Node Agent (sensor_node.py)"]
-        Cam -->|"Raw Frames"| Node
-        TPU -->|"JSON Detections"| Node
-    end
-
-    subgraph "Event Broker (Pi 5 Master)"
-        Broker["tds-mqtt Broker (Mosquitto)"]
-    end
-    
-    Node -->|"Publish stream & events"| Broker
-
-    subgraph "Distributed Compute Layer (k3s Cluster)"
-        API1["tds-api Pod 1 (pi5-master)"]
-        API2["tds-api Pod 2 (worker1)"]
-        API3["tds-api Pod 3 (worker2)"]
-        APIn["tds-api Pod 9 (worker8)"]
-    end
-
-    Broker -->|"Shared topic: $share/api-group/sensors/+/detections"| API1
-    Broker -->|"Shared topic: $share/api-group/sensors/+/detections"| API2
-    Broker -->|"Shared topic: $share/api-group/sensors/+/detections"| API3
-    Broker -->|"Shared topic: $share/api-group/sensors/+/detections"| APIn
-
-    subgraph "Kubernetes Network Services"
-        PostgresSvc["postgres Service (Port 5432)"]
-        MinioSvc["minio LoadBalancer (Port 9000)"]
-    end
-
-    API1 & API2 & API3 & APIn --> PostgresSvc
-    API1 & API2 & API3 & APIn --> MinioSvc
-
-    subgraph "Stateful Storage Layer (SSD)"
-        DB[("tds-postgres Database")]
-        subgraph "4-Node MinIO Cluster"
-            MinIO0["tds-minio-0 (pi5-master)"]
-            MinIO1["tds-minio-1 (worker1)"]
-            MinIO2["tds-minio-2 (worker2)"]
-            MinIO3["tds-minio-3 (worker3)"]
-        end
-    end
-
-    PostgresSvc --> DB
-    MinioSvc --> MinIO0 & MinIO1 & MinIO2 & MinIO3
-```
+![Backend Architecture](../assets/backend_architecture.png)
 
 ### Shared Subscriptions ($share)
 To support 9 replicas of the API running in parallel without duplicate data processing, we utilize **MQTT v5 Shared Subscriptions**:
