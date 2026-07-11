@@ -1,6 +1,7 @@
 #include <mpi.h>
 #include <stdio.h>
 #include <time.h>
+#include <stdlib.h>
 
 int main(int argc, char** argv) {
     MPI_Init(&argc, &argv);
@@ -10,7 +11,7 @@ int main(int argc, char** argv) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     // FIXED TOTAL WORKLOAD
-    long TOTAL_STEPS = 50000000;
+    long TOTAL_STEPS = atol(argv[1]);
     long steps_per_process = TOTAL_STEPS / size;
 
     double start_time = 0.0;
