@@ -108,11 +108,14 @@ int main(int argc, char** argv) {
 
 #### Step 2: Push and Compile Across Cluster Workers
 ```bash
-# Synchronization Loop
-for ip in 192.168.1.58 192.168.1.54 192.168.1.104 192.168.1.136           192.168.1.86 192.168.1.117 192.168.1.83 192.168.1.133; do
-  cat ~/amdahl_multi_test.c | ssh -i ~/.ssh/id_ed25519 pi@$ip "cat > /home/pi/amdahl_multi_test.c"
-  ssh -i ~/.ssh/id_ed25519 pi@$ip "mpicc -O3 /home/pi/amdahl_multi_test.c -o /home/pi/amdahl_multi_bench"
-done
+mpicc -o ~/amdahl_multi_bench amdahl_multi_test.c
+
+ansible workers -i ~/pi-cluster/hosts.ini -m copy -a "src=~/amdahl_multi_bench dest=/home/pi/amdahl_multi_bench mode=0755"
+```
+
+#### Step 3: Run it via run_amdahl_full Script (Example below)
+```bash
+./run_amdahl_full.sh 1000000 1 "1 2 4 8 16 32" amhdahl_core_results.csv "--map-by core" --table
 ```
 
 ---
@@ -168,12 +171,16 @@ int main(int argc, char** argv) {
 
 #### Step 2: Push and Compile Across Cluster Workers
 ```bash
-# Synchronization Loop
-for ip in 192.168.1.58 192.168.1.54 192.168.1.104 192.168.1.136           192.168.1.86 192.168.1.117 192.168.1.83 192.168.1.133; do
-  cat ~/gustafson_multi_test.c | ssh -i ~/.ssh/id_ed25519 pi@$ip "cat > /home/pi/gustafson_multi_test.c"
-  ssh -i ~/.ssh/id_ed25519 pi@$ip "mpicc -O3 /home/pi/gustafson_multi_test.c -o /home/pi/gustafson_multi_bench"
-done
+mpicc -o ~/gustafson_multi_bench gustafson_multi_test.c
+
+ansible workers -i ~/pi-cluster/hosts.ini -m copy -a "src=~/gustafson_multi_bench dest=/home/pi/gustafson_multi_bench mode=0755"
 ```
+
+#### Step 3: Run it via run_amdahl_full Script (Example below)
+```bash
+./run_gustafson_full.sh 1000000 1 "1 2 4 8 16 32" gustafson_core_results.csv "--map-by core" --table
+```
+
 
 ---
 

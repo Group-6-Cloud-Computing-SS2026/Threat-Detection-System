@@ -53,8 +53,8 @@ if [ "$SHOW_TABLE" == "--table" ]; then
     done < "$OUTPUT_FILE"
 fi
 
-# ./run_gustafson_full.sh 1000000 1 "1 2 4 8 16 32" gustafson_core_results.csv "--map-by core" --table
-
 # mpicc -o ~/gustafson_multi_bench gustafson_multi_test.c
 
 # ansible workers -i ~/pi-cluster/hosts.ini -m copy -a "src=~/gustafson_multi_bench dest=/home/pi/gustafson_multi_bench mode=0755"
+
+# ./run_gustafson_full.sh 1000000 1 "1 2 4 8 16 32" gustafson_core_results.csv "--map-by core" --table

@@ -50,6 +50,8 @@ if [ "$SHOW_TABLE" == "--table" ]; then
     done < "$OUTPUT_FILE"
 fi
 
-# ./run_amdahl_full.sh 1000000 1 "1 2 4 8 16 32" core_results.csv "--map-by core" --table
 # mpicc -o ~/amdahl_multi_bench amdahl_multi_test.c
+
 # ansible workers -i ~/pi-cluster/hosts.ini -m copy -a "src=~/amdahl_multi_bench dest=/home/pi/amdahl_multi_bench mode=0755"
+
+# ./run_amdahl_full.sh 1000000 1 "1 2 4 8 16 32" amhdahl_core_results.csv "--map-by core" --table
