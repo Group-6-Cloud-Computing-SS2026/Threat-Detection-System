@@ -1,0 +1,20 @@
+{
+    "imx500_object_detection":
+    {
+        "max_detections" : 5,
+        "threshold" : 0.4,
+        "network_file": "/home/cc123/output_rpk/network.rpk",
+        "classes": [
+            "background",
+            "blunt_weapon",
+            "edged_weapon",
+            "fire",
+            "firearm",
+            "person"
+        ]
+    },
+    "object_detect_draw_cv":
+    {
+        "line_thickness" : 2
+    }
+}

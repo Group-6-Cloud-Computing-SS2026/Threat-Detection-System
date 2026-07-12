@@ -14,7 +14,8 @@ NODE = "pi4-edge"
 TOPIC_EVENTS = "cluster/camera/events"
 TOPIC_STREAM = "cluster/camera/stream"
 POST_PROCESS_FILE = "/home/cc123/imx500_yolo.json"
-DETECTION_INTERVAL = float(os.getenv("DETECTION_INTERVAL", "10.0"))  # seconds
+DETECTION_INTERVAL = float(os.getenv("DETECTION_INTERVAL", "5.0"))  # seconds
+CAMERA_FPS = int(os.getenv("CAMERA_FPS", "30"))
 
 # Global reference to the latest captured frame bytes
 latest_frame_base64 = None
@@ -54,18 +55,26 @@ def parse_stderr_detections(stderr_stream):
                 break
             next_line_str = next_line.decode("utf-8", errors="ignore").strip()
 
-            # Format is usually e.g., "Inference output : person [confidence]" or similar
+            # Raw string layout: "fire[3] (0.85) @ 147308,43185 0x0"
             label = "unknown"
-            if " : " in next_line_str:
-                label = next_line_str.split(" : ")[1].strip()
-                if "[" in label:
-                    label = label.split("[")[0].strip()
-            elif next_line_str:
-                label = next_line_str.strip()
-                if "[" in label:
-                    label = label.split("[")[0].strip()
+            confidence = 0.0
 
-            # Enforce the 2-second publish interval
+            # 1. Isolate text after the colon
+            raw_target = next_line_str.split(":", 1)[1].strip() if ":" in next_line_str else next_line_str.strip()
+            
+            # 2. Extract the label (everything before the class bracket '[')
+            if "[" in raw_target:
+                label = raw_target.split("[")[0].strip()
+            
+            # 3. Extract the confidence (everything between '(' and ')')
+            if "(" in raw_target and ")" in raw_target:
+                try:
+                    conf_str = raw_target.split("(")[1].split(")")[0].strip()
+                    confidence = round(float(conf_str), 2)
+                except (ValueError, IndexError):
+                    confidence = 0.02
+
+            # Enforce the configured publish interval
             current_time = time.time()
             if current_time - last_publish_time >= DETECTION_INTERVAL:
                 last_publish_time = current_time
@@ -75,11 +84,22 @@ def parse_stderr_detections(stderr_stream):
                 event_type = "unknown"
                 if "person" in label_lower:
                     event_type = "person"
-                elif any(w in label_lower for w in ["knife", "scissors", "bat", "gun", "pistol", "rifle", "weapon"]):
+                elif any(
+                    w in label_lower
+                    for w in [
+                        "knife",
+                        "scissors",
+                        "bat",
+                        "gun",
+                        "pistol",
+                        "rifle",
+                        "weapon",
+                    ]
+                ):
                     event_type = "weapon"
                 elif any(f in label_lower for f in ["fire", "smoke"]):
                     event_type = "fire"
-                
+
                 # Determine severity
                 severity = "medium"
                 if event_type == "person":
@@ -90,7 +110,7 @@ def parse_stderr_detections(stderr_stream):
                     severity = "critical"
 
                 ts = datetime.now(timezone.utc).isoformat()
-                
+
                 # Retrieve the latest base64 frame if available
                 with frame_lock:
                     img_base64 = latest_frame_base64
@@ -101,20 +121,22 @@ def parse_stderr_detections(stderr_stream):
                     "event_type": event_type,
                     "objects": count,
                     "label": event_type,
-                    "confidence": 1.0,
+                    "confidence": confidence,
                     "severity": severity,
-                    "raw_detections": [{"class_name": label, "confidence": 1.0}],
+                    "raw_detections": [{"class_name": label, "confidence": confidence}],
                     "metadata": {
                         "source": "imx500_hardware_tpu",
                         "node": NODE,
-                    }
+                    },
                 }
                 if img_base64:
                     payload["image_base64"] = img_base64
 
                 try:
                     client.publish(TOPIC_EVENTS, json.dumps(payload))
-                    print(f"[{datetime.now().strftime('%H:%M:%S')}] Published detection event: {event_type} (count: {count})")
+                    print(
+                        f"[{datetime.now().strftime('%H:%M:%S')}] Published hardware detection event: {event_type} (count: {count}, conf: {confidence}))"
+                    )
                 except Exception as e:
                     print(f"Error publishing detection event: {e}")
 
@@ -131,45 +153,50 @@ def main():
 
     client.loop_start()
 
-    # Launch rpicam-vid
+    # Launch rpicam-vid 
     cmd = [
         "rpicam-vid",
-        "-t", "0",
-        "--post-process-file", POST_PROCESS_FILE,
+        "-t",
+        "0",
+        "--post-process-file",
+        POST_PROCESS_FILE,
         "--nopreview",
-        "-v", "2",
-        "--codec", "mjpeg",
-        "--width", "640",
-        "--height", "480",
-        "--framerate", "10",
-        "-o", "-"
+        "-v",
+        "2",
+        "--codec",
+        "mjpeg",
+        "--width",
+        "640",
+        "--height",
+        "480",
+        "--framerate",
+        str(CAMERA_FPS),
+        "-o",
+        "-",
     ]
 
     print(f"Launching command: {' '.join(cmd)}")
     try:
         process = subprocess.Popen(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            bufsize=0
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=0
         )
     except FileNotFoundError:
-        print("Fatal error: rpicam-vid command not found. Ensure rpicam-apps is installed.")
+        print(
+            "Fatal error: rpicam-vid command not found. Ensure rpicam-apps is installed."
+        )
         client.loop_stop()
         sys.exit(1)
 
     # Start the stderr parsing thread
     stderr_thread = threading.Thread(
-        target=parse_stderr_detections,
-        args=(process.stderr,),
-        daemon=True
+        target=parse_stderr_detections, args=(process.stderr,), daemon=True
     )
     stderr_thread.start()
 
     # Read binary MJPEG frames from stdout
     buffer = bytearray()
     print("Reading MJPEG stream from rpicam-vid...")
-    
+
     try:
         while True:
             data = process.stdout.read(4096)
@@ -179,7 +206,7 @@ def main():
 
             buffer.extend(data)
             while True:
-                start = buffer.find(b'\xff\xd8')
+                start = buffer.find(b"\xff\xd8")
                 if start == -1:
                     # Clean up buffer if no start marker is found
                     if len(buffer) > 1000000:
@@ -190,13 +217,13 @@ def main():
                     del buffer[:start]
                     start = 0
 
-                end = buffer.find(b'\xff\xd9', start)
+                end = buffer.find(b"\xff\xd9", start)
                 if end == -1:
                     break
 
                 # Extract the full JPEG frame
-                frame_bytes = bytes(buffer[start:end + 2])
-                del buffer[:end + 2]
+                frame_bytes = bytes(buffer[start : end + 2])
+                del buffer[: end + 2]
 
                 # Base64 encode the frame
                 base64_frame = base64.b64encode(frame_bytes).decode("utf-8")
@@ -208,9 +235,9 @@ def main():
                 # Publish stream frame to MQTT
                 stream_payload = {
                     "timestamp": datetime.now(timezone.utc).isoformat(),
-                    "fps": 10,
+                    "fps": CAMERA_FPS,
                     "node": NODE,
-                    "image": base64_frame
+                    "image": base64_frame,
                 }
                 try:
                     client.publish(TOPIC_STREAM, json.dumps(stream_payload))

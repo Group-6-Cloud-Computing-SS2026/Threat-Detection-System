@@ -14101,4 +14101,2146 @@ Average parallel part:       172.707s
 Average 2nd sequential part: 5.473s
 =========================================
 Results saved to: results_6400x4800_4nodes.csv
-cc123@pi5-master:~/task-distributor $ ./run_task_
+
+cc123@pi5-master:~/task-distributor $ ./run_task_distributor.sh 1 1600 600 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n no 5
+--- Checking/Mounting Workers (Parallel) ---
+Mounting 192.168.1.133...
+Mounting 192.168.1.117...
+Warning: Permanently added '192.168.1.133' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Mounting 192.168.1.83...
+Warning: Permanently added '192.168.1.117' (ED25519) to the list of known hosts.
+Mounting 192.168.1.54...
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Mounting 192.168.1.58...
+Warning: Permanently added '192.168.1.83' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Mounting 192.168.1.86...
+Mounting 192.168.1.104...
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Mounting 192.168.1.136...
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.86' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+--- All workers checked/mounted ---
+=========================================
+             RUN 1 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (1 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:16:25
+192.168.1.58 has been finished.
+Image has been copied.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.006s
+Required time to process the parallel part:          7.025s
+Required time to process the 2nd sequential part:    0.010s
+=========================================
+             RUN 2 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (1 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:16:31
+192.168.1.58 has been finished.
+Image has been copied.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.004s
+Required time to process the parallel part:          6.021s
+Required time to process the 2nd sequential part:    0.006s
+=========================================
+             RUN 3 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (1 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:16:36
+192.168.1.58 has been finished.
+Image has been copied.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.004s
+Required time to process the parallel part:          5.018s
+Required time to process the 2nd sequential part:    0.006s
+=========================================
+             RUN 4 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (1 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:16:41
+192.168.1.58 has been finished.
+Image has been copied.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.004s
+Required time to process the parallel part:          5.018s
+Required time to process the 2nd sequential part:    0.005s
+=========================================
+             RUN 5 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (1 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:16:46
+192.168.1.58 has been finished.
+Image has been copied.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.003s
+Required time to process the parallel part:          5.019s
+Required time to process the 2nd sequential part:    0.006s
+
+=========================================
+   FINAL AVERAGES OVER 5 BENCHMARK RUNS   
+=========================================
+Average 1st sequential part: 0.004s
+Average parallel part:       5.620s
+Average 2nd sequential part: 0.006s
+=========================================
+Results saved to: results_1600x600_1nodes.csv
+cc123@pi5-master:~/task-distributor $ ls
+5        README.md       benchmark_results.csv  results_1600x600_1nodes.csv  task-distributor-worker.sh
+LICENSE  amdahl_results  documentation          run_task_distributor.sh
+README   benchmark       nodes                  task-distributor-master.sh
+cc123@pi5-master:~/task-distributor $ ./run_task_distributor.sh 1 1600 600 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n no 5^C
+cc123@pi5-master:~/task-distributor $ ./run_task_distributor.sh 2 1600 1200 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n no 5
+--- Checking/Mounting Workers (Parallel) ---
+--- All workers checked/mounted ---
+=========================================
+             RUN 1 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (2 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:32:54
+192.168.1.58 has been finished.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+192.168.1.54 2026_07_12_17:32:56
+192.168.1.54 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.003s
+Required time to process the parallel part:          10.038s
+Required time to process the 2nd sequential part:    0.403s
+=========================================
+             RUN 2 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (2 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:33:04
+192.168.1.58 has been finished.
+Wait for 192.168.1.54 in lockfile.
+192.168.1.54 2026_07_12_17:33:05
+192.168.1.54 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.003s
+Required time to process the parallel part:          8.028s
+Required time to process the 2nd sequential part:    0.359s
+=========================================
+             RUN 3 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (2 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:33:13
+192.168.1.58 has been finished.
+192.168.1.54 2026_07_12_17:33:13
+192.168.1.54 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.003s
+Required time to process the parallel part:          8.029s
+Required time to process the 2nd sequential part:    0.392s
+=========================================
+             RUN 4 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (2 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:33:21
+192.168.1.58 has been finished.
+192.168.1.54 2026_07_12_17:33:20
+192.168.1.54 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.003s
+Required time to process the parallel part:          8.042s
+Required time to process the 2nd sequential part:    0.431s
+=========================================
+             RUN 5 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (2 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:33:29
+192.168.1.58 has been finished.
+192.168.1.54 2026_07_12_17:33:29
+192.168.1.54 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.003s
+Required time to process the parallel part:          7.030s
+Required time to process the 2nd sequential part:    0.354s
+
+=========================================
+   FINAL AVERAGES OVER 5 BENCHMARK RUNS   
+=========================================
+Average 1st sequential part: 0.003s
+Average parallel part:       8.233s
+Average 2nd sequential part: 0.387s
+=========================================
+Results saved to: results_1600x1200_2nodes.csv
+cc123@pi5-master:~/task-distributor $ ./run_task_distributor.sh 2 1600 1200 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n no 5^C
+cc123@pi5-master:~/task-distributor $ ./run_task_distributor.sh 4 3200 1200 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n no 5
+--- Checking/Mounting Workers (Parallel) ---
+--- All workers checked/mounted ---
+=========================================
+             RUN 1 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (4 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:34:26
+192.168.1.58 has been finished.
+192.168.1.54 2026_07_12_17:34:27
+192.168.1.54 has been finished.
+Wait for 192.168.1.104 in lockfile.
+Wait for 192.168.1.104 in lockfile.
+Wait for 192.168.1.104 in lockfile.
+192.168.1.104 2026_07_12_17:34:29
+192.168.1.104 has been finished.
+192.168.1.136 2026_07_12_17:34:29
+192.168.1.136 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.003s
+Required time to process the parallel part:          11.051s
+Required time to process the 2nd sequential part:    0.729s
+=========================================
+             RUN 2 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (4 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:34:39
+192.168.1.58 has been finished.
+Wait for 192.168.1.54 in lockfile.
+192.168.1.54 2026_07_12_17:34:39
+192.168.1.54 has been finished.
+192.168.1.104 2026_07_12_17:34:39
+192.168.1.104 has been finished.
+192.168.1.136 2026_07_12_17:34:38
+192.168.1.136 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.003s
+Required time to process the parallel part:          9.048s
+Required time to process the 2nd sequential part:    0.787s
+=========================================
+             RUN 3 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (4 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:34:48
+192.168.1.58 has been finished.
+Wait for 192.168.1.54 in lockfile.
+192.168.1.54 2026_07_12_17:34:49
+192.168.1.54 has been finished.
+192.168.1.104 2026_07_12_17:34:49
+192.168.1.104 has been finished.
+192.168.1.136 2026_07_12_17:34:48
+192.168.1.136 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.003s
+Required time to process the parallel part:          9.050s
+Required time to process the 2nd sequential part:    0.830s
+=========================================
+             RUN 4 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (4 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:34:58
+192.168.1.58 has been finished.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+192.168.1.54 2026_07_12_17:34:59
+192.168.1.54 has been finished.
+192.168.1.104 2026_07_12_17:34:59
+192.168.1.104 has been finished.
+192.168.1.136 2026_07_12_17:34:58
+192.168.1.136 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.003s
+Required time to process the parallel part:          9.046s
+Required time to process the 2nd sequential part:    0.775s
+=========================================
+             RUN 5 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (4 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:35:07
+192.168.1.58 has been finished.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+192.168.1.54 2026_07_12_17:35:09
+192.168.1.54 has been finished.
+192.168.1.104 2026_07_12_17:35:08
+192.168.1.104 has been finished.
+192.168.1.136 2026_07_12_17:35:07
+192.168.1.136 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.005s
+Required time to process the parallel part:          9.050s
+Required time to process the 2nd sequential part:    0.740s
+
+=========================================
+   FINAL AVERAGES OVER 5 BENCHMARK RUNS   
+=========================================
+Average 1st sequential part: 0.003s
+Average parallel part:       9.449s
+Average 2nd sequential part: 0.772s
+=========================================
+Results saved to: results_3200x1200_4nodes.csv
+cc123@pi5-master:~/task-distributor $ ./run_task_distributor.sh 4 3200 2400 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_4^Cno 5
+cc123@pi5-master:~/task-distributor $ ./run_task_distributor.sh 8 3200 2400 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_8n no 5
+--- Checking/Mounting Workers (Parallel) ---
+--- All workers checked/mounted ---
+=========================================
+             RUN 1 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (8 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.86' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.133' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.117' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.83' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_8n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:36:09
+192.168.1.58 has been finished.
+192.168.1.54 2026_07_12_17:36:09
+192.168.1.54 has been finished.
+192.168.1.104 2026_07_12_17:36:09
+192.168.1.104 has been finished.
+Wait for 192.168.1.136 in lockfile.
+Wait for 192.168.1.136 in lockfile.
+192.168.1.136 2026_07_12_17:36:11
+192.168.1.136 has been finished.
+Wait for 192.168.1.86 in lockfile.
+Wait for 192.168.1.86 in lockfile.
+192.168.1.86 2026_07_12_17:36:13
+192.168.1.86 has been finished.
+192.168.1.117 2026_07_12_17:36:13
+192.168.1.117 has been finished.
+192.168.1.83 2026_07_12_17:36:12
+192.168.1.83 has been finished.
+192.168.1.133 2026_07_12_17:36:11
+192.168.1.133 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_8n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.004s
+Required time to process the parallel part:          16.087s
+Required time to process the 2nd sequential part:    1.692s
+=========================================
+             RUN 2 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (8 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.83' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.86' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.117' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.133' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_8n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:36:27
+192.168.1.58 has been finished.
+Wait for 192.168.1.54 in lockfile.
+192.168.1.54 2026_07_12_17:36:28
+192.168.1.54 has been finished.
+192.168.1.104 2026_07_12_17:36:27
+192.168.1.104 has been finished.
+192.168.1.136 2026_07_12_17:36:27
+192.168.1.136 has been finished.
+Wait for 192.168.1.86 in lockfile.
+Wait for 192.168.1.86 in lockfile.
+192.168.1.86 2026_07_12_17:36:29
+192.168.1.86 has been finished.
+192.168.1.117 2026_07_12_17:36:27
+192.168.1.117 has been finished.
+192.168.1.83 2026_07_12_17:36:27
+192.168.1.83 has been finished.
+192.168.1.133 2026_07_12_17:36:27
+192.168.1.133 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_8n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.004s
+Required time to process the parallel part:          15.090s
+Required time to process the 2nd sequential part:    1.600s
+=========================================
+             RUN 3 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (8 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.117' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.86' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.83' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.133' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_8n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:36:43
+192.168.1.58 has been finished.
+Wait for 192.168.1.54 in lockfile.
+192.168.1.54 2026_07_12_17:36:44
+192.168.1.54 has been finished.
+192.168.1.104 2026_07_12_17:36:44
+192.168.1.104 has been finished.
+Wait for 192.168.1.136 in lockfile.
+192.168.1.136 2026_07_12_17:36:46
+192.168.1.136 has been finished.
+Wait for 192.168.1.86 in lockfile.
+Wait for 192.168.1.86 in lockfile.
+192.168.1.86 2026_07_12_17:36:47
+192.168.1.86 has been finished.
+192.168.1.117 2026_07_12_17:36:45
+192.168.1.117 has been finished.
+192.168.1.83 2026_07_12_17:36:44
+192.168.1.83 has been finished.
+192.168.1.133 2026_07_12_17:36:45
+192.168.1.133 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_8n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.007s
+Required time to process the parallel part:          16.110s
+Required time to process the 2nd sequential part:    1.605s
+=========================================
+             RUN 4 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (8 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.86' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.83' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.117' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.133' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_8n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:37:01
+192.168.1.58 has been finished.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+192.168.1.54 2026_07_12_17:37:02
+192.168.1.54 has been finished.
+192.168.1.104 2026_07_12_17:37:02
+192.168.1.104 has been finished.
+Wait for 192.168.1.136 in lockfile.
+192.168.1.136 2026_07_12_17:37:03
+192.168.1.136 has been finished.
+192.168.1.86 2026_07_12_17:37:03
+192.168.1.86 has been finished.
+192.168.1.117 2026_07_12_17:37:02
+192.168.1.117 has been finished.
+192.168.1.83 2026_07_12_17:37:02
+192.168.1.83 has been finished.
+192.168.1.133 2026_07_12_17:37:01
+192.168.1.133 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_8n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.003s
+Required time to process the parallel part:          14.079s
+Required time to process the 2nd sequential part:    1.701s
+=========================================
+             RUN 5 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (8 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.117' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.86' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.83' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.133' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_8n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:37:17
+192.168.1.58 has been finished.
+192.168.1.54 2026_07_12_17:37:18
+192.168.1.54 has been finished.
+192.168.1.104 2026_07_12_17:37:17
+192.168.1.104 has been finished.
+Wait for 192.168.1.136 in lockfile.
+192.168.1.136 2026_07_12_17:37:18
+192.168.1.136 has been finished.
+192.168.1.86 2026_07_12_17:37:18
+192.168.1.86 has been finished.
+192.168.1.117 2026_07_12_17:37:18
+192.168.1.117 has been finished.
+192.168.1.83 2026_07_12_17:37:18
+192.168.1.83 has been finished.
+192.168.1.133 2026_07_12_17:37:17
+192.168.1.133 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_8n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.003s
+Required time to process the parallel part:          13.082s
+Required time to process the 2nd sequential part:    1.644s
+
+=========================================
+   FINAL AVERAGES OVER 5 BENCHMARK RUNS   
+=========================================
+Average 1st sequential part: 0.004s
+Average parallel part:       14.889s
+Average 2nd sequential part: 1.648s
+=========================================
+Results saved to: results_3200x2400_8nodes.csv
+cc123@pi5-master:~/task-distributor $ ls
+5        README.md       benchmark_results.csv  results_1600x1200_2nodes.csv  results_3200x2400_8nodes.csv  task-distributor-worker.sh
+LICENSE  amdahl_results  documentation          results_1600x600_1nodes.csv   run_task_distributor.sh
+README   benchmark       nodes                  results_3200x1200_4nodes.csv  task-distributor-master.sh
+cc123@pi5-master:~/task-distributor $ mkdir gustafsons_results
+cc123@pi5-master:~/task-distributor $ mv results_* gustafsons_results/
+cc123@pi5-master:~/task-distributor $ ls gustafsons_results/
+results_1600x1200_2nodes.csv  results_1600x600_1nodes.csv  results_3200x1200_4nodes.csv  results_3200x2400_8nodes.csv
+cc123@pi5-master:~/task-distributor $ 
+cc123@pi5-master:~/task-distributor $ ./run_task_distributor.sh 1 3200 1200 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n no 1
+--- Checking/Mounting Workers (Parallel) ---
+^CMounting 192.168.1.117...
+Mounting 192.168.1.83...
+Mounting 192.168.1.54...
+Mounting 192.168.1.136...
+Mounting 192.168.1.58...
+Mounting 192.168.1.86...
+Mounting 192.168.1.133...
+Mounting 192.168.1.104...
+
+cc123@pi5-master:~/task-distributor $ Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.133' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.117' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.83' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.86' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+./run_task_distributor.sh 1 3200 1200 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n no 1^C
+cc123@pi5-master:~/task-distributor $ ^C
+cc123@pi5-master:~/task-distributor $ ^C
+cc123@pi5-master:~/task-distributor $ ^C
+cc123@pi5-master:~/task-distributor $ ps aux | grep povray
+cc123      19579  0.0  0.0   6352  2080 pts/0    S+   18:40   0:00 grep --color=auto povray
+cc123@pi5-master:~/task-distributor $ ./run_task_distributor.sh 1 3200 1200 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n no 5
+--- Checking/Mounting Workers (Parallel) ---
+--- All workers checked/mounted ---
+=========================================
+             RUN 1 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (1 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:41:36
+192.168.1.58 has been finished.
+Image has been copied.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.005s
+Required time to process the parallel part:          15.042s
+Required time to process the 2nd sequential part:    0.006s
+=========================================
+             RUN 2 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (1 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:41:51
+192.168.1.58 has been finished.
+Image has been copied.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.004s
+Required time to process the parallel part:          15.041s
+Required time to process the 2nd sequential part:    0.004s
+=========================================
+             RUN 3 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (1 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:42:05
+192.168.1.58 has been finished.
+Image has been copied.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.003s
+Required time to process the parallel part:          14.041s
+Required time to process the 2nd sequential part:    0.007s
+=========================================
+             RUN 4 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (1 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:42:20
+192.168.1.58 has been finished.
+Image has been copied.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.004s
+Required time to process the parallel part:          14.043s
+Required time to process the 2nd sequential part:    0.004s
+=========================================
+             RUN 5 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (1 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:42:33
+192.168.1.58 has been finished.
+Image has been copied.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.004s
+Required time to process the parallel part:          14.041s
+Required time to process the 2nd sequential part:    0.004s
+
+=========================================
+   FINAL AVERAGES OVER 5 BENCHMARK RUNS   
+=========================================
+Average 1st sequential part: 0.004s
+Average parallel part:       14.441s
+Average 2nd sequential part: 0.005s
+=========================================
+Results saved to: results_3200x1200_1nodes.csv
+cc123@pi5-master:~/task-distributor $ ./run_task_distributor.sh 1 3200 1200 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_1n no 5^C
+cc123@pi5-master:~/task-distributor $ ./run_task_distributor.sh 2 3200 2400 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n no 5
+--- Checking/Mounting Workers (Parallel) ---
+--- All workers checked/mounted ---
+=========================================
+             RUN 1 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (2 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:44:41
+192.168.1.58 has been finished.
+192.168.1.54 2026_07_12_17:44:41
+192.168.1.54 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.003s
+Required time to process the parallel part:          27.088s
+Required time to process the 2nd sequential part:    1.204s
+=========================================
+             RUN 2 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (2 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:45:12
+192.168.1.58 has been finished.
+192.168.1.54 2026_07_12_17:45:09
+192.168.1.54 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.003s
+Required time to process the parallel part:          30.085s
+Required time to process the 2nd sequential part:    1.143s
+=========================================
+             RUN 3 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (2 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:45:39
+192.168.1.58 has been finished.
+Wait for 192.168.1.54 in lockfile.
+192.168.1.54 2026_07_12_17:45:40
+192.168.1.54 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.003s
+Required time to process the parallel part:          27.075s
+Required time to process the 2nd sequential part:    1.127s
+=========================================
+             RUN 4 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (2 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:46:07
+192.168.1.58 has been finished.
+Wait for 192.168.1.54 in lockfile.
+192.168.1.54 2026_07_12_17:46:08
+192.168.1.54 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.003s
+Required time to process the parallel part:          27.078s
+Required time to process the 2nd sequential part:    1.162s
+=========================================
+             RUN 5 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (2 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_17:46:35
+192.168.1.58 has been finished.
+Wait for 192.168.1.54 in lockfile.
+192.168.1.54 2026_07_12_17:46:37
+192.168.1.54 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.003s
+Required time to process the parallel part:          27.085s
+Required time to process the 2nd sequential part:    1.180s
+
+=========================================
+   FINAL AVERAGES OVER 5 BENCHMARK RUNS   
+=========================================
+Average 1st sequential part: 0.003s
+Average parallel part:       27.682s
+Average 2nd sequential part: 1.163s
+=========================================
+Results saved to: results_3200x2400_2nodes.csv
+cc123@pi5-master:~/task-distributor $ ./run_task_distributor.sh 2 3200 ^C00 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_2n no 5
+cc123@pi5-master:~/task-distributor $ ./run_task_distributor.sh 4 6400 2400 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n no 5
+--- Checking/Mounting Workers (Parallel) ---
+--- All workers checked/mounted ---
+=========================================
+             RUN 1 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (4 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+^C^C^C^Z
+[1]+  Stopped                 ./run_task_distributor.sh 4 6400 2400 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n no 5
+cc123@pi5-master:~/task-distributor $ ps aux | grep povray
+cc123      21157  0.0  0.1  17472  8832 pts/0    T    18:50   0:00 ssh -i /home/cc123/.ssh/id_ed25519 pi@192.168.1.136 /home/pi/task-distributor-worker.sh 4 /opt/povray/share/povray-3.7/scenes/objects/ blob.pov +FN +W6400 +H2400 +O/tmp/ +SR1801 +ER2400 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n /mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n/lockfile
+cc123      22458  0.0  0.0   6352  2080 pts/0    S+   18:59   0:00 grep --color=auto povray
+cc123@pi5-master:~/task-distributor $ pkill -9 -f task-distributor-worker.sh
+cc123@pi5-master:~/task-distributor $  kill -9 %1
+
+[1]+  Stopped                 ./run_task_distributor.sh 4 6400 2400 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n no 5
+cc123@pi5-master:~/task-distributor $ kill -9 %1
+-bash: kill: (21115) - No such process
+[1]+  Killed                  ./run_task_distributor.sh 4 6400 2400 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n no 5
+cc123@pi5-master:~/task-distributor $ pkill -9 -f task-distributor-worker.sh
+cc123@pi5-master:~/task-distributor $ kill -9 %1
+-bash: kill: %1: no such job
+cc123@pi5-master:~/task-distributor $ ps aux | grep povray
+cc123      22489  0.0  0.0   6352  2064 pts/0    S+   18:59   0:00 grep --color=auto povray
+cc123@pi5-master:~/task-distributor $ ./run_task_distributor.sh 4 6400 2400 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n no 5
+--- Checking/Mounting Workers (Parallel) ---
+--- All workers checked/mounted ---
+=========================================
+             RUN 1 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (4 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/home/pi/task-distributor-worker.sh: line 41:  8888 Aborted                 TERM=dumb /usr/bin/povray +I${IMG_PATH}/${IMG_FILE} ${FN} ${WIDTH} ${HEIGHT} +O${TARGET_DIR}/${BASENAME}.png ${START} ${END} > /dev/null 2> /tmp/povraymessages
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_18:01:29
+192.168.1.58 has been finished.
+192.168.1.54 2026_07_12_18:01:27
+192.168.1.54 has been finished.
+192.168.1.104 2026_07_12_18:01:26
+192.168.1.104 has been finished.
+Wait for 192.168.1.136 in lockfile.
+Wait for 192.168.1.136 in lockfile.
+192.168.1.136 2026_07_12_18:01:31
+192.168.1.136 has been finished.
+Image parts have been composed.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n/lockfile has been erased.
+Image parts have been erased.
+Required time to process the 1st sequential part:    0.003s
+Required time to process the parallel part:          40.125s
+Required time to process the 2nd sequential part:    2.395s
+=========================================
+             RUN 2 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (4 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/home/pi/task-distributor-worker.sh: line 41:  8958 Aborted                 TERM=dumb /usr/bin/povray +I${IMG_PATH}/${IMG_FILE} ${FN} ${WIDTH} ${HEIGHT} +O${TARGET_DIR}/${BASENAME}.png ${START} ${END} > /dev/null 2> /tmp/povraymessages
+convert-im6.q16: unable to open image `/home/pi/pov_tmp/blob.png': No such file or directory @ error/blob.c/OpenBlob/3029.
+convert-im6.q16: no images defined `/home/pi/pov_tmp/blob.png' @ error/convert.c/ConvertImageCommand/3229.
+mv: cannot stat '/home/pi/pov_tmp/blob.png': No such file or directory
+convert-im7.q16: unable to open image '/mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n/192.168.1.136.png': No such file or directory @ error/blob.c/OpenBlob/3700.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_18:02:11
+192.168.1.58 has been finished.
+192.168.1.54 2026_07_12_18:02:11
+192.168.1.54 has been finished.
+192.168.1.104 2026_07_12_18:02:09
+192.168.1.104 has been finished.
+192.168.1.136 2026_07_12_18:02:01
+192.168.1.136 has been finished.
+Unable to compose the image parts.
+(standard_in) 2: syntax error
+(standard_in) 2: syntax error
+(standard_in) 2: syntax error
+=========================================
+             RUN 3 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (4 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+^C^C^C^C^Z
+[1]+  Stopped                 ./run_task_distributor.sh 4 6400 2400 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n no 5
+cc123@pi5-master:~/task-distributor $ ps aux | grep povray
+cc123      23117  0.0  0.1  17472  8832 pts/0    T    19:02   0:00 ssh -i /home/cc123/.ssh/id_ed25519 pi@192.168.1.136 /home/pi/task-distributor-worker.sh 4 /opt/povray/share/povray-3.7/scenes/objects/ blob.pov +FN +W6400 +H2400 +O/tmp/ +SR1801 +ER2400 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n /mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n/lockfile
+cc123      25375  0.0  0.0   6352  2096 pts/0    S+   19:16   0:00 grep --color=auto povray
+cc123@pi5-master:~/task-distributor $ kill -9 %1
+
+[1]+  Stopped                 ./run_task_distributor.sh 4 6400 2400 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n no 5
+cc123@pi5-master:~/task-distributor $ pkill -9 -f task-distributor-worker.sh
+[1]+  Killed                  ./run_task_distributor.sh 4 6400 2400 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n no 5
+cc123@pi5-master:~/task-distributor $ ps aux | grep povray
+cc123      25378  0.0  0.0   6352  2080 pts/0    S+   19:16   0:00 grep --color=auto povray
+cc123@pi5-master:~/task-distributor $ ls
+5        README.md       benchmark_results.csv  nodes                         results_6400x2400_4nodes.csv  task-distributor-worker.sh
+LICENSE  amdahl_results  documentation          results_3200x1200_1nodes.csv  run_task_distributor.sh
+README   benchmark       gustafsons_results     results_3200x2400_2nodes.csv  task-distributor-master.sh
+cc123@pi5-master:~/task-distributor $ ./run_task_distributor.sh 4 6400 2400 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n no 5^C
+cc123@pi5-master:~/task-distributor $ ls gustafsons_results/
+results_1600x1200_2nodes.csv  results_1600x600_1nodes.csv  results_3200x1200_4nodes.csv  results_3200x2400_8nodes.csv
+cc123@pi5-master:~/task-distributor $ Connection to pi5-master.local closed by remote host.
+Connection to pi5-master.local closed.
+(base) ➜  Threat-Detection-System git:(service-repository-backend-v1) ✗ ssh cc123@pi5-master.local
+cc123@pi5-master.local's password: 
+Linux pi5-master 6.12.75+rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.12.75-1+rpt1 (2026-03-11) aarch64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Sun Jul 12 17:12:11 2026 from fe80::4e9:7aa6:5ad2:d554%eth0
+-bash: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory
+-bash: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory
+-bash: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory
+-bash: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory
+-bash: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory
+-bash: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory
+-bash: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory
+-bash: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory
+cc123@pi5-master:~ $ ansible workers -i ~/pi-cluster/hosts.ini -m shell -a "killall povray"^C
+cc123@pi5-master:~ $ ./run_task_distributor.sh 4 6400 2400 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n no 5
+-bash: ./run_task_distributor.sh: No such file or directory
+cc123@pi5-master:~ $ cd task-distributor/
+cc123@pi5-master:~/task-distributor $ ./run_task_distributor.sh 4 6400 2400 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n no 5
+--- Checking/Mounting Workers (Parallel) ---
+Mounting 192.168.1.54...
+Mounting 192.168.1.117...
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Mounting 192.168.1.83...
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Mounting 192.168.1.86...
+Mounting 192.168.1.104...
+Warning: Permanently added '192.168.1.117' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.83' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.86' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Mounting 192.168.1.136...
+Mounting 192.168.1.133...
+Warning: Permanently added '192.168.1.133' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Mounting 192.168.1.58...
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+--- All workers checked/mounted ---
+=========================================
+             RUN 1 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (4 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/home/pi/task-distributor-worker.sh: line 41:  3978 Aborted                 TERM=dumb /usr/bin/povray +I${IMG_PATH}/${IMG_FILE} ${FN} ${WIDTH} ${HEIGHT} +O${TARGET_DIR}/${BASENAME}.png ${START} ${END} > /dev/null 2> /tmp/povraymessages
+convert-im6.q16: unable to open image `/home/pi/pov_tmp/blob.png': No such file or directory @ error/blob.c/OpenBlob/3029.
+convert-im6.q16: no images defined `/home/pi/pov_tmp/blob.png' @ error/convert.c/ConvertImageCommand/3229.
+mv: cannot stat '/home/pi/pov_tmp/blob.png': No such file or directory
+^C
+cc123@pi5-master:~/task-distributor $ pkill -9 -f task-distributor-worker.sh
+cc123@pi5-master:~/task-distributor $ kill -9 %1
+-bash: kill: %1: no such job
+cc123@pi5-master:~/task-distributor $ ps aux | grep povray
+cc123      13999  0.0  0.0   6352  2096 pts/0    S+   19:39   0:00 grep --color=auto povray
+cc123@pi5-master:~/task-distributor $ ^C
+cc123@pi5-master:~/task-distributor $ ./run_task_distributor.sh 4 6400 2400 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n no 5
+--- Checking/Mounting Workers (Parallel) ---
+--- All workers checked/mounted ---
+=========================================
+             RUN 1 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (4 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/home/pi/task-distributor-worker.sh: line 41:  8368 Aborted                 TERM=dumb /usr/bin/povray +I${IMG_PATH}/${IMG_FILE} ${FN} ${WIDTH} ${HEIGHT} +O${TARGET_DIR}/${BASENAME}.png ${START} ${END} +WT1 +BS16 > /dev/null 2> /tmp/povraymessages
+convert-im6.q16: unable to open image `/home/pi/pov_tmp/blob.png': No such file or directory @ error/blob.c/OpenBlob/3029.
+convert-im6.q16: no images defined `/home/pi/pov_tmp/blob.png' @ error/convert.c/ConvertImageCommand/3229.
+mv: cannot stat '/home/pi/pov_tmp/blob.png': No such file or directory
+convert-im7.q16: unable to open image '/mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n/192.168.1.136.png': No such file or directory @ error/blob.c/OpenBlob/3700.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_18:51:58
+192.168.1.58 has been finished.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+192.168.1.54 2026_07_12_18:52:12
+192.168.1.54 has been finished.
+192.168.1.104 2026_07_12_18:52:09
+192.168.1.104 has been finished.
+192.168.1.136 2026_07_12_18:51:46
+192.168.1.136 has been finished.
+Unable to compose the image parts.
+(standard_in) 2: syntax error
+(standard_in) 2: syntax error
+(standard_in) 2: syntax error
+=========================================
+             RUN 2 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (4 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/home/pi/task-distributor-worker.sh: line 41:  8571 Aborted                 TERM=dumb /usr/bin/povray +I${IMG_PATH}/${IMG_FILE} ${FN} ${WIDTH} ${HEIGHT} +O${TARGET_DIR}/${BASENAME}.png ${START} ${END} +WT1 +BS16 > /dev/null 2> /tmp/povraymessages
+convert-im6.q16: unable to open image `/home/pi/pov_tmp/blob.png': No such file or directory @ error/blob.c/OpenBlob/3029.
+convert-im6.q16: no images defined `/home/pi/pov_tmp/blob.png' @ error/convert.c/ConvertImageCommand/3229.
+mv: cannot stat '/home/pi/pov_tmp/blob.png': No such file or directory
+convert-im7.q16: unable to open image '/mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n/192.168.1.136.png': No such file or directory @ error/blob.c/OpenBlob/3700.
+/mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n/lockfile has been created.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+Wait for 192.168.1.58 in lockfile.
+192.168.1.58 2026_07_12_18:52:52
+192.168.1.58 has been finished.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+Wait for 192.168.1.54 in lockfile.
+192.168.1.54 2026_07_12_18:53:02
+192.168.1.54 has been finished.
+Wait for 192.168.1.104 in lockfile.
+192.168.1.104 2026_07_12_18:53:03
+192.168.1.104 has been finished.
+192.168.1.136 2026_07_12_18:52:40
+192.168.1.136 has been finished.
+Unable to compose the image parts.
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+=========================================
+             RUN 3 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (4 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/home/pi/task-distributor-worker.sh: line 41:  8653 Aborted                 TERM=dumb /usr/bin/povray +I${IMG_PATH}/${IMG_FILE} ${FN} ${WIDTH} ${HEIGHT} +O${TARGET_DIR}/${BASENAME}.png ${START} ${END} +WT1 +BS16 > /dev/null 2> /tmp/povraymessages
+convert-im6.q16: unable to open image `/home/pi/pov_tmp/blob.png': No such file or directory @ error/blob.c/OpenBlob/3029.
+convert-im6.q16: no images defined `/home/pi/pov_tmp/blob.png' @ error/convert.c/ConvertImageCommand/3229.
+mv: cannot stat '/home/pi/pov_tmp/blob.png': No such file or directory
+^C^C^C^C^C^C^C
+cc123@pi5-master:~/task-distributor $ ./run_task_distributor.sh 4 6400 2400 /mnt/ssd/nfs/hpl-results/task-distributor/workspace_4n no 5
+--- Checking/Mounting Workers (Parallel) ---
+--- All workers checked/mounted ---
+=========================================
+             RUN 1 OF 5             
+=========================================
+--- Cleaning Workspace ---
+--- Executing Benchmark (4 nodes) ---
+rm: missing operand
+Try 'rm --help' for more information.
+Warning: Permanently added '192.168.1.58' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.104' (ED25519) to the list of known hosts.
+Warning: Permanently added '192.168.1.54' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Warning: Permanently added '192.168.1.136' (ED25519) to the list of known hosts.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+Please note that SSH may not work until a valid user has been set up.
+
+See http://rptl.io/newuser for details.
+/home/pi/task-distributor-worker.sh: line 41:  9091 Aborted                 TERM=dumb /usr/bin/povray +I${IMG_PATH}/${IMG_FILE} ${FN} ${WIDTH} ${HEIGHT} +O${TARGET_DIR}/${BASENAME}.png ${START} ${END} +WT1 +BS16 +FT > /dev/null 2> /tmp/povraymessages
+^Cconvert-im6.q16: unable to open image `/home/pi/pov_tmp/blob.png': No such file or directory @ error/blob.c/OpenBlob/3029.
+convert-im6.q16: no images defined `/home/pi/pov_tmp/blob.png' @ error/convert.c/ConvertImageCommand/3229.
+mv: cannot stat '/home/pi/pov_tmp/blob.png': No such file or directory
+convert-im6.q16: unable to open image `/home/pi/pov_tmp/blob.png': No such file or directory @ error/blob.c/OpenBlob/3029.
+convert-im6.q16: no images defined `/home/pi/pov_tmp/blob.png' @ error/convert.c/ConvertImageCommand/3229.
+mv: cannot stat '/home/pi/pov_tmp/blob.png': No such file or directory
+^C^C^C^C^Cconvert-im6.q16: unable to open image `/home/pi/pov_tmp/blob.png': No such file or directory @ error/blob.c/OpenBlob/3029.
+convert-im6.q16: no images defined `/home/pi/pov_tmp/blob.png' @ error/convert.c/ConvertImageCommand/3229.
+mv: cannot stat '/home/pi/pov_tmp/blob.png': No such file or directory
+convert-im6.q16: unable to open image `/home/pi/pov_tmp/blob.png': No such file or directory @ error/blob.c/OpenBlob/3029.
+convert-im6.q16: no images defined `/home/pi/pov_tmp/blob.png' @ error/convert.c/ConvertImageCommand/3229.
+mv: cannot stat '/home/pi/pov_tmp/blob.png': No such file or directory
+
