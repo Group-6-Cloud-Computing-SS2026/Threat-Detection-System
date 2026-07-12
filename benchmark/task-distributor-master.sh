@@ -166,11 +166,21 @@ if [ "$NUM_NODES" -eq 1 ] ; then
 elif [ "$NUM_NODES" -gt 1 ] ; then
   # More than a single node was used 
   # Compose image parts to create the final image
-  if /usr/bin/convert-im7.q16 -set colorspace RGB `ls ${IMAGE_PARTS_PATH}/*.png` -append /tmp/output_${IMG_WIDTH}x${IMG_HEIGHT}_${NUM_NODES}_nodes_`date +%Y_%m_%d_%H:%M:%S`.png ; then
+  # Build the file list in the exact array order
+  FILE_LIST=""
+  for ((i=1; i<=${NUM_NODES}; i+=1))
+  do
+    FILE_LIST="$FILE_LIST ${IMAGE_PARTS_PATH}/${HOSTS_ARRAY[$i]}.png"
+  done
+
+  # Compose image parts using the ordered file list
+  if /usr/bin/convert-im7.q16 -set colorspace RGB $FILE_LIST -append /tmp/output_${IMG_WIDTH}x${IMG_HEIGHT}_${NUM_NODES}_nodes_`date +%Y_%m_%d_%H:%M:%S`.png ; then
     echo "Image parts have been composed."
   else
     echo "Unable to compose the image parts." && exit 1
   fi
+
+
 # if the number of nodes is not 1 and not > 1 than we have an error
 else
     echo "An error occurred because the value of ${1} is not 0 and not greater 
