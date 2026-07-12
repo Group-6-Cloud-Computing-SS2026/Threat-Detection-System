@@ -11,6 +11,10 @@ RUNS=${6:-3}        # Default to 3 runs if not specified
 WORKER_IPS="192.168.1.58 192.168.1.54 192.168.1.104 192.168.1.136 192.168.1.86 192.168.1.117 192.168.1.83 192.168.1.133"
 NFS_PATH="/mnt/ssd/nfs/hpl-results"
 
+# Define CSV filename and initialize headers
+CSV_FILE="results_${X}x${Y}_${NODES}nodes.csv"
+echo "Run,Nodes,Resolution,1st_Seq,Parallel,2nd_Seq" > "$CSV_FILE"
+
 if [ "$DO_SETUP" == "yes" ]; then
     echo "--- Running Environment Setup ---"
     sudo exportfs -ra
@@ -55,6 +59,9 @@ for (( r=1; r<=RUNS; r++ )); do
     P=$(echo "$OUTPUT" | grep "parallel part:" | awk '{print $NF}' | tr -d 's')
     S2=$(echo "$OUTPUT" | grep "2nd sequential part:" | awk '{print $NF}' | tr -d 's')
 
+    # Log individual run data to CSV
+    echo "Run_$r,$NODES,${X}x${Y},$S1,$P,$S2" >> "$CSV_FILE"
+
     # Accumulate metrics for averaging
     TOTAL_SEQ1=$(echo "$TOTAL_SEQ1 + $S1" | bc)
     TOTAL_PAR=$(echo "$TOTAL_PAR + $P" | bc)
@@ -66,6 +73,9 @@ AVG_SEQ1=$(echo "scale=3; $TOTAL_SEQ1 / $RUNS" | bc | sed 's/^\./0./')
 AVG_PAR=$(echo "scale=3; $TOTAL_PAR / $RUNS" | bc | sed 's/^\./0./')
 AVG_SEQ2=$(echo "scale=3; $TOTAL_SEQ2 / $RUNS" | bc | sed 's/^\./0./')
 
+# Append final average row to CSV
+echo "Average,$NODES,${X}x${Y},$AVG_SEQ1,$AVG_PAR,$AVG_SEQ2" >> "$CSV_FILE"
+
 echo ""
 echo "========================================="
 echo "   FINAL AVERAGES OVER $RUNS BENCHMARK RUNS   "
@@ -74,3 +84,4 @@ echo "Average 1st sequential part: ${AVG_SEQ1}s"
 echo "Average parallel part:       ${AVG_PAR}s"
 echo "Average 2nd sequential part: ${AVG_SEQ2}s"
 echo "========================================="
+echo "Results saved to: $CSV_FILE"
