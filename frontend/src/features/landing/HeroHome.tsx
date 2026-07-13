@@ -1,7 +1,6 @@
 import { links } from "../../shared/components/ui/footer/footerData.ts";
 import Button from "../../shared/components/ui/Button.tsx";
 import GithubIcon from "../../shared/components/ui/icons/GithubIcon.tsx";
-import { NavLink } from "react-router";
 
 export default function HeroHome() {
   const githubLink = links.find((link) => link.tag === "GitHub");
@@ -13,13 +12,13 @@ export default function HeroHome() {
         <div className="py-12 md:py-20">
           {/* Section header */}
           <div className="pb-12 text-center md:pb-20">
-            <NavLink to="/" className="mb-16 flex justify-center">
+            <div className="mb-16 flex justify-center">
               <img
                 src="/images/wordmark-dark.svg"
                 alt="ThreatOff"
                 className="h-44 w-auto"
               />
-            </NavLink>
+            </div>
 
             <h1
               className="font-nacelle m-8 animate-[gradient_6s_linear_infinite_reverse] bg-[linear-gradient(to_right,var(--color-brand-alabaster-grey-100),var(--color-brand-alabaster-grey-50),white,var(--color-brand-alabaster-grey-50),var(--color-brand-alabaster-grey-100))] bg-[length:200%_auto] bg-clip-text pb-5 text-4xl font-semibold text-transparent md:text-5xl"
