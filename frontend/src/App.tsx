@@ -909,7 +909,7 @@ function App() {
           {/* ── GRAPHS SECTION ── */}
           {activeSection === 'graphs' && (
             <iframe
-              src="/task_4_graphs.html"
+              src="/amdahl-gustafson-graphs.html"
               title="Task 4 Graphs"
               style={{
                 width: '100%',
