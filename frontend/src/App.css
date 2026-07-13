@@ -1337,3 +1337,102 @@
     display: none;
   }
 }
+
+/* ═══════════════════════════════════════
+   LIGHT THEME
+   ═══════════════════════════════════════ */
+[data-theme="light"] {
+  --bg-base:      #f0f4f8;
+  --bg-surface:   #ffffff;
+  --bg-elevated:  #e8edf3;
+  --bg-glass:     rgba(255, 255, 255, 0.82);
+  --border-subtle: rgba(30, 41, 59, 0.08);
+  --border-default: rgba(30, 41, 59, 0.14);
+  --border-strong: rgba(30, 41, 59, 0.26);
+  --text-primary:   #0f172a;
+  --text-secondary: #334155;
+  --text-muted:     #64748b;
+  --text-accent:    #0d9488;
+  --severity-critical-bg: rgba(239, 68, 68, 0.08);
+  --severity-high-bg:     rgba(249, 115, 22, 0.08);
+  --severity-medium-bg:   rgba(234, 179, 8, 0.08);
+  --severity-low-bg:      rgba(34, 197, 94, 0.08);
+}
+
+/* Body background follows theme */
+[data-theme="light"] body,
+[data-theme="light"] .app-shell {
+  background: var(--bg-base);
+  color: var(--text-primary);
+}
+
+/* Scrollbars in light mode */
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(30, 41, 59, 0.18);
+}
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(30, 41, 59, 0.30);
+}
+
+/* Nav item hover / active adjustments for light */
+[data-theme="light"] .nav-item:hover {
+  background: rgba(30, 41, 59, 0.06);
+}
+[data-theme="light"] .nav-item.active {
+  background: rgba(59, 130, 246, 0.10);
+  color: #1d4ed8;
+  border-color: rgba(59, 130, 246, 0.22);
+}
+[data-theme="light"] .nav-item.active svg {
+  color: #1d4ed8;
+}
+
+/* btn-secondary in light */
+[data-theme="light"] .btn-secondary {
+  background: #e8edf3;
+  border-color: var(--border-default);
+  color: var(--text-secondary);
+}
+[data-theme="light"] .btn-secondary:hover {
+  background: #dde3ec;
+  color: var(--text-primary);
+}
+
+/* ── Theme Toggle Button ── */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease,
+              transform 300ms ease;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-toggle:hover {
+  background: var(--bg-glass);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+  transform: rotate(20deg);
+}
+
+.theme-toggle svg {
+  width: 16px;
+  height: 16px;
+  transition: opacity 200ms ease, transform 300ms ease;
+}
+
+/* Sun icon shown in dark mode (click to go light) */
+.theme-toggle .icon-sun  { display: block; }
+.theme-toggle .icon-moon { display: none; }
+
+[data-theme="light"] .theme-toggle .icon-sun  { display: none; }
+[data-theme="light"] .theme-toggle .icon-moon { display: block; }
