@@ -17,12 +17,17 @@ export default function LandingPage() {
         content="An edge-computing platform that detects people and identifies threats — theft, fire, vandalism — in real time from Raspberry Pi sensor nodes."
       />
 
-      <section id="landing-page" className="relative">
-        <PageIllustration />
-        <HeroHome />
-        <Workflows />
-        <Features />
-        <Cta />
+      <section
+        id="landing-page"
+        className="relative isolate overflow-hidden bg-brand-pitch-black-500"
+      >
+        <div className="relative z-10">
+          <PageIllustration />
+          <HeroHome />
+          <Workflows />
+          <Features />
+          <Cta />
+        </div>
       </section>
     </>
   );

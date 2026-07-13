@@ -14,12 +14,12 @@ export default function Features() {
         />
       </div>
       <div
-        className="pointer-events-none absolute bottom-0 left-1/2 -z-10 -mb-80 -translate-x-[120%] opacity-50"
+        className="pointer-events-none absolute bottom-0 left-1/2 -z-10 -mb-80 translate-x-[-120%] opacity-65"
         aria-hidden="true"
       >
         <img
           className="max-w-none"
-          src="/images/blurred-shape.svg"
+          src="/images/blurred-shape-gray.svg"
           width={760}
           height={668}
           alt="Blurred shape"
@@ -46,6 +46,7 @@ export default function Features() {
           <div className="flex justify-center pb-4 md:pb-12" data-aos="fade-up">
             <img
               className="max-w-none"
+              style={{ filter: "grayscale(0.35) brightness(0.92) contrast(1.05)" }}
               src="/images/features.png"
               width={1104}
               height={384}

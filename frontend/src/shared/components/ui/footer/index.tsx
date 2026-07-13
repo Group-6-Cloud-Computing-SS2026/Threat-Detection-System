@@ -7,8 +7,20 @@ export default function Footer() {
   const teacherPageLink = links.find((link) => link.tag === "Teacher Page");
 
   return (
-    <footer>
-      <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
+    <footer className="relative isolate overflow-hidden">
+      <div
+        className="pointer-events-none absolute right-0 bottom-0 z-0 translate-x-1/4"
+        aria-hidden="true"
+      >
+        <img
+          className="max-w-none grayscale contrast-125 opacity-95"
+          src="/images/footer-illustration.svg"
+          width={1076}
+          height={378}
+          alt=""
+        />
+      </div>
+      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
         <div className="grid grid-cols-4 justify-between gap-12 py-8 sm:grid-rows-[auto_auto] md:grid-cols-2 md:grid-rows-[auto_auto] md:py-12 lg:grid-cols-[repeat(4,minmax(0,140px))_1fr] lg:grid-rows-1 xl:gap-20">
           <div className="col-span-2 space-y-2">
             <h3 className="text-brand-alabaster-grey-500 text-sm font-medium">
