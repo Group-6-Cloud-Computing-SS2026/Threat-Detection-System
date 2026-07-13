@@ -50,7 +50,7 @@ export default function HeroHome() {
                     className="w-full sm:w-auto"
                   >
                     <GithubIcon />
-                    Sign in with GitHub
+                    Open in GitHub
                   </Button>
                 </div>
                 <div data-aos="fade-up" data-aos-delay={600}>
