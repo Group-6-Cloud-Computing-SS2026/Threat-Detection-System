@@ -24,7 +24,7 @@ The following table summarizes the work packages defined for this project, who i
 | **Task 5** | [Monitoring](task-05-monitoring.md) | **Awais Yaseen** | Done | Deploying Prometheus and Grafana on the Pi 5 Master with a flexible setup, allowing us to choose the easiest worker metrics collection method later without disrupting cluster operations. |
 | **Task 6** | [Model Training](task-06-model-training.md) | **Muhammad Musfir** | Almost Done | YOLO11n/YOLO8n python scripts and weights, Roboflow dataset, YOLO8n RPI4 configuration and performance metrics. |
 | **Task 7** | [Backend](task-07-backend.md) | **Abdul Hanan Javaid & Md. Forman Ullah Sajib** | Done | FastAPI service-repository backend, 9 replicas on K3s, and distributed MinIO S3 storage. |
-| **Task 8** | [Frontend](task-08-frontend.md) | **Javier de Santiago Soto** | In Progress | React + TypeScript web client, TailwindCSS layout, React Router, live telemetry dashboard, and Google Maps alerts. |
+| **Task 8** | [Frontend](task-08-frontend.md) | **Md. Forman Ullah Sajib & Javier de Santiago Soto** | Done | React 19 + TypeScript SPA (ThreatOff Dashboard): JWT auth, live WebSocket camera stream, real-time detection polling, historical event search, embedded scaling-law graphs, Nginx + Docker + k3s deployment. |
 | **Task 9** | [Telegram Bot](task-09-telegram.md) | **Abdul Hanan Javaid** | Done | Send real-time messages, images, and health status alerts using a Telegram bot. |
 | **Task 10** | [Documentation](task-10-documentation.md) | Complete Team | Completed | Static site with Material theme, automated builds, and GitHub Pages hosting. |
 
@@ -108,12 +108,15 @@ The following table summarizes the work packages defined for this project, who i
 ---
 
 ### Task 8 — React Dashboard Frontend
-*   **Lead Developer:** Javier de Santiago Soto
+*   **Lead Developer:** Md. Forman Ullah Sajib & Javier de Santiago Soto
 *   **Proposed Approach & Solution:**
-    *   **Dashboard SPA Client:** Develop a single-page web app using React, TypeScript, and Vite. Style the dashboard using TailwindCSS.
-    *   **Interactive Interface:** Build nested pages for health telemetry, event logs, maps, and system settings, connecting directly to FastAPI APIs.
+    *   **Single-Page Application:** Built with React 19, TypeScript 5.6, and Vite. Custom dark-theme CSS — no external UI library or CSS framework.
+    *   **Live Surveillance Dashboard:** Real-time detection event polling (`/detections/recent` every 10 s), live camera WebSocket stream with latency/FPS telemetry, and expandable detection cards with lazy-loaded images from MinIO.
+    *   **Historical Search:** Fully filterable event search (type, severity, sensor, time range, acknowledgement status) with pagination.
+    *   **Embedded Benchmark Results:** Amdahl's & Gustafson's Law Chart.js charts from Task 4 embedded via iframe.
+    *   **Deployment:** Multi-stage Docker build (`node:20-alpine` → `nginx:alpine`), Nginx reverse-proxy for `/api/`, deployed as a k3s Kubernetes workload.
 *   **Current Work Status:**
-    *   **In Progress.** Basic routing and layouts are implemented. API endpoints integration is underway.
+    *   **Completed.** All dashboard sections are operational and deployed to the k3s cluster.
 
 ---
 
