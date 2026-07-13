@@ -13,11 +13,9 @@ LOCKFILE=${11}
 BASENAME="${IMG_FILE%.*}"
 MY_IP=$(hostname -I | awk '{print $1}')
 
-# Extract numeric dimensions from +Wxxxx and +Hyyyy strings
 W_VAL=$(echo $WIDTH | cut -c 3-)
 H_VAL=$(echo $HEIGHT | cut -c 3-)
 
-# Use physical storage if resolution is higher than 3200x2400
 if [ "$W_VAL" -gt 3200 ] || [ "$H_VAL" -gt 2400 ]; then
   export POV_TMP=/home/pi/pov_tmp
   TARGET_DIR="/home/pi/pov_tmp"
@@ -26,10 +24,13 @@ else
   TARGET_DIR="/tmp"
 fi
 
+mkdir -p "${TARGET_DIR}"
+rm -f "${TARGET_DIR}/${BASENAME}.pov-state"
+
 if [ $NUM_NODES -eq 1 ] ; then
   TERM=dumb /usr/bin/povray +I${IMG_PATH}/${IMG_FILE} ${FN} ${WIDTH} ${HEIGHT} +O${TARGET_DIR}/${BASENAME}.png 1>/dev/null 2>/tmp/povraymessages
 elif [ $NUM_NODES -gt 1 ] ; then
-  TERM=dumb /usr/bin/povray +I${IMG_PATH}/${IMG_FILE} ${FN} ${WIDTH} ${HEIGHT} +O${TARGET_DIR}/${BASENAME}.png ${START} ${END} 1>/dev/null 2>/tmp/povraymessages
+  TERM=dumb /usr/bin/povray +I${IMG_PATH}/${IMG_FILE} ${FN} ${WIDTH} ${HEIGHT} +O${TARGET_DIR}/${BASENAME}.png ${START} ${END} +WT1 +BS16 +FT 1>/dev/null 2>/tmp/povraymessages
   SIZE_TEMP=$(echo $START | cut -c 4-)
   SIZE_RESULT=$(expr $SIZE_TEMP - 1)
   IMG_H=$(echo $HEIGHT | cut -c 3-)
@@ -39,5 +40,6 @@ elif [ $NUM_NODES -gt 1 ] ; then
 else
   echo "Error: invalid NUM_NODES=${NUM_NODES}" && exit 1
 fi
+
 mv ${TARGET_DIR}/${BASENAME}.png ${IMAGE_PARTS_PATH}/${MY_IP}.png
 echo "${MY_IP} $(date +%Y_%m_%d_%H:%M:%S)" >> ${LOCKFILE}

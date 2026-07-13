@@ -8,7 +8,8 @@ WORKSPACE=${4:-"/mnt/ssd/nfs/hpl-results/task-distributor/workspace_node$NODES"}
 DO_SETUP=${5:-"no"} # Set to "yes" to force sudo commands
 RUNS=${6:-3}        # Default to 3 runs if not specified
 
-WORKER_IPS="192.168.1.58 192.168.1.54 192.168.1.104 192.168.1.136 192.168.1.86 192.168.1.117 192.168.1.83 192.168.1.133"
+WORKER_IPS="192.168.1.86 192.168.1.117 192.168.1.83 192.168.1.133 192.168.1.54 192.168.1.58 192.168.1.104 192.168.1.136"
+
 NFS_PATH="/mnt/ssd/nfs/hpl-results"
 
 # Define CSV filename and initialize headers

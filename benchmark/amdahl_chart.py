@@ -41,11 +41,11 @@ data = {
         "speedup": [1.00, 1.72, 2.59, 3.38]
     },
     "6400x4800": {
-        "seq1": [0.000, 0.000, 0.003, 0.004],
-        "parallel": [0.000, 0.000, 172.707, 130.054],
-        "seq2": [0.000, 0.000, 5.473, 7.071],
-        "std": [0.00, 0.00, 37.45, 42.19],
-        "speedup": [0.00, 0.00, 0.00, 0.00]  # N/A values
+        "seq1": [0.000, 0.003, 0.003, 0.004],
+        "parallel": [0.000, 124.752, 172.707, 130.054],
+        "seq2": [0.000, 4.420, 5.473, 7.071],
+        "std": [0.00, 1.98, 37.45, 42.19],
+        "speedup": [0.00, 0.00, 0.00, 0.00]  
     }
 }
 
@@ -68,6 +68,11 @@ for i, res in enumerate(resolutions):
     ax.set_xlabel("Nodes [#]", fontsize=10)
     ax.set_ylabel("Runtime [s]", fontsize=10)
     ax.tick_params(direction='in', top=True, right=True)
+    
+    # Label Node 1 as an unsuccessful run for 6400x4800
+    if res == "6400x4800":
+        ax.text(0, 10, "OOM\nCrash", ha='center', va='bottom', color='red', fontsize=9, fontweight='bold')
+        
     if i == 4:
         ax.legend([b1, b2, b3], ["1st seq. part", "2nd seq. part", "Par. part"], frameon=False, loc="upper right", fontsize=9)
 plt.tight_layout()
@@ -78,8 +83,9 @@ plt.figure(figsize=(10, 5))
 plotted_resolutions, markers = ["1600x1200", "3200x2400", "6400x4800"], ['o', 's', '^']
 for res, marker in zip(plotted_resolutions, markers):
     stds = data[res]["std"]
-    valid_nodes = [nodes_list[j] for j in range(4) if (res != "6400x4800" or nodes_list[j] >= 4)]
-    valid_stds = [stds[j] for j in range(4) if (res != "6400x4800" or nodes_list[j] >= 4)]
+    # Modified filter: Include Node 2 (index 1), remove Node 1 (index 0) only for 6400x4800
+    valid_nodes = [nodes_list[j] for j in range(4) if (res != "6400x4800" or nodes_list[j] != 1)]
+    valid_stds = [stds[j] for j in range(4) if (res != "6400x4800" or nodes_list[j] != 1)]
     plt.plot(valid_nodes, valid_stds, marker=marker, linewidth=2, markersize=8, label=f"{res} ($\pm\sigma$)")
 plt.title("Run-to-Run Performance Variability (Standard Deviation)", fontsize=12, pad=12)
 plt.xlabel("Number of Distributed Nodes", fontsize=11)
@@ -90,7 +96,7 @@ plt.legend(fontsize=10)
 plt.tight_layout()
 plt.savefig("benchmark_std_deviation.png", dpi=300)
 
-# FIGURE 3: MULTI-PANEL SPEEDUP CHARTS (Matching user image layout)
+# FIGURE 3: MULTI-PANEL SPEEDUP CHARTS
 fig, axes = plt.subplots(1, 6, figsize=(18, 5.5))
 for i, res in enumerate(resolutions):
     ax = axes[i]
@@ -110,6 +116,10 @@ for i, res in enumerate(resolutions):
             val_str = f"{val:.2f}" if val == 1.0 or val >= 1.0 else f".{int(val*100)}"
             ax.text(bar.get_x() + bar.get_width()/2., val + 0.08, val_str, ha='center', va='bottom', fontsize=10)
         else:
-            ax.text(bar.get_x() + bar.get_width()/2., 0.1, "N/A", ha='center', va='bottom', fontsize=10)
+            # Explicitly flag Node 1 as an unsuccessful run
+            if res == "6400x4800" and nodes_list[j] == 1:
+                ax.text(bar.get_x() + bar.get_width()/2., 0.1, "OOM", ha='center', va='bottom', fontsize=9, color='red', fontweight='bold')
+            else:
+                ax.text(bar.get_x() + bar.get_width()/2., 0.1, "N/A", ha='center', va='bottom', fontsize=10)
 plt.tight_layout()
 plt.savefig("amdahl_speedups.png", dpi=300)

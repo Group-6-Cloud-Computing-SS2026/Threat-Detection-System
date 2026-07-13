@@ -479,6 +479,14 @@ cd ~/task-distributor
 
 **Key insight:** With smaller image size adding more nodes give diminishing or worse performance returns (e.g. 200x150 - [2, 4, 8]) probably because of the NFS overhead.
 
+
+### Amdahl's Law — Graphs
+![Time Bar Chart](../assets/amdahl_stacked_runtimes.png) 
+![Speedup Bar Chart](../assets/amdahl_speedups.png) 
+![Standard deviation Graph](../assets/amdahl_std_deviation.png) 
+
+
+
 ---
 
 ## Experiment 2: Gustafson's Law
@@ -565,7 +573,7 @@ the work per node constant (each node always renders 120 rows).
 
 
 
-### Gustafson's Law — Summary Table (Averages of 5 Runs)
+### Gustafson's Law (Set 1) — Summary Table (Averages of 5 Runs)
 
 | Size      | Nodes | Avg Seq 1 | Avg Parallel | Avg Seq 2 | Avg Total Time  | Std Dev | Scaled Speedup  | Efficiency |
 |---------- |-------|-----------|--------------|-----------|-----------------|---------|-----------------|------------|
@@ -573,6 +581,78 @@ the work per node constant (each node always renders 120 rows).
 | 1600x1200 | 2     | 0.003s    | 8.233s       | 0.387s    | 8.623s          | ±1.11s  | **1.95x**       | 98%        |
 | 3200x1200 | 4     | 0.003s    | 9.449s       | 0.772s    | 10.224s         | ±0.87s  | **3.77x**       | 94%        |
 | 3200x2400 | 8     | 0.004s    | 14.889s      | 1.648s    | 16.541s         | ±1.31s  | **7.30x**       | 91%        |
+
+
+### Gustafson's Law (Set 1) — Graphs
+
+![Time Bar Chart](../assets/gustafson_stacked_runtimes_1.png) 
+![Speedup Bar Chart](../assets/gustafson_speedups_1.png) 
+![Standard deviation Graph](../assets/gustafson_std_deviation_1.png)
+
+
+## Experiment 2: Gustafson's Law — 5 Runs x Workfload Set 2
+
+**1 Nodes — 3200x1200**
+
+| Run | Seq Part 1 | Parallel Part | Seq Part 2 | Total Time |
+|-----|-----------|---------------|-----------|------------|
+| 1   | 0.005s    | 15.042s       | 0.006s    | 15.053s    |
+| 2   | 0.004s    | 15.041s       | 0.004s    | 15.049s    |
+| 3   | 0.003s    | 14.041s       | 0.007s    | 14.051s    |
+| 4   | 0.004s    | 14.043s       | 0.004s    | 14.051s    |
+| 5   | 0.004s    | 14.041s       | 0.004s    | 14.049s    |
+| **AVG** | **0.004s** | **14.441s** | **0.005s** | **14.450s** |
+
+**2 Nodes — 3200x2400**
+
+| Run | Seq Part 1 | Parallel Part | Seq Part 2 | Total Time |
+|-----|-----------|---------------|-----------|------------|
+| 1   | 0.003s    | 27.088s       | 1.204s    | 28.295s    |
+| 2   | 0.003s    | 30.085s       | 1.143s    | 31.231s    |
+| 3   | 0.003s    | 27.075s       | 1.127s    | 28.205s    |
+| 4   | 0.003s    | 27.078s       | 1.162s    | 28.243s    |
+| 5   | 0.003s    | 27.085s       | 1.180s    | 28.268s    |
+| **AVG** | **0.003s** | **27.682s** | **1.163s** | **28.848s** |
+
+
+**4 Nodes — 4800x2400**
+
+| Run | Seq Part 1 | Parallel Part | Seq Part 2 | Total Time |
+|-----|-----------|---------------|-----------|------------|
+| 1   | 0.003s    | 29.099s       | 1.631s    | 30.733s    |
+| 2   | 0.002s    | 27.090s       | 1.630s    | 28.722s    |
+| 3   | 0.002s    | 27.096s       | 1.654s    | 28.752s    |
+| 4   | 0.002s    | 27.088s       | 1.700s    | 28.790s    |
+| 5   | 0.003s    | 27.091s       | 1.661s    | 28.755s    |
+| **AVG** | **0.002s** | **27.492s** | **1.655s** | **29.149s** |
+
+**8 Nodes — 6400x4800**
+
+| Run | Seq Part 1 | Parallel Part | Seq Part 2 | Total Time |
+|-----|-----------|---------------|-----------|------------|
+| 1   | 0.003s    | 166.535s      | 6.572s    | 173.110s   |
+| 2   | 0.003s    | 92.357s       | 7.702s    | 100.062s   |
+| 3   | 0.007s    | 119.410s      | 6.373s    | 125.790s   |
+| 4   | 0.006s    | 89.370s       | 7.904s    | 97.280s    |
+| 5   | 0.004s    | 182.602s      | 6.804s    | 189.410s   |
+| **AVG** | **0.004s** | **130.054s** | **7.071s** | **137.129s** |
+
+
+
+### Gustafson's Law (Set 2) — Summary Table (Averages of 5 Runs)
+
+| Size      | Nodes | Avg Seq 1 | Avg Parallel | Avg Seq 2 | Avg Total Time  | Std Dev | Scaled Speedup  | Efficiency |
+|---------- |-------|-----------|--------------|-----------|-----------------|---------|-----------------|------------|
+| 3200x1200 | 1     | 0.004s    | 14.441s      | 0.005s    | 14.450s         | ±0.55s  | 1.00x           | 100%       |
+| 3200x2400 | 2     | 0.003s    | 27.682s      | 1.163s    | 28.848s         | ±1.33s  | **1.96x** | 98%        |
+| 4800x2400 | 4     | 0.002s    | 27.492s      | 1.655s    | 29.149s         | ±0.89s  | **3.83x** | 96%        |
+| 6400x4800 | 8     | 0.004s    | 130.054s     | 7.071s    | 137.129s        | ±42.19s | **7.64x** | 95%        |
+
+
+### Gustafson's Law (Set 2) — Graphs
+![Time Bar Chart](../assets/gustafson_stacked_runtimes_2.png) 
+![Speedup Bar Chart](../assets/gustafson_speedups_2.png) 
+![Standard deviation Graph](../assets/gustafson_std_deviation_2.png) 
 
 
 **Key insight:** Gustafson's Law is confirmed — as workload scales with node
@@ -610,43 +690,24 @@ picture of parallel computing on real hardware.
 ~/task-distributor/
 ├── task-distributor-master.sh    # Modified master script
 └── task-distributor-worker.sh    # Modified worker script
+└── gustafsons_results            # results in csv
+└── amdahl_results                # in the format results_[WxH]_[count_of_nodes]_nodes.csv
 
 /mnt/ssd/nfs/hpl-results/task-distributor/
-├── amdahl_1node.txt              # Amdahl 1-node results
-├── amdahl_2nodes.txt             # Amdahl 2-node results
-├── amdahl_4nodes.txt             # Amdahl 4-node results
-├── amdahl_8nodes.txt             # Amdahl 8-node results
-├── gustafson_1node.txt           # Gustafson 1-node results
-├── gustafson_2nodes.txt          # Gustafson 2-node results
-├── gustafson_4nodes.txt          # Gustafson 4-node results
-├── gustafson_8nodes.txt          # Gustafson 8-node results
+├── amdahl_1node.txt              # Amdahl 1-node logs
+├── amdahl_2nodes.txt             # Amdahl 2-node logs
+├── amdahl_4nodes.txt             # Amdahl 4-node logs
+├── amdahl_8nodes.txt             # Amdahl 8-node logs
+├── gustafson_1node.txt           # Gustafson 1-node logs
+├── gustafson_2nodes.txt          # Gustafson 2-node logs
+├── gustafson_4nodes.txt          # Gustafson 4-node logs
+├── gustafson_8nodes.txt          # Gustafson 8-node logs
 ├── workspace_2n/                 # 2-node workspace
 ├── workspace_4n/                 # 4-node workspace
 └── workspace_8n/                 # 8-node workspace
 ```
 
----
-
-## Graphs
-
-> All graphs generated from empirical cluster measurements (small workload) and
-> linearly scaled estimates (large workloads). ECG-style line charts on dark background.
-
----
-
-### Amdahl's Law — Graphs
-![Time Bar Chart](../assets/amdahl_stacked_runtimes.png) 
-![Speedup Bar Chart](../assets/amdahl_speedups.png) 
-![Standard deviation Graph](../assets/amdahl_std_deviation.png) 
-
-
----
-
-### Gustafson's Law — Graphs
-
-![Time Bar Chart](../assets/gustafson_stacked_runtimes.png) 
-![Speedup Bar Chart](../assets/gustafson_speedups.png) 
-![Standard deviation Graph](../assets/gustafson_std_deviation.png) 
+You can also find some logs in the benchmark folder
 
 ---
 
@@ -660,5 +721,15 @@ These occur for larger image sizes 6400 x 4800 especially if the number of nodes
 #### Unordered composed image
 Added a fix where the image composed of image cuts generated by worker hosts produce an unordered image 
 
-![Before](../assets/output_400x300_8_nodes_2026_07_12_06:23:07.png) 
-![After](../assets/output_400x300_8_nodes_2026_07_12_07:21:14.png) 
+![Before](../assets/output_400x300_8_nodes_2026_07_12_06:23:07.png)
+![After](../assets/output_400x300_8_nodes_2026_07_12_07:21:14.png)
+
+
+#### Failed runs
+
+#### 5400x2400 / 4 nodes
+![5400x2400_4_nodes](../assets/output_5400x2400_4_nodes_2026_07_13_10:29:10.png)
+#### 6400x2400 / 4 nodes
+![6400x2400_4_nodes](../assets/output_6400x2400_4_nodes_2026_07_13_09:27:03.png)
+#### 6400x2400 / 4 nodes
+![6400x2400_4_nodes](../assets/output_6400x2400_4_nodes_2026_07_13_09:41:18.png)

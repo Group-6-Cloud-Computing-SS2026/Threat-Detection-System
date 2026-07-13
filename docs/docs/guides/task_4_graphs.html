@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task 4 — Amdahl's & Gustafson's Law Results</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  /* ── Theme Palette Tokens ── */
+  :root {
+    --bg-base: #0a0f1e;
+    --bg-surface: #0d1525;
+    --bg-elevated: #111f2e;
+    --border-default: #1a3040;
+    --border-subtle: #0d1525;
+    --text-primary: #e2e8f0;
+    --text-secondary: #4a7c6b;
+    --text-muted: #94a3b8;
+    --accent-title: #00ff88;
+    --accent-sub: #00cc66;
+    --ideal-line: #1a3040;
+  }
+
+  /* Target light mode explicitly via data attribute or media fallback */
+  html[data-theme="light"],
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg-base: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-elevated: #f1f5f9;
+      --border-default: #cbd5e1;
+      --border-subtle: #e2e8f0;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #334155;
+      --accent-title: #047857;
+      --accent-sub: #059669;
+      --ideal-line: #cbd5e1;
+    }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg-base); color: var(--text-primary); font-family: 'Courier New', monospace; padding: 24px; transition: background 0.2s, color 0.2s; }
+  h1 { font-size: 22px; color: var(--accent-title); text-align: center; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 4px; }
+  .subtitle { text-align: center; color: var(--text-secondary); font-size: 11px; letter-spacing: 2px; margin-bottom: 32px; }
+  .section-title { font-size: 13px; color: var(--accent-title); letter-spacing: 2px; text-transform: uppercase; margin: 32px 0 8px; border-left: 3px solid var(--accent-title); padding-left: 10px; }
+  .section-desc { font-size: 11px; color: var(--text-secondary); margin-bottom: 16px; padding-left: 14px; }
+  .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .chart-grid.single { grid-template-columns: 1fr; }
+  .chart-box { background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: 8px; padding: 16px; position: relative; }
+  .chart-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #00ff88, transparent); border-radius: 8px 8px 0 0; }
+  .chart-title { font-size: 11px; color: var(--accent-sub); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+  .canvas-container { position: relative; height: 280px; width: 100%; }
+  .table-wrap { overflow-x: auto; margin-bottom: 24px; border: 1px solid var(--border-default); border-radius: 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 11px; background: var(--bg-surface); }
+  th { background: var(--bg-elevated); color: var(--accent-title); padding: 8px 12px; text-align: right; letter-spacing: 1px; border-bottom: 1px solid var(--border-default); }
+  th:first-child, th:nth-child(2) { text-align: left; }
+  td { padding: 6px 12px; text-align: right; border-bottom: 1px solid var(--border-subtle); color: var(--text-muted); }
+  td:first-child, td:nth-child(2) { text-align: left; }
+  tr:hover td { background: var(--bg-elevated); }
+  .good { color: #00ff88; font-weight: bold; }
+  html[data-theme="light"] .good { color: #059669; }
+  .mid  { color: #fbbf24; font-weight: bold; }
+  .bad  { color: #f87171; font-weight: bold; }
+  .divider { border: none; border-top: 1px solid var(--border-default); margin: 32px 0; }
+  .footer { text-align: center; font-size: 10px; color: var(--text-secondary); margin-top: 40px; letter-spacing: 1px; }
+  @media(max-width: 700px) { .chart-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<h1>Task 4 — Parallel Computing Laws</h1>
+<div class="subtitle">CLOUD COMPUTING SS2026 · FRANKFURT UAS · TASK DISTRIBUTOR + POV-RAY · 8× RPI3 B+</div>
+
+<div class="section-title">Amdahl's Law</div>
+<div class="section-desc">Fixed problem size. Varying node count (1, 2, 4, 8). Averages of 5 runs per configuration.</div>
+
+<div class="chart-grid">
+  <div class="chart-box">
+    <div class="chart-title">▸ Speedup vs Nodes (Selected Complete Workloads)</div>
+    <div class="canvas-container"><canvas id="amdahlSpeedup"></canvas></div>
+  </div>
+  <div class="chart-box">
+    <div class="chart-title">▸ Avg Total Time — Large Workloads (s)</div>
+    <div class="canvas-container"><canvas id="amdahlTime"></canvas></div>
+  </div>
+</div>
+
+<div class="chart-grid single">
+  <div class="chart-box">
+    <div class="chart-title">▸ Parallel Efficiency (%) vs Nodes</div>
+    <div class="canvas-container"><canvas id="amdahlEff"></canvas></div>
+  </div>
+</div>
+
+<hr class="divider">
+<div class="section-title">Gustafson's Law</div>
+<div class="section-desc">Scaled problem size with nodes. Each configuration maintains independent workload baselines.</div>
+
+<div class="chart-grid">
+  <div class="chart-box">
+    <div class="chart-title">▸ Scaled Speedup vs Nodes</div>
+    <div class="canvas-container"><canvas id="gustSpeedup"></canvas></div>
+  </div>
+  <div class="chart-box">
+    <div class="chart-title">▸ Execution Time Baseline Trends</div>
+    <div class="canvas-container"><canvas id="gustTime"></canvas></div>
+  </div>
+</div>
+
+<hr class="divider">
+<div class="section-title">Results Tables</div>
+
+<div class="section-desc">Amdahl's Law — Summary Table (Averages of 5 Runs)</div>
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>Workload</th><th>Nodes</th><th>Avg Seq 1</th><th>Avg Parallel</th><th>Avg Seq 2</th><th>Avg Total Time</th><th>Std Dev</th><th>Speedup</th><th>Efficiency</th>
+    </tr>
+  </thead>
+  <tbody id="amdahlTable"></tbody>
+</table>
+</div>
+
+<div class="section-desc">Gustafson's Law (Set 1 & Set 2) — Summary Table (Averages of 5 Runs)</div>
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>Set Description</th><th>Size</th><th>Nodes</th><th>Avg Seq 1</th><th>Avg Parallel</th><th>Avg Seq 2</th><th>Avg Total Time</th><th>Std Dev</th><th>Scaled Speedup</th><th>Efficiency</th>
+    </tr>
+  </thead>
+  <tbody id="gustTable"></tbody>
+</table>
+</div>
+
+<script>
+const nodes = [1, 2, 4, 8];
+
+const amdahlRawData = [
+  { wl: "200x150", n: 1, s1: 0.005, p: 3.015, s2: 0.007, t: 3.027, sd: 0.71, sp: 1.00, eff: 100 },
+  { wl: "200x150", n: 2, s1: 0.003, p: 2.215, s2: 0.022, t: 2.240, sd: 0.45, sp: 1.35, eff: 68 },
+  { wl: "200x150", n: 4, s1: 0.003, p: 2.028, s2: 0.026, t: 2.057, sd: 0.01, sp: 1.47, eff: 37 },
+  { wl: "200x150", n: 8, s1: 0.003, p: 2.050, s2: 0.030, t: 2.083, sd: 0.01, sp: 1.45, eff: 18 },
+  { wl: "400x300", n: 1, s1: 0.003, p: 2.209, s2: 0.004, t: 2.216, sd: 0.45, sp: 1.00, eff: 100 },
+  { wl: "400x300", n: 2, s1: 0.003, p: 2.816, s2: 0.051, t: 2.870, sd: 0.45, sp: 0.77, eff: 39 },
+  { wl: "400x300", n: 4, s1: 0.003, p: 2.228, s2: 0.053, t: 2.284, sd: 0.46, sp: 0.97, eff: 24 },
+  { wl: "400x300", n: 8, s1: 0.003, p: 2.045, s2: 0.055, t: 2.103, sd: 0.01, sp: 1.05, eff: 13 },
+  { wl: "800x600", n: 1, s1: 0.003, p: 4.014, s2: 0.005, t: 4.022, sd: 0.00, sp: 1.00, eff: 100 },
+  { wl: "800x600", n: 2, s1: 0.003, p: 3.618, s2: 0.135, t: 3.756, sd: 0.54, sp: 1.07, eff: 54 },
+  { wl: "800x600", n: 4, s1: 0.003, p: 3.028, s2: 0.137, t: 3.168, sd: 0.01, sp: 1.27, eff: 32 },
+  { wl: "800x600", n: 8, s1: 0.003, p: 3.056, s2: 0.146, t: 3.205, sd: 0.02, sp: 1.26, eff: 16 },
+  { wl: "1600x1200", n: 1, s1: 0.003, p: 10.030, s2: 0.005, t: 10.038, sd: 0.71, sp: 1.00, eff: 100 },
+  { wl: "1600x1200", n: 2, s1: 0.003, p: 8.433, s2: 0.375, t: 8.811, sd: 0.91, sp: 1.14, eff: 57 },
+  { wl: "1600x1200", n: 4, s1: 0.003, p: 6.036, s2: 0.465, t: 6.504, sd: 0.02, sp: 1.54, eff: 39 },
+  { wl: "1600x1200", n: 8, s1: 0.003, p: 5.057, s2: 0.472, t: 5.532, sd: 0.02, sp: 1.81, eff: 23 },
+  { wl: "2000x1504", n: 8, s1: null, p: null, s2: null, t: 8.366, sd: 0.54, sp: null, eff: null },
+  { wl: "3200x2400", n: 1, s1: 0.003, p: 51.141, s2: 0.008, t: 51.152, sd: 3.55, sp: 1.00, eff: 100 },
+  { wl: "3200x2400", n: 2, s1: 0.003, p: 28.483, s2: 1.224, t: 29.710, sd: 1.66, sp: 1.72, eff: 86 },
+  { wl: "3200x2400", n: 4, s1: 0.003, p: 18.466, s2: 1.303, t: 19.772, sd: 0.89, sp: 2.59, eff: 65 },
+  { wl: "3200x2400", n: 8, s1: 0.003, p: 13.478, s2: 1.654, t: 15.135, sd: 0.50, sp: 3.38, eff: 42 },
+  { wl: "6400x4800", n: 1, s1: 0.000, p: 0.000, s2: 0.000, t: 0.000, sd: 0.00, sp: null, eff: null },
+  { wl: "6400x4800", n: 4, s1: 0.003, p: 172.707, s2: 5.473, t: 178.183, sd: 37.45, sp: null, eff: null },
+  { wl: "6400x4800", n: 8, s1: 0.004, p: 130.054, s2: 7.071, t: 137.129, sd: 42.19, sp: null, eff: null }
+];
+
+const gustRawData = [
+  { set: "Gustafson Set 1", sz: "1600x600",  n: 1, s1: 0.004, p: 5.620,   s2: 0.006, t: 5.630,   sd: 0.90,  sp: 1.00, eff: 100 },
+  { set: "Gustafson Set 1", sz: "1600x1200", n: 2, s1: 0.003, p: 8.233,   s2: 0.387, t: 8.623,   sd: 1.11,  sp: 1.95, eff: 98 },
+  { set: "Gustafson Set 1", sz: "3200x1200", n: 4, s1: 0.003, p: 9.449,   s2: 0.772, t: 10.224,  sd: 0.87,  sp: 3.77, eff: 94 },
+  { set: "Gustafson Set 1", sz: "3200x2400", n: 8, s1: 0.004, p: 14.889,  s2: 1.648, t: 16.541,  sd: 1.31,  sp: 7.30, eff: 91 },
+  { set: "Gustafson Set 2", sz: "3200x1200", n: 1, s1: 0.004, p: 14.441,  s2: 0.005, t: 14.450,  sd: 0.55,  sp: 1.00, eff: 100 },
+  { set: "Gustafson Set 2", sz: "3200x2400", n: 2, s1: 0.003, p: 27.682,  s2: 1.163, t: 28.848,  sd: 1.33,  sp: 1.96, eff: 98 },
+  { set: "Gustafson Set 2", sz: "4800x2400", n: 4, s1: 0.002, p: 27.492,  s2: 1.655, t: 29.149,  sd: 0.89,  sp: 3.83, eff: 96 },
+  { set: "Gustafson Set 2", sz: "6400x4800", n: 8, s1: 0.004, p: 130.054, s2: 7.071, t: 137.129, sd: 42.19, sp: 7.64, eff: 95 }
+];
+
+const getAmdahlSeries = (wl) => nodes.map(num => amdahlRawData.find(d => d.wl === wl && d.n === num)?.sp || null);
+const getAmdahlEffSeries = (wl) => nodes.map(num => amdahlRawData.find(d => d.wl === wl && d.n === num)?.eff || null);
+
+const C = { green: '#00ff88', blue: '#00ccff', yellow: '#fbbf24', purple: '#a78bfa', pink: '#f43f5e' };
+
+const charts = {};
+
+// Default styling settings
+Chart.defaults.font.family = "'Courier New', monospace";
+Chart.defaults.font.size = 10;
+
+const ecgLine = (color) => ({
+  borderColor: color,
+  backgroundColor: color + '15',
+  borderWidth: 2,
+  pointBackgroundColor: color,
+  pointRadius: 4,
+  maintainAspectRatio: false
+});
+
+// Create Chart Instances
+charts.amdahlSpeedup = new Chart('amdahlSpeedup', {
+  type: 'line',
+  data: {
+    labels: ['1', '2', '4', '8'],
+    datasets: [
+      { label: 'Ideal Line', data: [1,2,4,8], borderColor: '#1a3040', borderWidth: 1, borderDash:[4,4], pointRadius:0 },
+      { label: '200x150', data: getAmdahlSeries("200x150"), ...ecgLine(C.green) },
+      { label: '400x300', data: getAmdahlSeries("400x300"), ...ecgLine(C.blue) },
+      { label: '800x600', data: getAmdahlSeries("800x600"), ...ecgLine(C.yellow) },
+      { label: '1600x1200', data: getAmdahlSeries("1600x1200"), ...ecgLine(C.purple) },
+      { label: '3200x2400', data: getAmdahlSeries("3200x2400"), ...ecgLine(C.pink) },
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false }
+});
+
+charts.amdahlTime = new Chart('amdahlTime', {
+  type: 'bar',
+  data: {
+    labels: ['1N','2N','4N','8N'],
+    datasets: [
+      { label:'1600x1200', data: [10.038, 8.811, 6.504, 5.532], backgroundColor: C.purple+'88', borderColor: C.purple, borderWidth:1 },
+      { label:'3200x2400', data: [51.152, 29.710, 19.772, 15.135], backgroundColor: C.pink+'88', borderColor: C.pink, borderWidth:1 },
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false }
+});
+
+charts.amdahlEff = new Chart('amdahlEff', {
+  type: 'line',
+  data: {
+    labels: ['1','2','4','8'],
+    datasets: [
+      { label:'100% (ideal)', data:[100,100,100,100], borderColor: '#1a3040', borderWidth: 1, borderDash:[3,3], pointRadius:0 },
+      { label:'200x150', data: getAmdahlEffSeries("200x150"), ...ecgLine(C.green) },
+      { label:'400x300', data: getAmdahlEffSeries("400x300"), ...ecgLine(C.blue) },
+      { label:'800x600', data: getAmdahlEffSeries("800x600"), ...ecgLine(C.yellow) },
+      { label:'1600x1200', data: getAmdahlEffSeries("1600x1200"), ...ecgLine(C.purple) },
+      { label:'3200x2400', data: getAmdahlEffSeries("3200x2400"), ...ecgLine(C.pink) },
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false, scales: { y: { min:10, max:105 } } }
+});
+
+charts.gustSpeedup = new Chart('gustSpeedup', {
+  type: 'line',
+  data: {
+    labels: ['1','2','4','8'],
+    datasets: [
+      { label:'Ideal Line', data:[1,2,4,8], borderColor: '#1a3040', borderWidth: 1, borderDash:[4,4], pointRadius:0 },
+      { label:'Set 1 Scaled', data: gustRawData.filter(d=>d.set==="Gustafson Set 1").map(d=>d.sp), ...ecgLine(C.green) },
+      { label:'Set 2 Scaled', data: gustRawData.filter(d=>d.set==="Gustafson Set 2").map(d=>d.sp), ...ecgLine(C.blue) },
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false }
+});
+
+charts.gustTime = new Chart('gustTime', {
+  type: 'line',
+  data: {
+    labels: ['1','2','4','8'],
+    datasets: [
+      { label:'Set 1 Total Time', data: gustRawData.filter(d=>d.set==="Gustafson Set 1").map(d=>d.t), ...ecgLine(C.green) },
+      { label:'Set 2 Total Time', data: gustRawData.filter(d=>d.set==="Gustafson Set 2").map(d=>d.t), ...ecgLine(C.blue) },
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false }
+});
+
+// Dynamic Chart styling updates on theme change
+function updateChartThemes() {
+  const styles = getComputedStyle(document.documentElement);
+  const textColor = styles.getPropertyValue('--text-secondary').trim();
+  const gridColor = styles.getPropertyValue('--border-default').trim();
+  const idealColor = styles.getPropertyValue('--ideal-line').trim();
+
+  Object.values(charts).forEach(chart => {
+    // Modify axis scales
+    if(chart.options.scales) {
+      Object.values(chart.options.scales).forEach(scale => {
+        scale.grid = { color: gridColor };
+        scale.ticks = { color: textColor, font: { family: "'Courier New', monospace" } };
+      });
+    }
+    // Update legend colors
+    if(chart.options.plugins?.legend?.labels) {
+      chart.options.plugins.legend.labels.color = textColor;
+    }
+    // Update ideal reference lines dynamically
+    if (chart.data.datasets[0].label.includes('ideal') || chart.data.datasets[0].label.includes('Ideal')) {
+      chart.data.datasets[0].borderColor = idealColor;
+    }
+    chart.update();
+  });
+}
+
+// Watch Theme variations
+const observer = new MutationObserver(updateChartThemes);
+observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', updateChartThemes);
+
+// ── Render Tables ───────────────────────────────────────────────────────────
+const amdahlBody = document.getElementById('amdahlTable');
+let lastWl = "";
+amdahlRawData.forEach(d => {
+  const displayWl = d.wl !== lastWl ? d.wl : "";
+  lastWl = d.wl;
+  const cleanSp = d.sp !== null ? `${d.sp.toFixed(2)}x` : "N/A";
+  const cleanEff = d.eff !== null ? `${d.eff}%` : "N/A";
+  const cls = d.sp === null ? 'bad' : d.sp >= 3.0 ? 'good' : d.sp >= 1.2 ? 'mid' : 'bad';
+
+  amdahlBody.innerHTML += `<tr>
+    <td><strong>${displayWl}</strong></td>
+    <td>${d.n}</td>
+    <td>${d.s1 !== null ? d.s1.toFixed(3)+'s' : 'N/A'}</td>
+    <td>${d.p !== null ? d.p.toFixed(3)+'s' : 'N/A'}</td>
+    <td>${d.s2 !== null ? d.s2.toFixed(3)+'s' : 'N/A'}</td>
+    <td>${d.t.toFixed(3)}s</td>
+    <td>±${d.sd.toFixed(2)}s</td>
+    <td class="${cls}">${cleanSp}</td>
+    <td>${cleanEff}</td>
+  </tr>`;
+});
+
+const gustBody = document.getElementById('gustTable');
+let lastSet = "";
+gustRawData.forEach(d => {
+  const displaySet = d.set !== lastSet ? d.set : "";
+  lastSet = d.set;
+  const cls = d.sp >= 7.0 ? 'good' : d.sp >= 3.5 ? 'mid' : 'bad';
+
+  gustBody.innerHTML += `<tr>
+    <td><strong>${displaySet}</strong></td>
+    <td>${d.sz}</td>
+    <td>${d.n}</td>
+    <td>${d.s1.toFixed(3)}s</td>
+    <td>${d.p.toFixed(3)}s</td>
+    <td>${d.s2.toFixed(3)}s</td>
+    <td>${d.t.toFixed(3)}s</td>
+    <td>±${d.sd.toFixed(2)}s</td>
+    <td class="${cls}">${d.sp.toFixed(2)}x</td>
+    <td>${d.eff}%</td>
+  </tr>`;
+});
+
+// Run theme check immediately upon loading datasets
+updateChartThemes();
+</script>
+</body>
+</html>

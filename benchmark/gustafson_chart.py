@@ -1,14 +1,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-sizes = ["1600x600\n(1 Node)", "1600x1200\n(2 Nodes)", "3200x1200\n(4 Nodes)", "3200x2400\n(8 Nodes)"]
+sizes = ["3200x1200\n(1 Node)", "3200x2400\n(2 Nodes)", "4800x2400\n(4 Nodes)", "6400x4800\n(8 Nodes)"]
 nodes = [1, 2, 4, 8]
 
-seq1 = np.array([0.004, 0.003, 0.003, 0.004])
-parallel = np.array([5.620, 8.233, 9.449, 14.889])
-seq2 = np.array([0.006, 0.387, 0.772, 1.648])
-stds = [0.90, 1.11, 0.87, 1.31]
-scaled_speedup = [1.00, 1.95, 3.77, 7.30]
+seq1 = np.array([0.004, 0.003, 0.002, 0.004])
+parallel = np.array([14.441, 27.682, 27.492, 130.054])
+seq2 = np.array([0.005, 1.163, 1.655, 7.071])
+stds = [0.55, 1.33, 0.89, 42.19]
+scaled_speedup = [1.00, 1.96, 3.83, 7.64]
 
 C_SEQ1 = "#e53935" 
 C_SEQ2 = "#ffb300" 

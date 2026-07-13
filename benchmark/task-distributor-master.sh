@@ -64,7 +64,7 @@ IMG_PATH=/opt/povray/share/povray-3.7/scenes/objects/
 IMG_FILE=blob.pov
 OUTPUT_DIR=/tmp/
 # Array with the hostnames (the first entry has index number 1 here)
-HOSTS_ARRAY=([1]=192.168.1.58 192.168.1.54 192.168.1.104 192.168.1.136 192.168.1.86 192.168.1.117 192.168.1.83 192.168.1.133)
+HOSTS_ARRAY=([1]=192.168.1.86 192.168.1.117 192.168.1.83 192.168.1.133 192.168.1.54 192.168.1.104 192.168.1.58 192.168.1.136)
 
 while getopts "hn:x:y:fcp:" Arg ; do
   case $Arg in
