@@ -1,4 +1,4 @@
-import { links } from "../../shared/components/ui/footerData";
+import { links } from "../../shared/components/ui/footer/footerData.ts";
 import Button from "../../shared/components/ui/Button.tsx";
 import GithubIcon from "../../shared/components/ui/icons/GithubIcon.tsx";
 

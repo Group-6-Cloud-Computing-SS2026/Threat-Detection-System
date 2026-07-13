@@ -1,4 +1,4 @@
-import type { TagUrl } from "../../types";
+import type { TagUrl } from "../../../types";
 
 export const teamMembers: TagUrl[] = [
   {

@@ -2,7 +2,7 @@ import { Outlet } from "react-router";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import Footer from "../shared/components/ui/Footer.tsx";
+import Footer from "../shared/components/ui/footer";
 import Header from "../shared/components/ui/Header.tsx";
 
 export default function Root() {
