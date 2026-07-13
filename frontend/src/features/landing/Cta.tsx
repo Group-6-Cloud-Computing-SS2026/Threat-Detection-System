@@ -21,7 +21,7 @@ export default function Cta() {
         />
       </div>
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="via-brand-carbon-black-800/50 bg-linear-to-r from-transparent py-12 md:py-20">
+        <div className="via-brand-pitch-black-950 bg-linear-to-r from-transparent py-12 md:py-20">
           <div className="mx-auto max-w-3xl text-center">
             <h2
               className="font-nacelle text-brand-alabaster-grey-100 pb-4 text-3xl font-semibold md:text-4xl"
@@ -53,7 +53,7 @@ export default function Cta() {
               <div data-aos="fade-up" data-aos-delay={600}>
                 <Button
                   variant="secondary"
-                  className="w-full sm:w-auto"
+                  className="w-full border-transparent bg-transparent sm:w-auto"
                   href={
                     teacherPageLink
                       ? teacherPageLink.url.href
@@ -62,7 +62,7 @@ export default function Cta() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Course Page
+                  Course Page →
                 </Button>
               </div>
             </div>

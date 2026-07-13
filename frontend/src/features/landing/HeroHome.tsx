@@ -20,8 +20,7 @@ export default function HeroHome() {
               />
             </div>
 
-            <h1
-              className="font-nacelle m-8 animate-[gradient_6s_linear_infinite_reverse] bg-[linear-gradient(to_right,var(--color-brand-alabaster-grey-100),var(--color-brand-alabaster-grey-50),white,var(--color-brand-alabaster-grey-50),var(--color-brand-alabaster-grey-100))] bg-[length:200%_auto] bg-clip-text pb-5 text-4xl font-semibold text-transparent md:text-5xl"
+            <h1 className="gradient-text font-nacelle m-8 pb-5 text-4xl font-semibold md:text-5xl"
               data-aos="fade-up"
             >
               Detect threats. Recognize risks. In real time.

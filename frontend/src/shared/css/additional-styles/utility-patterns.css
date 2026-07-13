@@ -1,15 +1,23 @@
 /* Buttons */
 .btn,
 .btn-sm {
-  @apply inline-flex items-center justify-center rounded-lg text-sm font-medium whitespace-nowrap transition-all;
+  @apply inline-flex items-center justify-center rounded-lg text-sm
+  font-medium whitespace-nowrap transition-all;
 }
 
 .btn {
-  @apply px-4 py-[11px];
+  @apply px-4 py-2.75;
 }
 
 .btn-sm {
-  @apply px-3 py-[7px];
+  @apply px-3 py-1.75;
+}
+
+.gradient-text {
+  @apply inline-block bg-linear-to-r
+  from-brand-alabaster-grey-100 via-brand-alabaster-grey-600 to-brand-alabaster-grey-100
+  bg-size-[400%] bg-clip-text text-transparent
+  motion-safe:animate-gradient;
 }
 
 /* Forms */
@@ -26,7 +34,8 @@ input[type="search"]::-webkit-search-results-decoration {
 .form-select,
 .form-checkbox,
 .form-radio {
-  @apply border-brand-alabaster-grey-700 bg-brand-alabaster-grey-900/50 focus:border-brand-alabaster-grey-600 border focus:ring-0 focus:ring-offset-0;
+  @apply border-brand-alabaster-grey-700 bg-brand-alabaster-grey-900/50
+  focus:border-brand-alabaster-grey-600 border focus:ring-0 focus:ring-offset-0;
 }
 
 .form-input,

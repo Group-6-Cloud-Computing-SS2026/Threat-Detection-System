@@ -34,7 +34,7 @@ export default function Features() {
                 System Capabilities
               </span>
             </div>
-            <h2 className="font-nacelle text-brand-alabaster-grey-100 pb-4 text-3xl font-semibold md:text-4xl">
+            <h2 className="gradient-text font-nacelle text-brand-alabaster-grey-100 pb-4 text-3xl font-semibold md:text-4xl">
               Purpose-built for real-time threat monitoring
             </h2>
             <p className="text-brand-alabaster-grey-600/80 text-lg">

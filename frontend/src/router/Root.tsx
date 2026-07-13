@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import {Outlet, useLocation} from "react-router";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -6,6 +6,8 @@ import Footer from "../shared/components/ui/footer";
 import Header from "../shared/components/ui/Header.tsx";
 
 export default function Root() {
+  const { pathname } = useLocation();
+
   useEffect(() => {
     AOS.init({
       once: true,
@@ -13,7 +15,11 @@ export default function Root() {
       duration: 600,
       easing: "ease-out-sine",
     });
-  });
+  }, []);
+
+  useEffect(() => {
+    AOS.refresh()
+  }, [pathname]);
 
   return (
     <div className="bg-brand-pitch-black-500 font-nacelle text-brad-alabaster-grey-900 text-base antialiased">
