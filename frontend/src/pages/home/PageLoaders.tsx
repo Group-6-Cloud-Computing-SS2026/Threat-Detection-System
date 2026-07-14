@@ -6,12 +6,8 @@ export function RoutePendingBar({ active }: { active: boolean }) {
   }
 
   return (
-    <div className="bg-brand-carbon-black-800/80 border-brand-carbon-black-700/80 sticky top-0 z-20 border-b px-4 py-2 backdrop-blur">
-      <div className="mx-auto w-full max-w-3xl">
-        <div className="bg-brand-carbon-black-700 relative h-1.5 overflow-hidden rounded-full">
-          <div className="bg-brand-light-green-500 absolute inset-y-0 left-0 w-1/3 animate-pulse rounded-full" />
-        </div>
-      </div>
+    <div className="sticky top-0 z-20 h-[3px] overflow-hidden">
+      <div className="bg-brand-light-green-500 shadow-brand-light-green-500/50 animate-route-bar absolute inset-y-0 w-2/5 rounded-full shadow-[0_0_8px]" />
     </div>
   );
 }

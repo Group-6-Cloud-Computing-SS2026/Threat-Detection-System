@@ -101,7 +101,19 @@
 
   --animate-shine: shine 5s ease-in-out 500ms infinite;
   --animate-gradient: gradient 6s linear infinite;
+  --animate-route-bar: route-bar 1.1s ease-in-out infinite;
 
+  @keyframes route-bar {
+    0% {
+      left: -35%;
+    }
+    60% {
+      left: 100%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
   @keyframes shine {
     0% {
       top: 0;
