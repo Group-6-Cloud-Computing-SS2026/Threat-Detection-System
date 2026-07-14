@@ -12,8 +12,9 @@ import {
   IconSettings,
 } from "../../shared/components/ui/icons/NavIcons.tsx";
 
-const GRAFANA_URL =
-  new URL("http://192.168.1.50:3000/d/rpi-cluster-v4/raspberry-pi-cluster-e28094-monitoring?orgId=1&refresh=1m");
+const GRAFANA_URL = new URL(
+  "http://192.168.1.50:3000/d/rpi-cluster-v4/raspberry-pi-cluster-e28094-monitoring?orgId=1&refresh=1m",
+);
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   `flex shrink-0 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition ${
@@ -29,7 +30,7 @@ export default function HomeSidebar() {
   const { auth, logout } = useAuth();
 
   return (
-    <aside className="border-brand-carbon-black-800 bg-brand-carbon-black-900/60 flex shrink-0 flex-col border-b md:h-screen md:w-64 md:sticky md:top-0 md:border-r md:border-b-0">
+    <aside className="border-brand-carbon-black-800 bg-brand-carbon-black-900/60 flex shrink-0 flex-col border-b md:sticky md:top-0 md:h-screen md:w-64 md:border-r md:border-b-0">
       <div className="border-brand-carbon-black-800 flex items-center justify-between gap-3 border-b p-4 md:block md:border-b md:p-5">
         <Logo />
         <p className="text-brand-alabaster-grey-600 mt-0 text-xs tracking-wide uppercase md:mt-3">

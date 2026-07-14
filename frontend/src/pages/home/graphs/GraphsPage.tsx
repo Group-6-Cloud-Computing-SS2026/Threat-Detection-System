@@ -13,9 +13,9 @@ export default function GraphsPage() {
         content="Amdahl's and Gustafson's law scaling benchmark results."
       />
 
-        <section className="border-brand-carbon-black-800 bg-brand-carbon-black-900/60 flex min-h-[calc(100vh-10rem)] flex-col rounded-2xl border p-5">
-            <Graphs />
-        </section>
+      <section className="border-brand-carbon-black-800 bg-brand-carbon-black-900/60 flex min-h-[calc(100vh-10rem)] flex-col rounded-2xl border p-5">
+        <Graphs />
+      </section>
     </>
   );
 }

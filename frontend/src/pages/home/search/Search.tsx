@@ -15,10 +15,7 @@ import type {
   QueryState,
 } from "../../../shared/types";
 import { useApiSettings } from "../useApiSettings.ts";
-import {
-  toCardState,
-  useDetectionDetailLoader,
-} from "../useDetectionCards.ts";
+import { toCardState, useDetectionDetailLoader } from "../useDetectionCards.ts";
 
 const inputClass =
   "w-full rounded-lg border border-brand-carbon-black-700 bg-brand-carbon-black-800 px-3 py-2 text-sm text-brand-alabaster-grey-100 outline-none transition focus:border-brand-light-green-500";
@@ -55,7 +52,9 @@ export default function Search() {
         token,
         `/detections?${buildQueryString(query)}`,
       )) as PaginatedResponse<DetectionEvent>;
-      setFilteredEvents(data.items.map((item) => toCardState(item, apiBaseUrl)));
+      setFilteredEvents(
+        data.items.map((item) => toCardState(item, apiBaseUrl)),
+      );
       setFilterTotals({
         total: data.total,
         skip: data.skip,
@@ -88,7 +87,12 @@ export default function Search() {
             acknowledgement status.
           </p>
         </div>
-        <Button variant="secondary" size="sm" type="button" onClick={resetFilters}>
+        <Button
+          variant="secondary"
+          size="sm"
+          type="button"
+          onClick={resetFilters}
+        >
           Clear filters
         </Button>
       </div>
@@ -215,7 +219,11 @@ export default function Search() {
       </div>
 
       <div className="mb-4 flex flex-wrap gap-3">
-        <Button type="button" size="sm" onClick={() => void fetchFilteredEvents()}>
+        <Button
+          type="button"
+          size="sm"
+          onClick={() => void fetchFilteredEvents()}
+        >
           {searchLoading ? "Searching..." : "Search detections"}
         </Button>
       </div>

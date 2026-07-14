@@ -91,7 +91,9 @@ export function useMqttCameraStream() {
     } catch (err) {
       setStatus("disconnected");
       setError(
-        err instanceof Error ? err.message : "Failed to load MQTT client library",
+        err instanceof Error
+          ? err.message
+          : "Failed to load MQTT client library",
       );
       return;
     }

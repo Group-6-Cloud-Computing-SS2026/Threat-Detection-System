@@ -32,7 +32,7 @@ export default function CameraStream() {
         <label className="space-y-1.5 text-sm">
           <span className="text-brand-alabaster-grey-500">Broker IP</span>
           <input
-            className="w-full rounded-lg border border-brand-carbon-black-700 bg-brand-carbon-black-800 px-3 py-2 text-sm text-brand-alabaster-grey-100 outline-none transition focus:border-brand-light-green-500 disabled:opacity-60"
+            className="border-brand-carbon-black-700 bg-brand-carbon-black-800 text-brand-alabaster-grey-100 focus:border-brand-light-green-500 w-full rounded-lg border px-3 py-2 text-sm transition outline-none disabled:opacity-60"
             value={brokerIp}
             onChange={(event) => setBrokerIp(event.target.value)}
             disabled={connected || connecting}
@@ -41,7 +41,7 @@ export default function CameraStream() {
         <label className="space-y-1.5 text-sm">
           <span className="text-brand-alabaster-grey-500">WebSocket port</span>
           <input
-            className="w-full rounded-lg border border-brand-carbon-black-700 bg-brand-carbon-black-800 px-3 py-2 text-sm text-brand-alabaster-grey-100 outline-none transition focus:border-brand-light-green-500 disabled:opacity-60"
+            className="border-brand-carbon-black-700 bg-brand-carbon-black-800 text-brand-alabaster-grey-100 focus:border-brand-light-green-500 w-full rounded-lg border px-3 py-2 text-sm transition outline-none disabled:opacity-60"
             value={brokerPort}
             onChange={(event) => setBrokerPort(event.target.value)}
             disabled={connected || connecting}

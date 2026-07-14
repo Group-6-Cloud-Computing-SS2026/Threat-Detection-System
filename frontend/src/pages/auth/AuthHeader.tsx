@@ -6,7 +6,10 @@ type HeaderProps = {
 
 export default function AuthHeader({ mode }: HeaderProps) {
   return (
-    <div className="motion-safe:animate-auth-fade mb-6 max-w-xl" data-aos="fade-up">
+    <div
+      className="motion-safe:animate-auth-fade mb-6 max-w-xl"
+      data-aos="fade-up"
+    >
       <p className="text-brand-light-green-300 text-sm font-medium tracking-wide uppercase">
         {mode === "register" ? "Create account" : "Welcome back"}
       </p>

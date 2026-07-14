@@ -47,7 +47,11 @@ export default function AuthSidebar() {
         </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3" data-aos="fade-up" data-aos-delay={200}>
+      <div
+        className="grid gap-3 sm:grid-cols-3"
+        data-aos="fade-up"
+        data-aos-delay={200}
+      >
         {SIDEBAR_CARDS.map((card) => (
           <div
             key={card.label}

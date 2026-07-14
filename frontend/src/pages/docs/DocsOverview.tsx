@@ -38,8 +38,8 @@ export default function DocsOverview() {
               The sections you actually need
             </h2>
             <p className="text-brand-alabaster-grey-600/80 text-lg">
-              Enough context to understand the system quickly, with direct
-              paths into the detailed documentation when you need them.
+              Enough context to understand the system quickly, with direct paths
+              into the detailed documentation when you need them.
             </p>
           </div>
         </div>

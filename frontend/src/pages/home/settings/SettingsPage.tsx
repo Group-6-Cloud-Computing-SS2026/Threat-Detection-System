@@ -10,9 +10,9 @@ export default function SettingsPage() {
         content="Connection settings for the Threat Detection System dashboard."
       />
 
-        <section className="border-brand-carbon-black-800 bg-brand-carbon-black-900/60 max-w-xl rounded-2xl border p-5">
-            <Settings />
-        </section>
+      <section className="border-brand-carbon-black-800 bg-brand-carbon-black-900/60 max-w-xl rounded-2xl border p-5">
+        <Settings />
+      </section>
     </>
   );
 }

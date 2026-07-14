@@ -10,9 +10,9 @@ export default function SearchPage() {
         content="Search and filter historical detection events."
       />
 
-        <section className="border-brand-carbon-black-800 bg-brand-carbon-black-900/60 rounded-2xl border p-5">
-            <Search />
-        </section>
+      <section className="border-brand-carbon-black-800 bg-brand-carbon-black-900/60 rounded-2xl border p-5">
+        <Search />
+      </section>
     </>
   );
 }

@@ -5,10 +5,7 @@ import CameraFeed from "./CameraFeed.tsx";
 import DetectionCard from "./DetectionCard.tsx";
 import type { CardState, DetectionEvent } from "../../shared/types";
 import { useApiSettings } from "./useApiSettings.ts";
-import {
-  toCardState,
-  useDetectionDetailLoader,
-} from "./useDetectionCards.ts";
+import { toCardState, useDetectionDetailLoader } from "./useDetectionCards.ts";
 
 export default function Overview() {
   const { auth } = useAuth();

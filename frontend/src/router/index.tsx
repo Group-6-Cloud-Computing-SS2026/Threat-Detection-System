@@ -2,7 +2,6 @@ import { createBrowserRouter } from "react-router";
 import Root from "./Root.tsx";
 import AuthLayout from "../pages/auth/AuthLayout.tsx";
 import HomeLayout from "../pages/home/HomeLayout.tsx";
-import RequireAuth from "./RequireAuth.tsx";
 import RedirectIfAuthed from "./RedirectIfAuthed.tsx";
 import RouteErrorPage from "./RouteErrorPage.tsx";
 import LoginPage from "../pages/auth/LoginPage.tsx";
@@ -46,7 +45,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    Component: RequireAuth,
+    // Component: RequireAuth,
     ErrorBoundary: RouteErrorPage,
     children: [
       {

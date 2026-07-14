@@ -15,11 +15,11 @@ export default function DocsHero() {
               alt="ThreatOff"
               className="h-12 w-auto"
             />
-            <span className="text-brand-alabaster-grey-600/70 text-sm font-medium uppercase tracking-[0.2em]">
+            <span className="text-brand-alabaster-grey-600/70 text-sm font-medium tracking-[0.2em] uppercase">
               Docs
             </span>
           </div>
-          <h1 className="gradient-text leading-16 font-nacelle text-brand-alabaster-grey-100 text-4xl mb-4 font-semibold md:text-5xl">
+          <h1 className="gradient-text font-nacelle text-brand-alabaster-grey-100 mb-4 text-4xl leading-16 font-semibold md:text-5xl">
             Documentation built for the edge pipeline
           </h1>
           <p className="text-brand-alabaster-grey-600/80 mt-5 max-w-2xl text-lg">

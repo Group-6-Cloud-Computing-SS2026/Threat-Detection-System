@@ -22,7 +22,9 @@ export function toCardState(
 export function useDetectionDetailLoader(
   apiBaseUrl: string,
   token: string | undefined,
-  setEvents: (value: CardState[] | ((current: CardState[]) => CardState[])) => void,
+  setEvents: (
+    value: CardState[] | ((current: CardState[]) => CardState[]),
+  ) => void,
   setError: (value: string | null) => void,
 ) {
   return useCallback(
@@ -42,7 +44,8 @@ export function useDetectionDetailLoader(
         const apiOrigin = apiBaseUrl.replace(/\/api\/v1\/?$/, "");
 
         for (const image of detail.images || []) {
-          imageUrls[image.id] = `${apiOrigin}/api/v1/images/${image.id}/download`;
+          imageUrls[image.id] =
+            `${apiOrigin}/api/v1/images/${image.id}/download`;
         }
 
         const resolvedPreviewUrl = buildImageUrl(
@@ -65,7 +68,9 @@ export function useDetectionDetailLoader(
         );
       } catch (error) {
         setError(
-          error instanceof Error ? error.message : "Failed to load event detail",
+          error instanceof Error
+            ? error.message
+            : "Failed to load event detail",
         );
       }
     },

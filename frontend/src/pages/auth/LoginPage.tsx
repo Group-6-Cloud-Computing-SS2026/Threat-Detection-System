@@ -72,8 +72,15 @@ export default function LoginPage() {
         <div ref={panelRef} className="grid lg:grid-cols-[1.05fr_0.95fr]">
           <AuthSidebar />
 
-          <section className="bg-brand-pitch-black-950/92 p-6 sm:p-8 lg:p-10" data-aos="fade-left" data-aos-delay={100}>
-            <div className="mb-8 flex items-center gap-3 lg:hidden" data-aos="fade-up">
+          <section
+            className="bg-brand-pitch-black-950/92 p-6 sm:p-8 lg:p-10"
+            data-aos="fade-left"
+            data-aos-delay={100}
+          >
+            <div
+              className="mb-8 flex items-center gap-3 lg:hidden"
+              data-aos="fade-up"
+            >
               <img src="/favicon.svg" alt="ThreatOff" className="h-11 w-11" />
               <div>
                 <div className="text-brand-alabaster-grey-100 text-sm font-semibold tracking-[0.16em] uppercase">
@@ -89,7 +96,12 @@ export default function LoginPage() {
             <ModeToggle mode={mode} onChange={handleModeChange} />
             <AuthMessages error={error} success={success} />
 
-            <div key={mode} className="motion-safe:animate-auth-fade" data-aos="fade-up" data-aos-delay={200}>
+            <div
+              key={mode}
+              className="motion-safe:animate-auth-fade"
+              data-aos="fade-up"
+              data-aos-delay={200}
+            >
               {mode === "register" ? (
                 <RegisterForm
                   username={username}

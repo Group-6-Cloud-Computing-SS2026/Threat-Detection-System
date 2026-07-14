@@ -30,7 +30,7 @@ export default function Settings() {
       <label className="mb-4 block space-y-1.5 text-sm">
         <span className="text-brand-alabaster-grey-500">API base URL</span>
         <input
-          className="w-full rounded-lg border border-brand-carbon-black-700 bg-brand-carbon-black-800 px-3 py-2 text-sm text-brand-alabaster-grey-100 outline-none transition focus:border-brand-light-green-500"
+          className="border-brand-carbon-black-700 bg-brand-carbon-black-800 text-brand-alabaster-grey-100 focus:border-brand-light-green-500 w-full rounded-lg border px-3 py-2 text-sm transition outline-none"
           value={draftApiBaseUrl}
           onChange={(event) => setDraftApiBaseUrl(event.target.value)}
           placeholder={DEFAULT_API_BASE_URL}

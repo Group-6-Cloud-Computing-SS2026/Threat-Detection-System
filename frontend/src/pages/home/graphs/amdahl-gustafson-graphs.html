@@ -1,343 +1,768 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Execution Time Summary</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<style>
-  /* ── Theme Architecture ── */
-  :root {
-    --bg-base: #f8fafc;
-    --bg-surface: #ffffff;
-    --bg-elevated: #f1f5f9;
-    --border-default: #cbd5e1;
-    --border-subtle: #e2e8f0;
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #334155;
-    --accent-title: #047857;
-    --accent-sub: #059669;
-  }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Execution Time Summary</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <style>
+      /* ── Theme Architecture ── */
+      :root {
+        --bg-base: #f8fafc;
+        --bg-surface: #ffffff;
+        --bg-elevated: #f1f5f9;
+        --border-default: #cbd5e1;
+        --border-subtle: #e2e8f0;
+        --text-primary: #0f172a;
+        --text-secondary: #475569;
+        --text-muted: #334155;
+        --accent-title: #047857;
+        --accent-sub: #059669;
+      }
 
-  /* Automatic & Manual Dark Mode */
-  html[data-theme="dark"] {
-    --bg-base: #0a0f1e;
-    --bg-surface: #0d1525;
-    --bg-elevated: #111f2e;
-    --border-default: #1a3040;
-    --border-subtle: #0d1525;
-    --text-primary: #e2e8f0;
-    --text-secondary: #4a7c6b;
-    --text-muted: #94a3b8;
-    --accent-title: #00ff88;
-    --accent-sub: #00cc66;
-  }
+      /* Automatic & Manual Dark Mode */
+      html[data-theme="dark"] {
+        --bg-base: #0a0f1e;
+        --bg-surface: #0d1525;
+        --bg-elevated: #111f2e;
+        --border-default: #1a3040;
+        --border-subtle: #0d1525;
+        --text-primary: #e2e8f0;
+        --text-secondary: #4a7c6b;
+        --text-muted: #94a3b8;
+        --accent-title: #00ff88;
+        --accent-sub: #00cc66;
+      }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg-base: #0a0f1e;
-      --bg-surface: #0d1525;
-      --bg-elevated: #111f2e;
-      --border-default: #1a3040;
-      --border-subtle: #0d1525;
-      --text-primary: #e2e8f0;
-      --text-secondary: #4a7c6b;
-      --text-muted: #94a3b8;
-      --accent-title: #00ff88;
-      --accent-sub: #00cc66;
-    }
-  }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg-base: #0a0f1e;
+          --bg-surface: #0d1525;
+          --bg-elevated: #111f2e;
+          --border-default: #1a3040;
+          --border-subtle: #0d1525;
+          --text-primary: #e2e8f0;
+          --text-secondary: #4a7c6b;
+          --text-muted: #94a3b8;
+          --accent-title: #00ff88;
+          --accent-sub: #00cc66;
+        }
+      }
 
-  /* ── Global Styles ── */
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { 
-    background: var(--bg-base); 
-    color: var(--text-primary); 
-    font-family: 'Courier New', monospace; 
-    padding: 32px; 
-    transition: background 0.3s, color 0.3s; 
-  }
+      /* ── Global Styles ── */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--bg-base);
+        color: var(--text-primary);
+        font-family: "Courier New", monospace;
+        padding: 32px;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
 
-  /* ── Typography & Layout ── */
-  .section-title { 
-    font-size: 16px; 
-    color: var(--accent-title); 
-    letter-spacing: 2px; 
-    text-transform: uppercase; 
-    margin: 24px 0 16px; 
-    border-left: 3px solid var(--accent-title); 
-    padding-left: 12px; 
-  }
-  
-  .chart-grid { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    gap: 24px; 
-    margin-bottom: 40px; 
-  }
-  
-  .chart-box { 
-    background: var(--bg-surface); 
-    border: 1px solid var(--border-default); 
-    border-radius: 8px; 
-    padding: 20px; 
-    position: relative; 
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  }
-  
-  .chart-box::before { 
-    content: ''; 
-    position: absolute; 
-    top: 0; left: 0; right: 0; 
-    height: 3px; 
-    background: linear-gradient(90deg, var(--accent-title), transparent); 
-    border-radius: 8px 8px 0 0; 
-  }
-  
-  .chart-title { 
-    font-size: 12px; 
-    color: var(--accent-sub); 
-    letter-spacing: 1px; 
-    text-transform: uppercase; 
-    margin-bottom: 16px; 
-    font-weight: bold;
-  }
-  
-  .canvas-container { 
-    position: relative; 
-    height: 300px; 
-    width: 100%; 
-  }
+      /* ── Typography & Layout ── */
+      .section-title {
+        font-size: 16px;
+        color: var(--accent-title);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin: 24px 0 16px;
+        border-left: 3px solid var(--accent-title);
+        padding-left: 12px;
+      }
 
-  /* ── Tables ── */
-  .table-wrap { 
-    overflow-x: auto; 
-    margin-bottom: 32px; 
-    border: 1px solid var(--border-default); 
-    border-radius: 8px; 
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  }
-  
-  table { 
-    width: 100%; 
-    border-collapse: collapse; 
-    font-size: 14px; 
-    background: var(--bg-surface); 
-  }
-  
-  th { 
-    background: var(--bg-elevated); 
-    color: var(--accent-title); 
-    padding: 12px 16px; 
-    text-align: right; 
-    letter-spacing: 1px; 
-    border-bottom: 2px solid var(--border-default); 
-  }
-  
-  th:first-child, th:nth-child(2) { text-align: left; }
-  
-  td { 
-    padding: 10px 16px; 
-    text-align: right; 
-    border-bottom: 1px solid var(--border-subtle); 
-    color: var(--text-muted); 
-  }
-  
-  td:first-child, td:nth-child(2) { text-align: left; }
-  
-  tr:hover td { background: var(--bg-elevated); color: var(--text-primary); }
-  
-  .good { color: #059669; font-weight: bold; }
-  html[data-theme="dark"] .good { color: #00ff88; }
-  .mid  { color: #d97706; font-weight: bold; }
-  html[data-theme="dark"] .mid { color: #fbbf24; }
-  .bad  { color: #dc2626; font-weight: bold; }
-  html[data-theme="dark"] .bad { color: #f87171; }
-  
-  .divider { 
-    border: none; 
-    border-top: 1px dashed var(--border-default); 
-    margin: 40px 0; 
-  }
+      .chart-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 40px;
+      }
 
-  @media(max-width: 900px) { .chart-grid { grid-template-columns: 1fr; } }
-</style>
-</head>
-<body>
+      .chart-box {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-default);
+        border-radius: 8px;
+        padding: 20px;
+        position: relative;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
 
-<div class="section-title">Execution Time Analysis</div>
-<div class="chart-grid">
-  <div class="chart-box">
-    <div class="chart-title">▸ Amdahl's Law: Avg Total Time</div>
-    <div class="canvas-container"><canvas id="amdahlTime"></canvas></div>
-  </div>
-  <div class="chart-box">
-    <div class="chart-title">▸ Gustafson's Law: Avg Total Time</div>
-    <div class="canvas-container"><canvas id="gustTime"></canvas></div>
-  </div>
-</div>
+      .chart-box::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--accent-title), transparent);
+        border-radius: 8px 8px 0 0;
+      }
 
-<hr class="divider">
+      .chart-title {
+        font-size: 12px;
+        color: var(--accent-sub);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+        font-weight: bold;
+      }
 
-<div class="section-title">Results Tables</div>
+      .canvas-container {
+        position: relative;
+        height: 300px;
+        width: 100%;
+      }
 
-<div class="table-wrap">
-<table>
-  <thead>
-    <tr>
-      <th>Workload (Amdahl)</th><th>Nodes</th><th>Avg Seq 1</th><th>Avg Parallel</th><th>Avg Seq 2</th><th>Avg Total Time</th><th>Std Dev</th><th>Speedup</th><th>Efficiency</th>
-    </tr>
-  </thead>
-  <tbody id="amdahlTable"></tbody>
-</table>
-</div>
+      /* ── Tables ── */
+      .table-wrap {
+        overflow-x: auto;
+        margin-bottom: 32px;
+        border: 1px solid var(--border-default);
+        border-radius: 8px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
 
-<div class="table-wrap">
-<table>
-  <thead>
-    <tr>
-      <th>Set Description</th><th>Size</th><th>Nodes</th><th>Avg Seq 1</th><th>Avg Parallel</th><th>Avg Seq 2</th><th>Avg Total Time</th><th>Std Dev</th><th>Scaled Speedup</th><th>Efficiency</th>
-    </tr>
-  </thead>
-  <tbody id="gustTable"></tbody>
-</table>
-</div>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        background: var(--bg-surface);
+      }
 
-<script>
-// ── Dataset Declarations ──
-const amdahlRawData = [
-  { wl: "200x150", n: 1, s1: 0.005, p: 3.015, s2: 0.007, t: 3.027, sd: 0.71, sp: 1.00, eff: 100 },
-  { wl: "200x150", n: 2, s1: 0.003, p: 2.215, s2: 0.022, t: 2.240, sd: 0.45, sp: 1.35, eff: 68 },
-  { wl: "200x150", n: 4, s1: 0.003, p: 2.028, s2: 0.026, t: 2.057, sd: 0.01, sp: 1.47, eff: 37 },
-  { wl: "200x150", n: 8, s1: 0.003, p: 2.050, s2: 0.030, t: 2.083, sd: 0.01, sp: 1.45, eff: 18 },
-  { wl: "400x300", n: 1, s1: 0.003, p: 2.209, s2: 0.004, t: 2.216, sd: 0.45, sp: 1.00, eff: 100 },
-  { wl: "400x300", n: 2, s1: 0.003, p: 2.816, s2: 0.051, t: 2.870, sd: 0.45, sp: 0.77, eff: 39 },
-  { wl: "400x300", n: 4, s1: 0.003, p: 2.228, s2: 0.053, t: 2.284, sd: 0.46, sp: 0.97, eff: 24 },
-  { wl: "400x300", n: 8, s1: 0.003, p: 2.045, s2: 0.055, t: 2.103, sd: 0.01, sp: 1.05, eff: 13 },
-  { wl: "800x600", n: 1, s1: 0.003, p: 4.014, s2: 0.005, t: 4.022, sd: 0.00, sp: 1.00, eff: 100 },
-  { wl: "800x600", n: 2, s1: 0.003, p: 3.618, s2: 0.135, t: 3.756, sd: 0.54, sp: 1.07, eff: 54 },
-  { wl: "800x600", n: 4, s1: 0.003, p: 3.028, s2: 0.137, t: 3.168, sd: 0.01, sp: 1.27, eff: 32 },
-  { wl: "800x600", n: 8, s1: 0.003, p: 3.056, s2: 0.146, t: 3.205, sd: 0.02, sp: 1.26, eff: 16 },
-  { wl: "1600x1200", n: 1, s1: 0.003, p: 10.030, s2: 0.005, t: 10.038, sd: 0.71, sp: 1.00, eff: 100 },
-  { wl: "1600x1200", n: 2, s1: 0.003, p: 8.433, s2: 0.375, t: 8.811, sd: 0.91, sp: 1.14, eff: 57 },
-  { wl: "1600x1200", n: 4, s1: 0.003, p: 6.036, s2: 0.465, t: 6.504, sd: 0.02, sp: 1.54, eff: 39 },
-  { wl: "1600x1200", n: 8, s1: 0.003, p: 5.057, s2: 0.472, t: 5.532, sd: 0.02, sp: 1.81, eff: 23 },
-  { wl: "2000x1504", n: 8, s1: null, p: null, s2: null, t: 8.366, sd: 0.54, sp: null, eff: null },
-  { wl: "3200x2400", n: 1, s1: 0.003, p: 51.141, s2: 0.008, t: 51.152, sd: 3.55, sp: 1.00, eff: 100 },
-  { wl: "3200x2400", n: 2, s1: 0.003, p: 28.483, s2: 1.224, t: 29.710, sd: 1.66, sp: 1.72, eff: 86 },
-  { wl: "3200x2400", n: 4, s1: 0.003, p: 18.466, s2: 1.303, t: 19.772, sd: 0.89, sp: 2.59, eff: 65 },
-  { wl: "3200x2400", n: 8, s1: 0.003, p: 13.478, s2: 1.654, t: 15.135, sd: 0.50, sp: 3.38, eff: 42 },
-  { wl: "6400x4800", n: 1, s1: 0.000, p: 0.000, s2: 0.000, t: 0.000, sd: 0.00, sp: null, eff: null },
-  { wl: "6400x4800", n: 4, s1: 0.003, p: 172.707, s2: 5.473, t: 178.183, sd: 37.45, sp: null, eff: null },
-  { wl: "6400x4800", n: 8, s1: 0.004, p: 130.054, s2: 7.071, t: 137.129, sd: 42.19, sp: null, eff: null }
-];
+      th {
+        background: var(--bg-elevated);
+        color: var(--accent-title);
+        padding: 12px 16px;
+        text-align: right;
+        letter-spacing: 1px;
+        border-bottom: 2px solid var(--border-default);
+      }
 
-const gustRawData = [
-  { set: "Gustafson Set 1", sz: "1600x600",  n: 1, s1: 0.004, p: 5.620,   s2: 0.006, t: 5.630,   sd: 0.90,  sp: 1.00, eff: 100 },
-  { set: "Gustafson Set 1", sz: "1600x1200", n: 2, s1: 0.003, p: 8.233,   s2: 0.387, t: 8.623,   sd: 1.11,  sp: 1.95, eff: 98 },
-  { set: "Gustafson Set 1", sz: "3200x1200", n: 4, s1: 0.003, p: 9.449,   s2: 0.772, t: 10.224,  sd: 0.87,  sp: 3.77, eff: 94 },
-  { set: "Gustafson Set 1", sz: "3200x2400", n: 8, s1: 0.004, p: 14.889,  s2: 1.648, t: 16.541,  sd: 1.31,  sp: 7.30, eff: 91 },
-  { set: "Gustafson Set 2", sz: "3200x1200", n: 1, s1: 0.004, p: 14.441,  s2: 0.005, t: 14.450,  sd: 0.55,  sp: 1.00, eff: 100 },
-  { set: "Gustafson Set 2", sz: "3200x2400", n: 2, s1: 0.003, p: 27.682,  s2: 1.163, t: 28.848,  sd: 1.33,  sp: 1.96, eff: 98 },
-  { set: "Gustafson Set 2", sz: "4800x2400", n: 4, s1: 0.002, p: 27.492,  s2: 1.655, t: 29.149,  sd: 0.89,  sp: 3.83, eff: 96 },
-  { set: "Gustafson Set 2", sz: "6400x4800", n: 8, s1: 0.004, p: 130.054, s2: 7.071, t: 137.129, sd: 42.19, sp: 7.64, eff: 95 }
-];
+      th:first-child,
+      th:nth-child(2) {
+        text-align: left;
+      }
 
-// ── Chart.js Configurations ──
-const C = { green: '#00ff88', blue: '#00ccff', purple: '#a78bfa', pink: '#f43f5e' };
-const charts = {};
+      td {
+        padding: 10px 16px;
+        text-align: right;
+        border-bottom: 1px solid var(--border-subtle);
+        color: var(--text-muted);
+      }
 
-Chart.defaults.font.family = "'Courier New', monospace";
-Chart.defaults.font.size = 16;
-const chartOptions = { 
-  responsive: true, 
-  maintainAspectRatio: false,
-  plugins: { legend: { position: 'top' } }
-};
+      td:first-child,
+      td:nth-child(2) {
+        text-align: left;
+      }
 
-// Amdahl Bar Chart
-charts.amdahlTime = new Chart('amdahlTime', {
-  type: 'bar',
-  data: {
-    labels: ['1N','2N','4N','8N'],
-    datasets: [
-      { label:'1600x1200', data: [10.038, 8.811, 6.504, 5.532], backgroundColor: C.purple+'88', borderColor: C.purple, borderWidth: 1, borderRadius: 2 },
-      { label:'3200x2400', data: [51.152, 29.710, 19.772, 15.135], backgroundColor: C.pink+'88', borderColor: C.pink, borderWidth: 1, borderRadius: 2 },
-    ]
-  },
-  options: chartOptions
-});
+      tr:hover td {
+        background: var(--bg-elevated);
+        color: var(--text-primary);
+      }
 
-// Gustafson Bar Chart
-charts.gustTime = new Chart('gustTime', {
-  type: 'bar',
-  data: {
-    labels: ['1N','2N','4N','8N'],
-    datasets: [
-      { label:'Set 1 (1600x600 for 1st node)', data: [5.630, 8.623, 10.224, 16.541], backgroundColor: C.green+'88', borderColor: C.green, borderWidth: 1, borderRadius: 2 },
-      { label:'Set 2 (3200x1200 for node)', data: [14.450, 28.848, 29.149, 137.129], backgroundColor: C.blue+'88', borderColor: C.blue, borderWidth: 1, borderRadius: 2 },
-    ]
-  },
-  options: chartOptions
-});
+      .good {
+        color: #059669;
+        font-weight: bold;
+      }
+      html[data-theme="dark"] .good {
+        color: #00ff88;
+      }
+      .mid {
+        color: #d97706;
+        font-weight: bold;
+      }
+      html[data-theme="dark"] .mid {
+        color: #fbbf24;
+      }
+      .bad {
+        color: #dc2626;
+        font-weight: bold;
+      }
+      html[data-theme="dark"] .bad {
+        color: #f87171;
+      }
 
-// ── Dynamic Theme Management ──
-function updateChartThemes() {
-  const styles = getComputedStyle(document.documentElement);
-  const textColor = styles.getPropertyValue('--text-secondary').trim();
-  const gridColor = styles.getPropertyValue('--border-default').trim();
+      .divider {
+        border: none;
+        border-top: 1px dashed var(--border-default);
+        margin: 40px 0;
+      }
 
-  Object.values(charts).forEach(chart => {
-    if(chart.options.scales) {
-      Object.values(chart.options.scales).forEach(scale => {
-        scale.grid = { color: gridColor, drawBorder: false };
-        scale.ticks = { color: textColor };
+      @media (max-width: 900px) {
+        .chart-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="section-title">Execution Time Analysis</div>
+    <div class="chart-grid">
+      <div class="chart-box">
+        <div class="chart-title">▸ Amdahl's Law: Avg Total Time</div>
+        <div class="canvas-container"><canvas id="amdahlTime"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">▸ Gustafson's Law: Avg Total Time</div>
+        <div class="canvas-container"><canvas id="gustTime"></canvas></div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="section-title">Results Tables</div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Workload (Amdahl)</th>
+            <th>Nodes</th>
+            <th>Avg Seq 1</th>
+            <th>Avg Parallel</th>
+            <th>Avg Seq 2</th>
+            <th>Avg Total Time</th>
+            <th>Std Dev</th>
+            <th>Speedup</th>
+            <th>Efficiency</th>
+          </tr>
+        </thead>
+        <tbody id="amdahlTable"></tbody>
+      </table>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Set Description</th>
+            <th>Size</th>
+            <th>Nodes</th>
+            <th>Avg Seq 1</th>
+            <th>Avg Parallel</th>
+            <th>Avg Seq 2</th>
+            <th>Avg Total Time</th>
+            <th>Std Dev</th>
+            <th>Scaled Speedup</th>
+            <th>Efficiency</th>
+          </tr>
+        </thead>
+        <tbody id="gustTable"></tbody>
+      </table>
+    </div>
+
+    <script>
+      // ── Dataset Declarations ──
+      const amdahlRawData = [
+        {
+          wl: "200x150",
+          n: 1,
+          s1: 0.005,
+          p: 3.015,
+          s2: 0.007,
+          t: 3.027,
+          sd: 0.71,
+          sp: 1.0,
+          eff: 100,
+        },
+        {
+          wl: "200x150",
+          n: 2,
+          s1: 0.003,
+          p: 2.215,
+          s2: 0.022,
+          t: 2.24,
+          sd: 0.45,
+          sp: 1.35,
+          eff: 68,
+        },
+        {
+          wl: "200x150",
+          n: 4,
+          s1: 0.003,
+          p: 2.028,
+          s2: 0.026,
+          t: 2.057,
+          sd: 0.01,
+          sp: 1.47,
+          eff: 37,
+        },
+        {
+          wl: "200x150",
+          n: 8,
+          s1: 0.003,
+          p: 2.05,
+          s2: 0.03,
+          t: 2.083,
+          sd: 0.01,
+          sp: 1.45,
+          eff: 18,
+        },
+        {
+          wl: "400x300",
+          n: 1,
+          s1: 0.003,
+          p: 2.209,
+          s2: 0.004,
+          t: 2.216,
+          sd: 0.45,
+          sp: 1.0,
+          eff: 100,
+        },
+        {
+          wl: "400x300",
+          n: 2,
+          s1: 0.003,
+          p: 2.816,
+          s2: 0.051,
+          t: 2.87,
+          sd: 0.45,
+          sp: 0.77,
+          eff: 39,
+        },
+        {
+          wl: "400x300",
+          n: 4,
+          s1: 0.003,
+          p: 2.228,
+          s2: 0.053,
+          t: 2.284,
+          sd: 0.46,
+          sp: 0.97,
+          eff: 24,
+        },
+        {
+          wl: "400x300",
+          n: 8,
+          s1: 0.003,
+          p: 2.045,
+          s2: 0.055,
+          t: 2.103,
+          sd: 0.01,
+          sp: 1.05,
+          eff: 13,
+        },
+        {
+          wl: "800x600",
+          n: 1,
+          s1: 0.003,
+          p: 4.014,
+          s2: 0.005,
+          t: 4.022,
+          sd: 0.0,
+          sp: 1.0,
+          eff: 100,
+        },
+        {
+          wl: "800x600",
+          n: 2,
+          s1: 0.003,
+          p: 3.618,
+          s2: 0.135,
+          t: 3.756,
+          sd: 0.54,
+          sp: 1.07,
+          eff: 54,
+        },
+        {
+          wl: "800x600",
+          n: 4,
+          s1: 0.003,
+          p: 3.028,
+          s2: 0.137,
+          t: 3.168,
+          sd: 0.01,
+          sp: 1.27,
+          eff: 32,
+        },
+        {
+          wl: "800x600",
+          n: 8,
+          s1: 0.003,
+          p: 3.056,
+          s2: 0.146,
+          t: 3.205,
+          sd: 0.02,
+          sp: 1.26,
+          eff: 16,
+        },
+        {
+          wl: "1600x1200",
+          n: 1,
+          s1: 0.003,
+          p: 10.03,
+          s2: 0.005,
+          t: 10.038,
+          sd: 0.71,
+          sp: 1.0,
+          eff: 100,
+        },
+        {
+          wl: "1600x1200",
+          n: 2,
+          s1: 0.003,
+          p: 8.433,
+          s2: 0.375,
+          t: 8.811,
+          sd: 0.91,
+          sp: 1.14,
+          eff: 57,
+        },
+        {
+          wl: "1600x1200",
+          n: 4,
+          s1: 0.003,
+          p: 6.036,
+          s2: 0.465,
+          t: 6.504,
+          sd: 0.02,
+          sp: 1.54,
+          eff: 39,
+        },
+        {
+          wl: "1600x1200",
+          n: 8,
+          s1: 0.003,
+          p: 5.057,
+          s2: 0.472,
+          t: 5.532,
+          sd: 0.02,
+          sp: 1.81,
+          eff: 23,
+        },
+        {
+          wl: "2000x1504",
+          n: 8,
+          s1: null,
+          p: null,
+          s2: null,
+          t: 8.366,
+          sd: 0.54,
+          sp: null,
+          eff: null,
+        },
+        {
+          wl: "3200x2400",
+          n: 1,
+          s1: 0.003,
+          p: 51.141,
+          s2: 0.008,
+          t: 51.152,
+          sd: 3.55,
+          sp: 1.0,
+          eff: 100,
+        },
+        {
+          wl: "3200x2400",
+          n: 2,
+          s1: 0.003,
+          p: 28.483,
+          s2: 1.224,
+          t: 29.71,
+          sd: 1.66,
+          sp: 1.72,
+          eff: 86,
+        },
+        {
+          wl: "3200x2400",
+          n: 4,
+          s1: 0.003,
+          p: 18.466,
+          s2: 1.303,
+          t: 19.772,
+          sd: 0.89,
+          sp: 2.59,
+          eff: 65,
+        },
+        {
+          wl: "3200x2400",
+          n: 8,
+          s1: 0.003,
+          p: 13.478,
+          s2: 1.654,
+          t: 15.135,
+          sd: 0.5,
+          sp: 3.38,
+          eff: 42,
+        },
+        {
+          wl: "6400x4800",
+          n: 1,
+          s1: 0.0,
+          p: 0.0,
+          s2: 0.0,
+          t: 0.0,
+          sd: 0.0,
+          sp: null,
+          eff: null,
+        },
+        {
+          wl: "6400x4800",
+          n: 4,
+          s1: 0.003,
+          p: 172.707,
+          s2: 5.473,
+          t: 178.183,
+          sd: 37.45,
+          sp: null,
+          eff: null,
+        },
+        {
+          wl: "6400x4800",
+          n: 8,
+          s1: 0.004,
+          p: 130.054,
+          s2: 7.071,
+          t: 137.129,
+          sd: 42.19,
+          sp: null,
+          eff: null,
+        },
+      ];
+
+      const gustRawData = [
+        {
+          set: "Gustafson Set 1",
+          sz: "1600x600",
+          n: 1,
+          s1: 0.004,
+          p: 5.62,
+          s2: 0.006,
+          t: 5.63,
+          sd: 0.9,
+          sp: 1.0,
+          eff: 100,
+        },
+        {
+          set: "Gustafson Set 1",
+          sz: "1600x1200",
+          n: 2,
+          s1: 0.003,
+          p: 8.233,
+          s2: 0.387,
+          t: 8.623,
+          sd: 1.11,
+          sp: 1.95,
+          eff: 98,
+        },
+        {
+          set: "Gustafson Set 1",
+          sz: "3200x1200",
+          n: 4,
+          s1: 0.003,
+          p: 9.449,
+          s2: 0.772,
+          t: 10.224,
+          sd: 0.87,
+          sp: 3.77,
+          eff: 94,
+        },
+        {
+          set: "Gustafson Set 1",
+          sz: "3200x2400",
+          n: 8,
+          s1: 0.004,
+          p: 14.889,
+          s2: 1.648,
+          t: 16.541,
+          sd: 1.31,
+          sp: 7.3,
+          eff: 91,
+        },
+        {
+          set: "Gustafson Set 2",
+          sz: "3200x1200",
+          n: 1,
+          s1: 0.004,
+          p: 14.441,
+          s2: 0.005,
+          t: 14.45,
+          sd: 0.55,
+          sp: 1.0,
+          eff: 100,
+        },
+        {
+          set: "Gustafson Set 2",
+          sz: "3200x2400",
+          n: 2,
+          s1: 0.003,
+          p: 27.682,
+          s2: 1.163,
+          t: 28.848,
+          sd: 1.33,
+          sp: 1.96,
+          eff: 98,
+        },
+        {
+          set: "Gustafson Set 2",
+          sz: "4800x2400",
+          n: 4,
+          s1: 0.002,
+          p: 27.492,
+          s2: 1.655,
+          t: 29.149,
+          sd: 0.89,
+          sp: 3.83,
+          eff: 96,
+        },
+        {
+          set: "Gustafson Set 2",
+          sz: "6400x4800",
+          n: 8,
+          s1: 0.004,
+          p: 130.054,
+          s2: 7.071,
+          t: 137.129,
+          sd: 42.19,
+          sp: 7.64,
+          eff: 95,
+        },
+      ];
+
+      // ── Chart.js Configurations ──
+      const C = {
+        green: "#00ff88",
+        blue: "#00ccff",
+        purple: "#a78bfa",
+        pink: "#f43f5e",
+      };
+      const charts = {};
+
+      Chart.defaults.font.family = "'Courier New', monospace";
+      Chart.defaults.font.size = 16;
+      const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: "top" } },
+      };
+
+      // Amdahl Bar Chart
+      charts.amdahlTime = new Chart("amdahlTime", {
+        type: "bar",
+        data: {
+          labels: ["1N", "2N", "4N", "8N"],
+          datasets: [
+            {
+              label: "1600x1200",
+              data: [10.038, 8.811, 6.504, 5.532],
+              backgroundColor: C.purple + "88",
+              borderColor: C.purple,
+              borderWidth: 1,
+              borderRadius: 2,
+            },
+            {
+              label: "3200x2400",
+              data: [51.152, 29.71, 19.772, 15.135],
+              backgroundColor: C.pink + "88",
+              borderColor: C.pink,
+              borderWidth: 1,
+              borderRadius: 2,
+            },
+          ],
+        },
+        options: chartOptions,
       });
-    }
-    if(chart.options.plugins?.legend?.labels) {
-      chart.options.plugins.legend.labels.color = textColor;
-    }
-    chart.update();
-  });
-}
 
-// Observers to catch external theme toggles
-const observer = new MutationObserver(updateChartThemes);
-observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateChartThemes);
+      // Gustafson Bar Chart
+      charts.gustTime = new Chart("gustTime", {
+        type: "bar",
+        data: {
+          labels: ["1N", "2N", "4N", "8N"],
+          datasets: [
+            {
+              label: "Set 1 (1600x600 for 1st node)",
+              data: [5.63, 8.623, 10.224, 16.541],
+              backgroundColor: C.green + "88",
+              borderColor: C.green,
+              borderWidth: 1,
+              borderRadius: 2,
+            },
+            {
+              label: "Set 2 (3200x1200 for node)",
+              data: [14.45, 28.848, 29.149, 137.129],
+              backgroundColor: C.blue + "88",
+              borderColor: C.blue,
+              borderWidth: 1,
+              borderRadius: 2,
+            },
+          ],
+        },
+        options: chartOptions,
+      });
 
-// ── HTML Table Generation ──
-const amdahlBody = document.getElementById('amdahlTable');
-let lastWl = "";
-amdahlRawData.forEach(d => {
-  const displayWl = d.wl !== lastWl ? d.wl : "";
-  lastWl = d.wl;
-  const cleanSp = d.sp !== null ? `${d.sp.toFixed(2)}x` : "N/A";
-  const cleanEff = d.eff !== null ? `${d.eff}%` : "N/A";
-  const cls = d.sp === null ? 'bad' : d.sp >= 3.0 ? 'good' : d.sp >= 1.2 ? 'mid' : 'bad';
+      // ── Dynamic Theme Management ──
+      function updateChartThemes() {
+        const styles = getComputedStyle(document.documentElement);
+        const textColor = styles.getPropertyValue("--text-secondary").trim();
+        const gridColor = styles.getPropertyValue("--border-default").trim();
 
-  amdahlBody.innerHTML += `<tr>
+        Object.values(charts).forEach((chart) => {
+          if (chart.options.scales) {
+            Object.values(chart.options.scales).forEach((scale) => {
+              scale.grid = { color: gridColor, drawBorder: false };
+              scale.ticks = { color: textColor };
+            });
+          }
+          if (chart.options.plugins?.legend?.labels) {
+            chart.options.plugins.legend.labels.color = textColor;
+          }
+          chart.update();
+        });
+      }
+
+      // Observers to catch external theme toggles
+      const observer = new MutationObserver(updateChartThemes);
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-theme"],
+      });
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", updateChartThemes);
+
+      // ── HTML Table Generation ──
+      const amdahlBody = document.getElementById("amdahlTable");
+      let lastWl = "";
+      amdahlRawData.forEach((d) => {
+        const displayWl = d.wl !== lastWl ? d.wl : "";
+        lastWl = d.wl;
+        const cleanSp = d.sp !== null ? `${d.sp.toFixed(2)}x` : "N/A";
+        const cleanEff = d.eff !== null ? `${d.eff}%` : "N/A";
+        const cls =
+          d.sp === null
+            ? "bad"
+            : d.sp >= 3.0
+              ? "good"
+              : d.sp >= 1.2
+                ? "mid"
+                : "bad";
+
+        amdahlBody.innerHTML += `<tr>
     <td><strong>${displayWl}</strong></td>
     <td>${d.n}</td>
-    <td>${d.s1 !== null ? d.s1.toFixed(3)+'s' : 'N/A'}</td>
-    <td>${d.p !== null ? d.p.toFixed(3)+'s' : 'N/A'}</td>
-    <td>${d.s2 !== null ? d.s2.toFixed(3)+'s' : 'N/A'}</td>
+    <td>${d.s1 !== null ? d.s1.toFixed(3) + "s" : "N/A"}</td>
+    <td>${d.p !== null ? d.p.toFixed(3) + "s" : "N/A"}</td>
+    <td>${d.s2 !== null ? d.s2.toFixed(3) + "s" : "N/A"}</td>
     <td>${d.t.toFixed(3)}s</td>
     <td>±${d.sd.toFixed(2)}s</td>
     <td class="${cls}">${cleanSp}</td>
     <td>${cleanEff}</td>
   </tr>`;
-});
+      });
 
-const gustBody = document.getElementById('gustTable');
-let lastSet = "";
-gustRawData.forEach(d => {
-  const displaySet = d.set !== lastSet ? d.set : "";
-  lastSet = d.set;
-  const cls = d.sp >= 7.0 ? 'good' : d.sp >= 3.5 ? 'mid' : 'bad';
+      const gustBody = document.getElementById("gustTable");
+      let lastSet = "";
+      gustRawData.forEach((d) => {
+        const displaySet = d.set !== lastSet ? d.set : "";
+        lastSet = d.set;
+        const cls = d.sp >= 7.0 ? "good" : d.sp >= 3.5 ? "mid" : "bad";
 
-  gustBody.innerHTML += `<tr>
+        gustBody.innerHTML += `<tr>
     <td><strong>${displaySet}</strong></td>
     <td>${d.sz}</td>
     <td>${d.n}</td>
@@ -349,10 +774,10 @@ gustRawData.forEach(d => {
     <td class="${cls}">${d.sp.toFixed(2)}x</td>
     <td>${d.eff}%</td>
   </tr>`;
-});
+      });
 
-// Run theme update once on mount
-updateChartThemes();
-</script>
-</body>
+      // Run theme update once on mount
+      updateChartThemes();
+    </script>
+  </body>
 </html>
