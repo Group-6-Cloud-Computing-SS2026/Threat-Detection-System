@@ -10,7 +10,7 @@ export default function Settings() {
   const [draftApiBaseUrl, setDraftApiBaseUrl] = useState(apiBaseUrl);
 
   return (
-    <section className="border-brand-carbon-black-800 bg-brand-carbon-black-900/60 max-w-xl rounded-2xl border p-5">
+    <>
       <div className="mb-4">
         <h2 className="font-nacelle text-brand-alabaster-grey-100 text-lg font-semibold">
           Connection settings
@@ -58,6 +58,6 @@ export default function Settings() {
           Sign out
         </Button>
       </div>
-    </section>
+    </>
   );
 }
