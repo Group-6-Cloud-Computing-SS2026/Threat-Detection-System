@@ -1,12 +1,12 @@
-import { useState, type SubmitEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type SubmitEvent } from "react";
 import { NavLink, useNavigate, useSearchParams } from "react-router";
 import Button from "../../shared/components/ui/Button.tsx";
 import { useApiSettings } from "../home/useApiSettings.ts";
 import { useAuth } from "./AuthContext.tsx";
 
 const inputClass =
-  "w-full rounded-lg border border-brand-alabaster-grey-300 bg-brand-alabaster-grey-50 px-3 py-2 text-brand-carbon-black-900 outline-none transition focus:border-brand-light-green-600 focus:ring-2 focus:ring-brand-light-green-600/20";
-const labelClass = "text-sm font-medium text-brand-carbon-black-700";
+  "w-full rounded-lg border border-brand-carbon-black-700 bg-brand-carbon-black-900 px-3 py-2 text-brand-alabaster-grey-100 outline-none shadow-inner shadow-black/20 transition placeholder:text-brand-alabaster-grey-700 focus:border-brand-light-green-600 focus:ring-2 focus:ring-brand-light-green-600/20";
+const labelClass = "text-sm font-medium text-brand-alabaster-grey-500";
 
 type Tab = "login" | "register";
 
@@ -15,10 +15,12 @@ export default function LoginPage() {
   const { login } = useAuth();
   const { apiBaseUrl } = useApiSettings();
   const [searchParams] = useSearchParams();
+  const panelRef = useRef<HTMLDivElement>(null);
 
   const [tab, setTab] = useState<Tab>(
     searchParams.get("tab") === "register" ? "register" : "login",
   );
+  const [panelHeight, setPanelHeight] = useState<number | null>(null);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,6 +34,43 @@ export default function LoginPage() {
     setError(null);
     setSuccess(null);
   }
+
+  useLayoutEffect(() => {
+    const element = panelRef.current;
+    if (!element) return;
+
+    const updateHeight = () => {
+      setPanelHeight(element.scrollHeight);
+    };
+
+    updateHeight();
+  }, [tab]);
+
+  useEffect(() => {
+    const element = panelRef.current;
+    if (!element) return;
+
+    const updateHeight = () => {
+      setPanelHeight(element.scrollHeight);
+    };
+
+    const observer = new ResizeObserver(() => {
+      requestAnimationFrame(updateHeight);
+    });
+
+    observer.observe(element);
+
+    const onResize = () => {
+      updateHeight();
+    };
+
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", onResize);
+    };
+  }, []);
 
   async function handleLogin(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -110,183 +149,194 @@ export default function LoginPage() {
       />
 
       <div
-        className={`bg-brand-alabaster-grey-50 w-full rounded-2xl p-8 shadow-2xl sm:p-10 ${
-          tab === "login" ? "max-w-sm" : "max-w-sm lg:max-w-xl"
+        className={`relative w-full overflow-hidden rounded-2xl border border-brand-carbon-black-700 bg-brand-carbon-black-900/95 shadow-[0_24px_80px_rgba(0,0,0,0.55)] backdrop-blur-xl transition-[max-width,height,box-shadow,transform] duration-500 ease-out ${
+          tab === "login" ? "max-w-[28rem]" : "max-w-[52rem]"
         }`}
+        style={panelHeight ? { height: `${panelHeight}px` } : undefined}
       >
-        <NavLink to="/landing" className="mb-8 flex justify-center">
-          <img
-            src="/images/wordmark-light.svg"
-            alt="ThreatOff"
-            className="h-32 w-auto"
-          />
-        </NavLink>
+        <div ref={panelRef} className="p-8 sm:p-10">
+          <NavLink to="/landing" className="mb-8 flex justify-center">
+            <img
+              src="/images/wordmark-dark.svg"
+              alt="ThreatOff"
+              className="h-28 w-auto opacity-95"
+            />
+          </NavLink>
 
-        <div className="bg-brand-alabaster-grey-100 mb-6 flex rounded-lg p-1 text-sm font-medium">
-          <button
-            type="button"
-            onClick={() => switchTab("login")}
-            className={`hover:text-brand-alabaster-grey-500 flex-1 cursor-pointer rounded-md py-1.5 transition ${
-              tab === "login"
-                ? "bg-brand-alabaster-grey-50 text-brand-carbon-black-900 shadow-sm"
-                : "text-brand-alabaster-grey-950"
-            }`}
-          >
-            Sign In
-          </button>
-          <button
-            type="button"
-            onClick={() => switchTab("register")}
-            className={`hover:text-brand-alabaster-grey-500 flex-1 cursor-pointer rounded-md py-1.5 transition ${
-              tab === "register"
-                ? "bg-brand-alabaster-grey-50 text-brand-carbon-black-900 shadow-sm"
-                : "text-brand-alabaster-grey-950"
-            }`}
-          >
-            Register
-          </button>
+          <div className="bg-brand-carbon-black-800 mb-6 flex rounded-lg border border-brand-carbon-black-700 p-1 text-sm font-medium">
+            <button
+              type="button"
+              onClick={() => switchTab("login")}
+              className={`flex-1 cursor-pointer rounded-md py-1.5 transition ${
+                tab === "login"
+                  ? "bg-brand-carbon-black-900 text-brand-alabaster-grey-100 shadow-sm"
+                  : "text-brand-alabaster-grey-600 hover:text-brand-alabaster-grey-200"
+              }`}
+            >
+              Sign In
+            </button>
+            <button
+              type="button"
+              onClick={() => switchTab("register")}
+              className={`flex-1 cursor-pointer rounded-md py-1.5 transition ${
+                tab === "register"
+                  ? "bg-brand-carbon-black-900 text-brand-alabaster-grey-100 shadow-sm"
+                  : "text-brand-alabaster-grey-600 hover:text-brand-alabaster-grey-200"
+              }`}
+            >
+              Register
+            </button>
+          </div>
+
+          {success && (
+            <div
+              className="mb-4 rounded-lg border border-brand-light-green-900/60 bg-brand-light-green-950/40 px-3 py-2 text-sm text-brand-light-green-200"
+              role="status"
+            >
+              {success}
+            </div>
+          )}
+          {error && (
+            <div
+              id="login-message"
+              className="mb-4 rounded-lg border border-brand-brick-red-900/70 bg-brand-brick-red-950/45 px-3 py-2 text-sm text-brand-brick-red-100"
+              role="alert"
+              aria-live="polite"
+            >
+              {error}
+            </div>
+          )}
+
+          {tab === "login" ? (
+            <form
+              className="space-y-4"
+              onSubmit={handleLogin}
+              aria-labelledby="login-title"
+              noValidate
+            >
+              <h1 id="login-title" className="sr-only">
+                Sign in
+              </h1>
+
+              <div className="grid gap-4">
+                <div className="space-y-1.5">
+                  <label htmlFor="username" className={labelClass}>
+                    Username
+                  </label>
+                  <input
+                    id="username"
+                    type="text"
+                    placeholder="Who are you?"
+                    autoComplete="username"
+                    required
+                    value={username}
+                    onChange={(event) => setUsername(event.target.value)}
+                    className={inputClass}
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label htmlFor="password" className={labelClass}>
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    className={inputClass}
+                  />
+                </div>
+              </div>
+
+              <div className="flex h-3" />
+              <Button type="submit" disabled={isSubmitting} fullWidth>
+                {isSubmitting ? "Signing in..." : "Sign In"}
+              </Button>
+            </form>
+          ) : (
+            <form
+              className="space-y-4"
+              onSubmit={handleRegister}
+              aria-labelledby="login-title"
+              noValidate
+            >
+              <h1 id="login-title" className="sr-only">
+                Create account
+              </h1>
+
+              <div className="grid gap-4 lg:grid-cols-2">
+                <div className="space-y-1.5">
+                  <label htmlFor="reg-username" className={labelClass}>
+                    Username
+                  </label>
+                  <input
+                    id="reg-username"
+                    type="text"
+                    autoComplete="username"
+                    required
+                    value={username}
+                    onChange={(event) => setUsername(event.target.value)}
+                    className={inputClass}
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label htmlFor="reg-email" className={labelClass}>
+                    Email
+                  </label>
+                  <input
+                    id="reg-email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    className={inputClass}
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label htmlFor="reg-password" className={labelClass}>
+                    Password
+                  </label>
+                  <input
+                    id="reg-password"
+                    type="password"
+                    autoComplete="new-password"
+                    required
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    className={inputClass}
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label htmlFor="reg-role" className={labelClass}>
+                    Role
+                  </label>
+                  <select
+                    id="reg-role"
+                    value={role}
+                    onChange={(event) => setRole(event.target.value)}
+                    className={inputClass}
+                  >
+                    <option value="viewer">Viewer</option>
+                    <option value="operator">Operator</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex h-3" />
+              <Button type="submit" disabled={isSubmitting} fullWidth>
+                {isSubmitting ? "Creating account..." : "Create account"}
+              </Button>
+            </form>
+          )}
         </div>
-
-        {success && (
-          <div
-            className="bg-brand-light-green-50 text-brand-light-green-700 mb-4 rounded-lg px-3 py-2 text-sm"
-            role="status"
-          >
-            {success}
-          </div>
-        )}
-        {error && (
-          <div
-            id="login-message"
-            className="bg-brand-brick-red-50 text-brand-brick-red-600 mb-4 rounded-lg px-3 py-2 text-sm"
-            role="alert"
-            aria-live="polite"
-          >
-            {error}
-          </div>
-        )}
-
-        {tab === "login" ? (
-          <form
-            className="space-y-4"
-            onSubmit={handleLogin}
-            aria-labelledby="login-title"
-            noValidate
-          >
-            <div className="grid gap-4">
-              <div className="space-y-1.5">
-                <label htmlFor="username" className={labelClass}>
-                  Username
-                </label>
-                <input
-                  id="username"
-                  type="text"
-                  placeholder="Who are you?"
-                  autoComplete="username"
-                  required
-                  value={username}
-                  onChange={(event) => setUsername(event.target.value)}
-                  className={inputClass}
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label htmlFor="password" className={labelClass}>
-                  Password
-                </label>
-                <input
-                  id="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  className={inputClass}
-                />
-              </div>
-            </div>
-
-            <div className="flex h-3"></div>
-            <Button type="submit" disabled={isSubmitting} fullWidth>
-              {isSubmitting ? "Signing in..." : "Sign In"}
-            </Button>
-          </form>
-        ) : (
-          <form
-            className="space-y-4"
-            onSubmit={handleRegister}
-            aria-labelledby="login-title"
-            noValidate
-          >
-            <div className="grid gap-4 lg:grid-cols-2">
-              <div className="space-y-1.5">
-                <label htmlFor="reg-username" className={labelClass}>
-                  Username
-                </label>
-                <input
-                  id="reg-username"
-                  type="text"
-                  autoComplete="username"
-                  required
-                  value={username}
-                  onChange={(event) => setUsername(event.target.value)}
-                  className={inputClass}
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label htmlFor="reg-email" className={labelClass}>
-                  Email
-                </label>
-                <input
-                  id="reg-email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  className={inputClass}
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label htmlFor="reg-password" className={labelClass}>
-                  Password
-                </label>
-                <input
-                  id="reg-password"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  className={inputClass}
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label htmlFor="reg-role" className={labelClass}>
-                  Role
-                </label>
-                <select
-                  id="reg-role"
-                  value={role}
-                  onChange={(event) => setRole(event.target.value)}
-                  className={inputClass}
-                >
-                  <option value="viewer">Viewer</option>
-                  <option value="operator">Operator</option>
-                  <option value="admin">Admin</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="flex h-3"></div>
-            <Button type="submit" disabled={isSubmitting} fullWidth>
-              {isSubmitting ? "Creating account..." : "Create account"}
-            </Button>
-          </form>
-        )}
       </div>
     </>
   );
