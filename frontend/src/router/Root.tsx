@@ -15,7 +15,7 @@ export default function Root() {
   }, [pathname]);
 
   return (
-    <div className="bg-brand-pitch-black-500 font-nacelle text-brad-alabaster-grey-900 text-base antialiased">
+    <div className="bg-brand-pitch-black-500 font-nacelle text-brand-alabaster-grey-900 min-h-screen text-base antialiased">
       <div>
         <header id="header">
           <Header />

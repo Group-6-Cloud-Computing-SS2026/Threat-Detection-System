@@ -173,6 +173,17 @@ body {
   background-color: #0a0903;
 }
 
+html {
+  min-height: 100%;
+  color-scheme: dark;
+}
+
+body,
+#root {
+  min-height: 100vh;
+  background-color: #0a0903;
+}
+
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still

@@ -1,10 +1,6 @@
-import { links } from "../../shared/components/ui/footer/footerData.ts";
 import Button from "../../shared/components/ui/Button.tsx";
-import GithubIcon from "../../shared/components/ui/icons/GithubIcon.tsx";
 
 export default function HeroHome() {
-  const githubLink = links.find((link) => link.tag === "GitHub");
-
   return (
     <section>
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -41,15 +37,12 @@ export default function HeroHome() {
                 <div data-aos="fade-up" data-aos-delay={400}>
                   <Button
                     variant="github"
-                    href={
-                      githubLink ? githubLink.url.href : "https://github.com"
-                    }
+                    href="/auth"
                     target="_blank"
                     rel="noreferrer"
                     className="w-full sm:w-auto"
                   >
-                    <GithubIcon />
-                    Open in GitHub
+                    Open Dashboard
                   </Button>
                 </div>
                 <div data-aos="fade-up" data-aos-delay={600}>

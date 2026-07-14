@@ -19,7 +19,7 @@ export default function LandingPage() {
 
       <section
         id="landing-page"
-        className="bg-brand-pitch-black-500 relative isolate overflow-hidden"
+        className="bg-brand-pitch-black-500 relative isolate min-h-screen overflow-hidden"
       >
         <div className="relative z-10">
           <PageIllustration />
