@@ -28,25 +28,24 @@ type ButtonAsAnchor = BaseProps &
   };
 
 export type ButtonProps = ButtonAsButton | ButtonAsAnchor;
+type ButtonRestProps =
+  | Omit<ButtonAsButton, keyof BaseProps>
+  | Omit<ButtonAsAnchor, keyof BaseProps>;
 
 const SIZE_CLASSES: Record<Size, string> = {
   sm: "px-3 py-[7px] text-sm",
   md: "px-4 py-2.5 text-sm",
 };
 
-// Inner corner radius is 1px tighter than the pill's rounded-lg so the
-// gradient border reads as a consistent ring at every size.
 const INNER_RADIUS = "rounded-[7px]";
 
-// Duotone variants share the same two-layer structure (gradient border that
-// reveals on hover) and only differ in color.
 const DUOTONE_STYLES: Record<
   DuotoneVariant,
   { outer: string; inner: string; ring: string }
 > = {
   primary: {
     outer:
-      "bg-linear-to-br from-brand-light-green-400 to-brand-light-green-700",
+      "bg-linear-to-br from-brand-light-green-500 via-brand-light-green-600 to-brand-light-green-800 shadow-[0_10px_24px_rgba(0,0,0,0.20)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.26)]",
     inner:
       "bg-brand-pitch-black-500 text-brand-alabaster-grey-100 group-hover:bg-transparent group-hover:text-brand-pitch-black-500",
     ring: "focus:ring-brand-light-green-500/30",
@@ -59,6 +58,18 @@ const DUOTONE_STYLES: Record<
   },
 };
 
+function hasHref(
+  props: ButtonRestProps,
+): props is Omit<ButtonAsAnchor, keyof BaseProps> & { href: string } {
+  return "href" in props && typeof props.href === "string";
+}
+
+function isInternalLink(
+  props: ButtonRestProps,
+): props is Omit<ButtonAsAnchor, keyof BaseProps> & { href: string } {
+  return hasHref(props) && props.href.startsWith("/");
+}
+
 export default function Button({
   variant = "primary",
   size = "md",
@@ -68,66 +79,61 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const width = fullWidth ? "w-full" : "";
-  const isAnchor = props.href !== undefined;
-  // Internal routes (e.g. "/login") go through react-router's Link so navigation
-  // stays client-side; in-page anchors (#section) and external URLs use a plain <a>.
-  const isInternalLink = isAnchor && props.href!.startsWith("/");
 
   if (variant === "secondary") {
-    const secondaryClasses = `inline-flex items-center justify-center gap-1 rounded-lg border border-brand-carbon-black-700 bg-brand-carbon-black-800/60 font-medium text-brand-alabaster-grey-700 transition hover:border-brand-carbon-black-600 hover:bg-brand-carbon-black-800 hover:text-brand-alabaster-grey-100 disabled:cursor-not-allowed disabled:opacity-50 ${SIZE_CLASSES[size]} ${width} ${className}`;
+    const classes = `inline-flex items-center justify-center gap-1 rounded-lg border border-brand-carbon-black-700 bg-brand-carbon-black-800/60 font-medium text-brand-alabaster-grey-700 transition hover:border-brand-carbon-black-600 hover:bg-brand-carbon-black-800 hover:text-brand-alabaster-grey-100 disabled:cursor-not-allowed disabled:opacity-50 ${SIZE_CLASSES[size]} ${width} ${className}`;
 
-    if (isInternalLink) {
-      const { href, ...rest } =
-        props as AnchorHTMLAttributes<HTMLAnchorElement> & { href: string };
+    if (isInternalLink(props)) {
+      const { href, ...rest } = props;
       return (
-        <Link to={href} className={secondaryClasses} {...rest}>
+        <Link to={href} className={classes} {...rest}>
           {children}
         </Link>
       );
     }
-    return isAnchor ? (
-      <a
-        className={secondaryClasses}
-        {...(props as AnchorHTMLAttributes<HTMLAnchorElement>)}
-      >
-        {children}
-      </a>
-    ) : (
-      <button
-        className={secondaryClasses}
-        {...(props as ButtonHTMLAttributes<HTMLButtonElement>)}
-      >
+
+    if (hasHref(props)) {
+      const anchorProps = props as Omit<ButtonAsAnchor, keyof BaseProps>;
+      return (
+        <a className={classes} {...anchorProps}>
+          {children}
+        </a>
+      );
+    }
+
+    const buttonProps = props as Omit<ButtonAsButton, keyof BaseProps>;
+    return (
+      <button className={classes} {...buttonProps}>
         {children}
       </button>
     );
   }
 
-  // primary / github: duotone gradient border that reveals on hover, à la Flowbite's gradient-duotone buttons.
   const styles = DUOTONE_STYLES[variant];
   const outerClasses = `group inline-flex items-center overflow-hidden rounded-lg ${styles.outer} p-0.5 font-medium transition focus:outline-none focus:ring-4 ${styles.ring} disabled:cursor-not-allowed disabled:opacity-50 ${width} ${className}`;
   const innerClasses = `flex w-full items-center justify-center gap-1 cursor-pointer ${INNER_RADIUS} ${styles.inner} transition-all duration-150 ease-in ${SIZE_CLASSES[size]}`;
 
-  if (isInternalLink) {
-    const { href, ...rest } =
-      props as AnchorHTMLAttributes<HTMLAnchorElement> & { href: string };
+  if (isInternalLink(props)) {
+    const { href, ...rest } = props;
     return (
       <Link to={href} className={outerClasses} {...rest}>
         <span className={innerClasses}>{children}</span>
       </Link>
     );
   }
-  return isAnchor ? (
-    <a
-      className={outerClasses}
-      {...(props as AnchorHTMLAttributes<HTMLAnchorElement>)}
-    >
-      <span className={innerClasses}>{children}</span>
-    </a>
-  ) : (
-    <button
-      className={outerClasses}
-      {...(props as ButtonHTMLAttributes<HTMLButtonElement>)}
-    >
+
+  if (hasHref(props)) {
+    const anchorProps = props as Omit<ButtonAsAnchor, keyof BaseProps>;
+    return (
+      <a className={outerClasses} {...anchorProps}>
+        <span className={innerClasses}>{children}</span>
+      </a>
+    );
+  }
+
+  const buttonProps = props as Omit<ButtonAsButton, keyof BaseProps>;
+  return (
+    <button className={outerClasses} {...buttonProps}>
       <span className={innerClasses}>{children}</span>
     </button>
   );
