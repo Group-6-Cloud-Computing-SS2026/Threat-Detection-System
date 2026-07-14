@@ -296,11 +296,11 @@ export default function Graphs() {
         }
 
         if (chart.options.plugins?.legend?.labels) {
-          chart.options.plugins.legend.labels.color = textColor;
+          chart.options.plugins.legend.labels.color = "#eaeaea";
         }
 
         if (chart.options.plugins?.tooltip) {
-          chart.options.plugins.tooltip.titleColor = textColor;
+          chart.options.plugins.tooltip.titleColor = "#b4b4b4";
           chart.options.plugins.tooltip.bodyColor = textColor;
           chart.options.plugins.tooltip.borderColor = gridColor;
         }
@@ -338,8 +338,8 @@ export default function Graphs() {
               },
             },
             tooltip: {
-              backgroundColor: "#2f2f2f",
-              borderColor: "#0c280c",
+              backgroundColor: "#0d0d0d",
+              borderColor: "#bfbfbf",
               borderWidth: 1,
               cornerRadius: 12,
               padding: 14,
