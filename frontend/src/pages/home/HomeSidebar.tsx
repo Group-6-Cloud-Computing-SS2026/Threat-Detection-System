@@ -9,6 +9,7 @@ import {
   IconDocs,
   IconGrafana,
   IconLogout,
+  IconLayoutDashboard,
   IconSearch,
   IconSettings,
 } from "../../shared/components/ui/icons/NavIcons.tsx";
@@ -89,7 +90,7 @@ export default function HomeSidebar() {
             Dashboard
           </p>
           <SidebarNavLink to="/" end>
-            <IconActivity className="h-4 w-4 shrink-0 opacity-70" />
+            <IconLayoutDashboard className="h-4 w-4 shrink-0 opacity-70" />
             Overview
           </SidebarNavLink>
           <SidebarNavLink to="/camera">
@@ -110,7 +111,11 @@ export default function HomeSidebar() {
             <IconSettings className="h-4 w-4 shrink-0 opacity-70" />
             Settings
           </SidebarNavLink>
-          <NavLink to="/docs" target="_blank" className={navLinkClass}>
+          <SidebarNavLink to="/operations">
+            <IconActivity className="h-4 w-4 shrink-0 opacity-70" />
+            Operations
+          </SidebarNavLink>
+          <NavLink to="/docs" className={navLinkClass}>
             <IconDocs className="h-4 w-4 shrink-0 opacity-70" />
             Docs
           </NavLink>
@@ -132,7 +137,7 @@ export default function HomeSidebar() {
               className={externalLinkClass}
           >
             <IconFileCode className="h-4 w-4 shrink-0 opacity-70" />
-            API docs
+            Swagger UI
           </a>
         </div>
       </nav>
