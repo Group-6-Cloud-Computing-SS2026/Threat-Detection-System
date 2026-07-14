@@ -116,3 +116,43 @@ INFO: All MinIO sub-systems initialized successfully          ← Cluster quorum
 ```
 
 A single-node MinIO would report `1 drive per set`. Seeing `4 drives per set` confirms the distributed erasure-coded cluster is fully operational.
+
+---
+
+## 5. Scaling Constraints & RAM Limitations
+
+### Why the cluster is pinned to 4 MinIO replicas:
+
+1. **Hardware Memory Constraints**: The Raspberry Pi 3 worker nodes are equipped with only **1GB of RAM** and boot diskless over NFS. MinIO's distributed erasure coding requires significant memory cache to orchestrate disk queries and network peer synchronization. Restricting the cluster to 4 MinIO pods prevents worker nodes from running out of memory (OOM) and crashing.
+2. **Optimizing API High Availability**: By deploying MinIO on only 4 nodes (e.g. `pi5-master`, `worker6`, `worker4`, and `worker7`), the remaining 4 worker nodes are left free of heavy storage workloads. This allows the lightweight FastAPI `tds-api` backend replica pods to scale to 9 pods across the cluster with maximum availability and responsiveness.
+3. **Future Hardware Upgrade Path**: If the cluster is upgraded with more powerful hardware (e.g., Raspberry Pi 4 or 5 nodes with 4GB or 8GB of RAM), the StatefulSet can be safely scaled to 8 replicas. 
+
+To upgrade to an 8-node MinIO cluster:
+1. Increase `replicas: 8` in [minio.yaml](../../k8s/minio.yaml).
+2. Update the startup args to reflect the larger pool:
+   `http://tds-minio-{0...7}.minio-sys.default.svc.cluster.local/data`
+3. *Note: Changing erasure coding layout requires re-initializing the persistent volumes (PVs) as MinIO cannot dynamically expand an existing set size.*
+
+---
+
+## 6. Auditing Physical Image Files on the Master Node
+
+Because all worker nodes network-boot (PXE) their operating systems and run diskless, any data written to their local persistent volumes (including MinIO local storage paths) is physically stored on the Master Pi 5's SSD inside the shared NFS root directories.
+
+You can audit, find, or count the physical `annotated.jpg` files directly from the **Pi 5 Master** terminal:
+
+### Find all saved threat detection images:
+```bash
+sudo find /nfs/nodes/ -name "annotated.jpg"
+```
+
+### Count the total number of saved threat detection images:
+```bash
+sudo find /nfs/nodes/ -name "annotated.jpg" | wc -l
+```
+
+### Path structure breakdown:
+The files are stored inside each worker's local storage PV volume root:
+`/nfs/nodes/<worker-hostname-hash>/var/lib/rancher/k3s/storage/pvc-<pvc-uuid>_default_data-tds-minio-<pod-index>/detection-images/detections/<event-uuid>/annotated.jpg`
+
+

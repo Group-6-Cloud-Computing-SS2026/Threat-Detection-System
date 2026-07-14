@@ -1,0 +1,6 @@
+background
+blunt_weapon
+edged_weapon
+fire
+firearm
+person

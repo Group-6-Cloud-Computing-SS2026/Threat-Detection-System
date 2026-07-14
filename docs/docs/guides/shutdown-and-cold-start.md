@@ -186,6 +186,20 @@ If a worker node's `systemd` deadlocks (`timed out waiting for service 'org.free
 sudo -u cc123 ansible worker7 -i ~/pi-cluster/hosts.ini -m shell -a "echo 1 > /proc/sys/kernel/sysrq && echo b > /proc/sysrq-trigger" --become
 ```
 
+### D. Preventing Parallel API Migration Deadlocks
+If `tds-api` is configured with multiple replicas (e.g., 9 replicas) during a cold boot, all replicas will start in parallel and run database migrations simultaneously. This can cause DDL lock contentions and deadlocks in PostgreSQL, putting the pods in a `CrashLoopBackOff` loop.
+
+To prevent this:
+1. Scale the deployment down to **1 replica** before bootstrapping or when restarting the cluster:
+   ```bash
+   sudo kubectl scale deployment tds-api --replicas=1
+   ```
+2. Wait for the single pod to become `Running` (which applies the schema migrations cleanly).
+3. Scale it back up to your desired count (e.g., 9 replicas):
+   ```bash
+   sudo kubectl scale deployment tds-api --replicas=9
+   ```
+
 ---
 
 ## 7. 🔌 Clean Shutdown & Power-Off Sequence

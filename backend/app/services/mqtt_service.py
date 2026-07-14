@@ -11,6 +11,7 @@ from datetime import datetime, timedelta, timezone
 from uuid import UUID
 
 import aiomqtt
+from fastapi import WebSocket
 
 from app.config import settings
 from app.database import async_session_factory
@@ -31,6 +32,29 @@ mqtt_connected: bool = False
 _latest_camera_stream_frames: dict[str, dict[str, object]] = {}
 
 
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: list[WebSocket] = []
+
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections.append(websocket)
+
+    def disconnect(self, websocket: WebSocket):
+        if websocket in self.active_connections:
+            self.active_connections.remove(websocket)
+
+    async def broadcast(self, message: str):
+        for connection in list(self.active_connections):
+            try:
+                await connection.send_text(message)
+            except Exception:
+                self.disconnect(connection)
+
+
+manager = ConnectionManager()
+
+
 async def mqtt_subscriber():
     """Long-running MQTT subscriber that processes sensor messages."""
     global mqtt_connected
@@ -48,10 +72,14 @@ async def mqtt_subscriber():
                     settings.MQTT_BROKER_PORT,
                 )
 
-                await client.subscribe(settings.MQTT_TOPIC_DETECTIONS)
-                await client.subscribe(settings.MQTT_TOPIC_HEALTH)
-                await client.subscribe(settings.MQTT_TOPIC_CAMERA)
-                logger.info("Subscribed to MQTT topics")
+                # Use shared subscriptions for database-modifying events so only 1 replica processes each event
+                await client.subscribe(f"$share/api-group/{settings.MQTT_TOPIC_DETECTIONS}")
+                await client.subscribe(f"$share/api-group/{settings.MQTT_TOPIC_HEALTH}")
+                
+                # Split camera topic: stream goes to all pods (for WS broadcast), events goes to 1 pod (for storage)
+                await client.subscribe("cluster/camera/stream")
+                await client.subscribe("$share/api-group/cluster/camera/events")
+                logger.info("Subscribed to shared and standard MQTT topics")
 
                 async for message in client.messages:
                     try:
@@ -81,6 +109,7 @@ async def _handle_message(message: aiomqtt.Message) -> None:
 
     if topic == "cluster/camera/stream":
         _cache_camera_stream_frame(payload)
+        await manager.broadcast(json.dumps(payload))
         return
 
     # Route camera detection events: cluster/camera/{sub-topic}
@@ -319,3 +348,4 @@ def _get_cached_camera_stream_frame(node_key: str) -> str | None:
         return None
 
     return cached.get("image_base64") if isinstance(cached.get("image_base64"), str) else None
+

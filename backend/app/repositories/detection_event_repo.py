@@ -6,6 +6,7 @@ from datetime import datetime
 from uuid import UUID
 
 from sqlalchemy import desc, func, select, update
+from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.detection_event import DetectionEvent
@@ -15,6 +16,16 @@ from app.repositories.base import BaseRepository
 class DetectionEventRepository(BaseRepository[DetectionEvent]):
     def __init__(self, db: AsyncSession):
         super().__init__(DetectionEvent, db)
+
+    async def get_by_id_with_sensor_node(self, event_id: UUID) -> DetectionEvent | None:
+        """Fetch a single event with sensor_node eagerly loaded (avoids async lazy-load errors)."""
+        stmt = (
+            select(DetectionEvent)
+            .options(selectinload(DetectionEvent.sensor_node))
+            .where(DetectionEvent.id == event_id)
+        )
+        result = await self.db.execute(stmt)
+        return result.scalar_one_or_none()
 
     async def get_by_sensor_id(self, sensor_id: UUID, skip: int = 0, limit: int = 50) -> list[DetectionEvent]:
         stmt = (

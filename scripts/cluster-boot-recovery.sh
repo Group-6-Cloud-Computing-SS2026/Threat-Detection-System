@@ -160,11 +160,11 @@ if [ -f "$HOSTS_INI" ]; then
     success "Worker clocks synchronized!"
 
     # --------------------------------------------------------------------------
-    # 8. Reload Systemd and Restart K3s-agent on Workers
+    # 8. Reload Systemd and Restart K3s-agent on Workers (Skipped)
     # --------------------------------------------------------------------------
-    log "Reloading systemd and restarting k3s-agent on all workers..."
-    sudo -u cc123 ansible workers -i "$HOSTS_INI" -m shell -a "systemctl daemon-reload && systemctl restart k3s-agent" --become || warn "Failed to restart worker agents."
-    success "All worker K3s agents reloaded and restarted!"
+    # We no longer force-restart the k3s-agent on every boot. This prevents the
+    # boot recovery script from terminating pods that have already started running.
+    log "Skipping worker agent restart (already active with baked configurations)."
 else
     warn "Ansible hosts.ini not found! Skipping worker clock-sync. Please sync workers manually using Ansible."
 fi
@@ -198,6 +198,38 @@ if [ -n "$STUCK_LIST" ]; then
     success "All stuck/ghost pods cleared!"
 else
     success "No stuck/ghost pods detected. Clean boot!"
+fi
+
+# ------------------------------------------------------------------------------
+# 10. Prevent Parallel API Migration Deadlocks
+# ------------------------------------------------------------------------------
+if sudo kubectl get deployment tds-api >/dev/null 2>&1; then
+    TARGET_REPLICAS=$(sudo kubectl get deployment tds-api -o jsonpath='{.spec.replicas}' 2>/dev/null || echo "9")
+    if [ "$TARGET_REPLICAS" -gt 1 ]; then
+        log "Auto-recovery: Detected multiple API replicas ($TARGET_REPLICAS). Scaling down to 1 to run database migrations safely..."
+        sudo kubectl scale deployment tds-api --replicas=1 || warn "Failed to scale down tds-api."
+        
+        log "Waiting for tds-api migrations to finish (Ready replicas = 1)..."
+        ATTEMPT=1
+        while true; do
+            READY_REPLICAS=$(sudo kubectl get deployment tds-api -o jsonpath='{.status.readyReplicas}' 2>/dev/null || echo "0")
+            if [ "$READY_REPLICAS" = "1" ]; then
+                success "tds-api database migrations applied successfully!"
+                break
+            fi
+            if [ $ATTEMPT -gt 24 ]; then
+                warn "Timeout waiting for tds-api readiness. Scaling up anyway."
+                break
+            fi
+            sleep 5
+            ATTEMPT=$((ATTEMPT + 1))
+        done
+        
+        log "Auto-recovery: Scaling tds-api back up to original target ($TARGET_REPLICAS)..."
+        sudo kubectl scale deployment tds-api --replicas="$TARGET_REPLICAS" || warn "Failed to scale up tds-api."
+    else
+        log "tds-api is already scaled to 1 replica. Skipping auto-scaling checks."
+    fi
 fi
 
 

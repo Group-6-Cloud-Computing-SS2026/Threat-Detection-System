@@ -34,7 +34,7 @@ Navigate through the guides and configurations structured by component and layer
 | :--- | :--- |
 | [MPI Cluster Setup Guide](guides/mpi-cluster.md) | Cross-compiling OpenMPI via chroot and launching cluster-wide jobs. |
 | [HPL Synthetic Benchmarks](guides/synthetic-benchmarks.md) | Tuning process grids (P x Q) and running LINPACK benchmarks. |
-| [Task Distributor Guide](guides/task4-task-distributor.md) | Validating Amdahl's and Gustafson's Laws using parallel POV-Ray renders. |
+| [Task Distributor Guide](guides/task-distributor.md) | Validating Amdahl's and Gustafson's Laws using parallel POV-Ray renders. |
 
 ---
 
@@ -47,7 +47,7 @@ Detailed completion progress for each task requirement:
 | **Task 1** | [Edge Computing Infrastructure](tasks/task-01-edge-computing-infrastructure.md) | Network boot setup, dual-homed DNS config, and SSD migration. |
 | **Task 2** | [HPL Performance](tasks/task-02-hpl.md) | High Performance LINPACK benchmarking and process tuning. |
 | **Task 3** | [MPI Cluster](tasks/task-03-mpi.md) | OpenMPI deployment and distributed workload validation. |
-| **Task 4** | [Non-MPI Scaling Laws](tasks/task-04-scaling-laws.md) | Scaling analysis (Amdahl vs Gustafson) with POV-Ray & Task Distributor. |
+| **Task 4** | [Non-MPI Scaling Laws](tasks/task-04-scaling-non-mpi-laws.md) | Scaling analysis (Amdahl vs Gustafson) with POV-Ray & Task Distributor. |
 | **Task 5** | [Monitoring](tasks/task-05-monitoring.md) | Prometheus, Grafana, and system health status. |
 | **Task 6** | [Model Training](tasks/task-06-model-training.md) | Custom YOLO model training and threat detection weights. |
 | **Task 7** | [Backend API](tasks/task-07-backend.md) | Load-balanced FastAPI replicas with MinIO S3 and Postgres integration. |
