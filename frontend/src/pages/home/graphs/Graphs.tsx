@@ -81,10 +81,10 @@ const CHART_JS_SRC =
   "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js";
 
 const BRANDS = {
-  green: "#80ef80",
-  greenDeep: "#267026",
+  blue: "#3b82f6",
+  violet: "#8b5cf6",
+  emerald: "#22c55e",
   red: "#bb0a21",
-  redSoft: "#e07982",
 };
 
 const amdahlRawData: AmdahlRow[] = [
@@ -338,10 +338,15 @@ export default function Graphs() {
               },
             },
             tooltip: {
-              backgroundColor: "#16140f",
-              borderColor: "#2b2b2b",
+              backgroundColor: "#2f2f2f",
+              borderColor: "#0c280c",
               borderWidth: 1,
-              padding: 12,
+              cornerRadius: 12,
+              padding: 14,
+              displayColors: true,
+              boxPadding: 6,
+              titleColor: "#eaeaea",
+              bodyColor: "#eaeaea",
             },
           },
           scales: {
@@ -362,16 +367,16 @@ export default function Graphs() {
               {
                 label: "1600x1200",
                 data: [10.038, 8.811, 6.504, 5.532],
-                backgroundColor: `${BRANDS.green}88`,
-                borderColor: BRANDS.green,
+                backgroundColor: `${BRANDS.blue}88`,
+                borderColor: BRANDS.blue,
                 borderWidth: 1,
                 borderRadius: 2,
               },
               {
                 label: "3200x2400",
                 data: [51.152, 29.71, 19.772, 15.135],
-                backgroundColor: `${BRANDS.red}88`,
-                borderColor: BRANDS.red,
+                backgroundColor: `${BRANDS.emerald}88`,
+                borderColor: BRANDS.emerald,
                 borderWidth: 1,
                 borderRadius: 2,
               },
@@ -388,16 +393,16 @@ export default function Graphs() {
               {
                 label: "Set 1 (1600x600 for 1st node)",
                 data: [5.63, 8.623, 10.224, 16.541],
-                backgroundColor: `${BRANDS.greenDeep}88`,
-                borderColor: BRANDS.greenDeep,
+                backgroundColor: `${BRANDS.violet}88`,
+                borderColor: BRANDS.violet,
                 borderWidth: 1,
                 borderRadius: 2,
               },
               {
                 label: "Set 2 (3200x1200 for node)",
                 data: [14.45, 28.848, 29.149, 137.129],
-                backgroundColor: `${BRANDS.redSoft}88`,
-                borderColor: BRANDS.redSoft,
+                backgroundColor: `${BRANDS.red}88`,
+                borderColor: BRANDS.red,
                 borderWidth: 1,
                 borderRadius: 2,
               },
@@ -453,7 +458,7 @@ export default function Graphs() {
             Benchmark report
           </span>
           <span className="bg-brand-carbon-black-800 text-brand-alabaster-grey-300 rounded-full px-2.5 py-1 text-[11px] font-medium">
-            TSX
+            Data
           </span>
         </div>
 
