@@ -1,7 +1,7 @@
 export default function DocsOverview() {
   return (
     <div className="[border-image:linear-gradient(to_right,transparent,--theme(--color-brand-carbon-black-700/.5),transparent)1] border-t">
-      <div className="relative isolate overflow-hidden">
+      <div className="relative isolate flex w-full flex-col overflow-hidden">
         <div
           className="pointer-events-none absolute top-0 left-1/2 -z-10 -mt-24 -translate-x-1/2 opacity-70"
           aria-hidden="true"
@@ -15,7 +15,7 @@ export default function DocsOverview() {
           />
         </div>
         <div
-          className="pointer-events-none absolute bottom-0 left-1/2 -z-10 -mb-72 translate-x-[-120%] opacity-55"
+          className="pointer-events-none absolute bottom-0 left-1/2 -z-10 -mb-72 -translate-x-1/2 opacity-55"
           aria-hidden="true"
         >
           <img
