@@ -608,8 +608,12 @@ export default function Graphs() {
       if (!chartApi) return;
 
       const styles = getComputedStyle(document.documentElement);
-      const textColor = styles.getPropertyValue("--text-secondary").trim();
-      const gridColor = styles.getPropertyValue("--border-default").trim();
+      const textColor =
+        styles.getPropertyValue("--color-brand-alabaster-grey-600").trim() ||
+        "#d3d3d3";
+      const gridColor =
+        styles.getPropertyValue("--color-brand-carbon-black-700").trim() ||
+        "#232323";
 
       chartApi.defaults.font.family = "Nacelle, sans-serif";
       chartApi.defaults.font.size = 14;
