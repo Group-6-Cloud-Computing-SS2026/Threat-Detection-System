@@ -12,7 +12,7 @@ export default function Header() {
             to="/auth"
             className="text-brand-alabaster-grey-600 hover:text-brand-alabaster-grey-100 text-sm font-medium transition"
           >
-            Login
+            Log in
           </NavLink>
           <Button href="/auth?tab=register" size="sm">
             Register
