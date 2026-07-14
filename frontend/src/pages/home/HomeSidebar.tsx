@@ -90,16 +90,16 @@ export default function HomeSidebar() {
 
   return (
     <aside className="border-brand-carbon-black-800/80 flex shrink-0 flex-col border-b bg-[linear-gradient(180deg,rgba(18,18,18,0.98),rgba(8,8,8,0.98))] md:sticky md:top-0 md:h-screen md:w-64 md:border-r md:border-b-0">
-      <div className="border-brand-carbon-black-800/80 flex items-center justify-between gap-3 border-b p-4 md:block md:border-b md:p-5">
-        <div className="flex min-w-0 flex-1 flex-col items-start gap-2">
+      <div className="border-brand-carbon-black-800/80 flex shrink-0 items-center justify-between gap-3 border-b p-4 md:block md:border-b">
+        <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
           <NavLink to="/landing">
             <img
               src="/images/wordmark-dark.svg"
               alt="ThreatOff"
-              className="h-22 w-auto"
+              className="h-14 w-auto"
             />
           </NavLink>
-          <p className="text-brand-alabaster-grey-600 mt-0 text-xs tracking-wide uppercase md:mt-3">
+          <p className="text-brand-alabaster-grey-600 mt-0 text-xs tracking-wide uppercase md:mt-1.5">
             Surveillance dashboard
           </p>
         </div>
@@ -121,7 +121,7 @@ export default function HomeSidebar() {
 
       <nav
         id="home-sidebar-nav"
-        className={`flex flex-1 flex-col p-3 md:flex md:gap-1 md:overflow-visible ${
+        className={`flex flex-1 flex-col overflow-y-auto p-3 md:flex md:min-h-0 md:gap-1 ${
           mobileNavOpen ? "flex" : "hidden"
         }`}
       >
@@ -143,7 +143,7 @@ export default function HomeSidebar() {
           </SidebarNavLink>
         </div>
 
-        <div className="flex flex-col gap-0.5 md:mt-6 md:gap-1">
+        <div className="flex flex-col gap-0.5 md:mt-4 md:gap-1">
           <p className="text-brand-alabaster-grey-600 hidden px-3 pb-1 text-[11px] font-semibold tracking-wider uppercase md:block">
             System
           </p>
@@ -178,7 +178,7 @@ export default function HomeSidebar() {
         </div>
       </nav>
 
-      <div className="border-brand-carbon-black-800/80 border-t p-3">
+      <div className="border-brand-carbon-black-800/80 shrink-0 border-t p-3">
         <div className="bg-brand-carbon-black-800/60 flex items-center gap-3 rounded-lg px-3 py-2">
           <div className="from-brand-light-green-500 to-brand-light-green-800 text-brand-pitch-black-500 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-linear-to-br text-xs font-bold">
             {auth?.username.charAt(0).toUpperCase()}
