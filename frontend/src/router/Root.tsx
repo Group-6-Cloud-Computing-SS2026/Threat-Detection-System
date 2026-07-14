@@ -1,21 +1,14 @@
 import { Outlet, useLocation } from "react-router";
 import { useEffect } from "react";
 import AOS from "aos";
-import "aos/dist/aos.css";
 import Footer from "../shared/components/ui/footer";
 import Header from "../shared/components/ui/Header.tsx";
+import { useAos } from "../shared/hooks";
 
 export default function Root() {
   const { pathname } = useLocation();
 
-  useEffect(() => {
-    AOS.init({
-      once: true,
-      disable: "phone",
-      duration: 600,
-      easing: "ease-out-sine",
-    });
-  }, []);
+  useAos();
 
   useEffect(() => {
     AOS.refresh();

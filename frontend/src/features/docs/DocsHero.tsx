@@ -8,7 +8,7 @@ export default function DocsHero() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 md:py-16">
       <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-        <div>
+        <div data-aos="fade-up">
           <div className="mb-6 flex items-center gap-3">
             <img
               src="/images/wordmark-dark.svg"
@@ -44,7 +44,7 @@ export default function DocsHero() {
           </div>
         </div>
 
-        <div className="overflow-hidden p-3 shadow-lg">
+        <div className="overflow-hidden p-3 shadow-lg" data-aos="fade-left">
           <img
             src="/images/docs-picture.png"
             alt="ThreatOff docs"

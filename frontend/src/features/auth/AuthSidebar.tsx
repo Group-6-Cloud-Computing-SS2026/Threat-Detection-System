@@ -12,7 +12,7 @@ const SIDEBAR_CARDS: Array<{
 export default function AuthSidebar() {
   return (
     <aside className="border-brand-carbon-black-800/80 hidden min-h-full flex-col justify-between border-r bg-[linear-gradient(180deg,rgba(18,18,18,0.98),rgba(8,8,8,0.98))] p-10 lg:flex">
-      <div>
+      <div data-aos="fade-right">
         <NavLink
           to="/landing"
           className="group inline-flex items-center gap-3 transition-transform duration-300 ease-out hover:translate-x-0.5"
@@ -47,7 +47,7 @@ export default function AuthSidebar() {
         </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-3" data-aos="fade-up" data-aos-delay={200}>
         {SIDEBAR_CARDS.map((card) => (
           <div
             key={card.label}

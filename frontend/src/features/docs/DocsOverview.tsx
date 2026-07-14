@@ -28,7 +28,7 @@ export default function DocsOverview() {
         </div>
 
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 md:py-20">
-          <div className="mx-auto max-w-3xl text-center">
+          <div className="mx-auto max-w-3xl text-center" data-aos="fade-up">
             <div className="before:to-brand-light-green-200/50 after:to-brand-light-green-200/50 inline-flex items-center gap-3 pb-3 before:h-px before:w-8 before:bg-linear-to-r before:from-transparent after:h-px after:w-8 after:bg-linear-to-l after:from-transparent">
               <span className="text-brand-light-green-300 inline-flex font-medium tracking-wide">
                 What the docs cover

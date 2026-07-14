@@ -1,4 +1,5 @@
 import "./shared/css/style.css";
+import "aos/dist/aos.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router/dom";
