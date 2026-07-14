@@ -121,7 +121,7 @@ export default function HomeSidebar() {
           </NavLink>
           <SidebarNavLink to="/graphs">
             <IconBarChart className="h-4 w-4 shrink-0 opacity-70" />
-            Scaling law results
+            Scaling results
           </SidebarNavLink>
           <a
             href={GRAFANA_URL.href}

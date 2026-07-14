@@ -5,6 +5,7 @@ import CameraFeed from "./CameraFeed.tsx";
 import DetectionCard from "./DetectionCard.tsx";
 import { homePanelClass } from "./homeSurface.ts";
 import { PanelSkeleton } from "./PageLoaders.tsx";
+import Button from "../../shared/components/ui/Button.tsx";
 import type { CardState, DetectionEvent } from "../../shared/types";
 import { useApiSettings } from "./useApiSettings.ts";
 import { toCardState, useDetectionDetailLoader } from "./useDetectionCards.ts";
@@ -101,6 +102,31 @@ export default function HomeDashboard() {
         />
       </section>
 
+      <section
+        className={`${homePanelClass} flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between`}
+        data-aos="fade-up"
+        data-aos-delay={40}
+      >
+        <div className="max-w-3xl">
+          <div className="text-brand-light-green-300 text-xs font-semibold tracking-[0.22em] uppercase">
+            Dashboard
+          </div>
+          <h2 className="text-brand-alabaster-grey-100 mt-2 text-xl font-semibold">
+            Live detections, camera feed, and backend tools
+          </h2>
+          <p className="text-brand-alabaster-grey-600 mt-2 text-sm md:text-base">
+            Check recent detections here, then jump into operations or docs
+            when you need logs, nodes, metrics, or the API surface.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap gap-3">
+          <Button variant="github" href="/operations">
+            Go to operations
+          </Button>
+        </div>
+      </section>
+
       <div className="grid gap-6 xl:grid-cols-2">
         <div data-aos="fade-right">
           <CameraFeed apiBaseUrl={apiBaseUrl} />
@@ -108,14 +134,14 @@ export default function HomeDashboard() {
 
         <section className={`${homePanelClass} p-5`} data-aos="fade-left" data-aos-delay={120}>
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h2 className="font-nacelle text-brand-alabaster-grey-100 text-lg font-semibold">
-                Live detections
-              </h2>
-              <p className="text-brand-alabaster-grey-600 text-sm">
-                Polling /detections/recent every 10 seconds.
-              </p>
-            </div>
+          <div>
+            <h2 className="font-nacelle text-brand-alabaster-grey-100 text-lg font-semibold">
+              Live detections
+            </h2>
+            <p className="text-brand-alabaster-grey-600 text-sm">
+              Updates every 10 seconds from /detections/recent.
+            </p>
+          </div>
             <button
               type="button"
               onClick={() => setAutoRefresh((value) => !value)}
@@ -168,7 +194,7 @@ export default function HomeDashboard() {
             ))}
             {liveEvents.length === 0 && !liveLoading ? (
               <p className="text-brand-alabaster-grey-600 py-6 text-center text-sm">
-                No recent detections
+                No detections yet
               </p>
             ) : null}
           </div>
