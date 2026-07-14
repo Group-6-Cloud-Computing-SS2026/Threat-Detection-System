@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { PointerEvent as ReactPointerEvent } from "react";
 import {
   homeInnerFrameClass,
   homePanelClass,
@@ -179,6 +180,70 @@ function formatOptionalNumber(value: number | null, digits = 2, suffix = "x") {
   return value === null ? "N/A" : `${value.toFixed(digits)}${suffix}`;
 }
 
+function useHorizontalDragScroll() {
+  const draggingRef = useRef<{
+    active: boolean;
+    pointerId: number | null;
+    startX: number;
+    startScrollLeft: number;
+  }>({
+    active: false,
+    pointerId: null,
+    startX: 0,
+    startScrollLeft: 0,
+  });
+
+  const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.pointerType !== "mouse" || event.button !== 0) return;
+    const target = event.currentTarget;
+    if (target.scrollWidth <= target.clientWidth) return;
+
+    event.preventDefault();
+
+    draggingRef.current = {
+      active: true,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startScrollLeft: target.scrollLeft,
+    };
+
+    target.setPointerCapture(event.pointerId);
+    target.classList.add("select-none");
+    target.style.cursor = "grabbing";
+  };
+
+  const onPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const state = draggingRef.current;
+    if (!state.active || state.pointerId !== event.pointerId) return;
+
+    const target = event.currentTarget;
+    const deltaX = event.clientX - state.startX;
+    target.scrollLeft = state.startScrollLeft - deltaX;
+  };
+
+  const endDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const state = draggingRef.current;
+    if (!state.active || state.pointerId !== event.pointerId) return;
+
+    const target = event.currentTarget;
+    state.active = false;
+    state.pointerId = null;
+    target.classList.remove("select-none");
+    target.style.cursor = "";
+
+    if (target.hasPointerCapture(event.pointerId)) {
+      target.releasePointerCapture(event.pointerId);
+    }
+  };
+
+  return {
+    onPointerDown,
+    onPointerMove,
+    onPointerUp: endDrag,
+    onPointerCancel: endDrag,
+  };
+}
+
 const amdahlMaxSpeedup = Math.max(
   ...amdahlRawData.map((row) => row.sp ?? 0),
 ).toFixed(2);
@@ -191,6 +256,8 @@ export default function Graphs() {
   const amdahlCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const gustCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const chartsRef = useRef<ChartInstance[]>([]);
+  const amdahlTableDrag = useHorizontalDragScroll();
+  const gustTableDrag = useHorizontalDragScroll();
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -501,7 +568,10 @@ export default function Graphs() {
         </div>
 
         <article className={tableCardClass}>
-          <div className={`${homeInnerFrameClass} overflow-x-auto`}>
+          <div
+            className={`${homeInnerFrameClass} cursor-grab overflow-x-auto`}
+            {...amdahlTableDrag}
+          >
             <table className="min-w-[920px] border-collapse text-sm lg:w-full lg:min-w-0 lg:table-fixed">
               <colgroup>
                 <col className="lg:w-[16%]" />
@@ -601,7 +671,10 @@ export default function Graphs() {
         </article>
 
         <article className={tableCardClass}>
-          <div className={`${homeInnerFrameClass} overflow-x-auto`}>
+          <div
+            className={`${homeInnerFrameClass} cursor-grab overflow-x-auto`}
+            {...gustTableDrag}
+          >
             <table className="min-w-[1040px] border-collapse text-sm lg:w-full lg:min-w-0 lg:table-fixed">
               <colgroup>
                 <col className="lg:w-[18%]" />
