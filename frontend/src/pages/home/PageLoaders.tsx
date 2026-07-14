@@ -7,8 +7,10 @@ export function RoutePendingBar({ active }: { active: boolean }) {
 
   return (
     <div className="bg-brand-carbon-black-800/80 border-brand-carbon-black-700/80 sticky top-0 z-20 border-b px-4 py-2 backdrop-blur">
-      <div className="bg-brand-carbon-black-700 relative h-1.5 overflow-hidden rounded-full">
-        <div className="bg-brand-light-green-500 absolute inset-y-0 left-0 w-1/3 animate-pulse rounded-full" />
+      <div className="mx-auto w-full max-w-3xl">
+        <div className="bg-brand-carbon-black-700 relative h-1.5 overflow-hidden rounded-full">
+          <div className="bg-brand-light-green-500 absolute inset-y-0 left-0 w-1/3 animate-pulse rounded-full" />
+        </div>
       </div>
     </div>
   );
@@ -52,7 +54,7 @@ export function FrameLoader({
   children?: ReactNode;
 }) {
   return (
-    <div className="flex h-full min-h-[18rem] flex-col items-center justify-center gap-4 px-6 py-8 text-center">
+    <div className="flex h-full min-h-72 flex-col items-center justify-center gap-4 px-6 py-8 text-center">
       <div className="border-brand-light-green-500/30 border-t-brand-light-green-500 h-10 w-10 animate-spin rounded-full border-4" />
       <div>
         <p className="text-brand-alabaster-grey-100 text-sm font-medium">

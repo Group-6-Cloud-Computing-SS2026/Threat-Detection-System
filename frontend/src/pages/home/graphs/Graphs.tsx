@@ -17,7 +17,7 @@ export default function Graphs() {
         </p>
       </div>
       <div
-        className={`${homeInnerFrameClass} relative min-h-[32rem] flex-1 overflow-hidden rounded-xl`}
+        className={`${homeInnerFrameClass} relative min-h-128 flex-1 overflow-hidden rounded-xl`}
         data-aos="zoom-in"
         data-aos-delay={120}
       >
