@@ -17,6 +17,7 @@ import type {
 import { useApiSettings } from "../useApiSettings.ts";
 import { homeInnerFrameClass } from "../homeSurface.ts";
 import { toCardState, useDetectionDetailLoader } from "../useDetectionCards.ts";
+import { PanelSkeleton } from "../PageLoaders.tsx";
 
 const inputClass =
   "w-full rounded-lg border border-brand-carbon-black-700 bg-brand-carbon-black-800 px-3 py-2 text-sm text-brand-alabaster-grey-100 outline-none transition focus:border-brand-light-green-500";
@@ -242,6 +243,11 @@ export default function Search() {
       </div>
 
       <div className="space-y-3" data-aos="fade-up" data-aos-delay={260}>
+        {searchLoading && filteredEvents.length === 0 ? (
+          <div className="bg-brand-carbon-black-800/60 rounded-lg px-4 py-4">
+            <PanelSkeleton title="Searching detections" lines={4} />
+          </div>
+        ) : null}
         {filteredEvents.map((event) => (
           <DetectionCard
             key={event.id}

@@ -6,13 +6,8 @@ import RedirectIfAuthed from "./RedirectIfAuthed.tsx";
 import RouteErrorPage from "./RouteErrorPage.tsx";
 import LoginPage from "../pages/auth/LoginPage.tsx";
 import DocsPage from "../pages/docs/DocsPage.tsx";
-import HomePage from "../pages/home/HomePage.tsx";
-import SearchPage from "../pages/home/search/SearchPage.tsx";
-import SettingsPage from "../pages/home/settings/SettingsPage.tsx";
-import GraphsPage from "../pages/home/graphs/GraphsPage.tsx";
-import CameraStreamPage from "../pages/home/camera/CameraStreamPage.tsx";
 import LandingPage from "../pages/landing/LandingPage.tsx";
-// import RequireAuth from "./RequireAuth.tsx";
+import RequireAuth from "./RequireAuth.tsx";
 
 const router = createBrowserRouter([
   {
@@ -46,7 +41,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    // FIXME: add Component: RequireAuth,
+    Component: RequireAuth,
     ErrorBoundary: RouteErrorPage,
     children: [
       {
@@ -54,23 +49,37 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            Component: HomePage,
+            lazy: async () => ({
+              Component: (await import("../pages/home/HomePage.tsx")).default,
+            }),
           },
           {
             path: "camera",
-            Component: CameraStreamPage,
+            lazy: async () => ({
+              Component: (await import("../pages/home/camera/CameraStreamPage.tsx"))
+                .default,
+            }),
           },
           {
             path: "search",
-            Component: SearchPage,
+            lazy: async () => ({
+              Component: (await import("../pages/home/search/SearchPage.tsx"))
+                .default,
+            }),
           },
           {
             path: "settings",
-            Component: SettingsPage,
+            lazy: async () => ({
+              Component: (await import("../pages/home/settings/SettingsPage.tsx"))
+                .default,
+            }),
           },
           {
             path: "graphs",
-            Component: GraphsPage,
+            lazy: async () => ({
+              Component: (await import("../pages/home/graphs/GraphsPage.tsx"))
+                .default,
+            }),
           },
         ],
       },

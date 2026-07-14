@@ -4,6 +4,7 @@ import { apiFetch } from "./api.ts";
 import CameraFeed from "./CameraFeed.tsx";
 import DetectionCard from "./DetectionCard.tsx";
 import { homePanelClass } from "./homeSurface.ts";
+import { PanelSkeleton } from "./PageLoaders.tsx";
 import type { CardState, DetectionEvent } from "../../shared/types";
 import { useApiSettings } from "./useApiSettings.ts";
 import { toCardState, useDetectionDetailLoader } from "./useDetectionCards.ts";
@@ -133,9 +134,9 @@ export default function HomeDashboard() {
               {liveError}
             </div>
           ) : null}
-          {liveLoading ? (
-            <div className="bg-brand-carbon-black-800 text-brand-alabaster-grey-400 mb-4 rounded-lg px-3 py-2 text-sm">
-              Loading latest detections...
+          {liveLoading && liveEvents.length === 0 ? (
+            <div className="bg-brand-carbon-black-800/60 mb-4 rounded-lg px-4 py-4">
+              <PanelSkeleton title="Loading latest detections" lines={4} />
             </div>
           ) : null}
 

@@ -2,6 +2,7 @@ import { IconCamera } from "../../shared/components/ui/icons/NavIcons.tsx";
 import { useCameraStream } from "./useCameraStream.ts";
 import { useAuth } from "../auth/AuthContext.tsx";
 import { homeInnerFrameClass, homePanelClass } from "./homeSurface.ts";
+import { FrameLoader } from "./PageLoaders.tsx";
 
 const STATUS_STYLES: Record<string, string> = {
   connected: "bg-brand-light-green-950 text-brand-light-green-400",
@@ -47,14 +48,14 @@ export default function CameraFeed({ apiBaseUrl }: { apiBaseUrl: string }) {
             src={imageSrc}
             alt="Live camera preview"
           />
+        ) : status === "connecting" ? (
+          <FrameLoader label="Connecting to edge node">
+            Waiting for the first frame from the stream.
+          </FrameLoader>
         ) : (
           <div className="text-brand-alabaster-grey-600 flex flex-col items-center gap-3 px-6 py-12 text-center">
             <IconCamera className="h-10 w-10 opacity-40" />
-            <p className="max-w-56 text-sm">
-              {status === "connecting"
-                ? "Connecting to edge node…"
-                : "Awaiting stream from edge node"}
-            </p>
+            <p className="max-w-56 text-sm">Awaiting stream from edge node</p>
           </div>
         )}
       </div>

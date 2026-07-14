@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { NavLink } from "react-router";
 import { useAuth } from "../auth/AuthContext.tsx";
 import {
@@ -25,6 +26,41 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
 const externalLinkClass =
   "flex shrink-0 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-brand-alabaster-grey-600 transition hover:bg-brand-carbon-black-800 hover:text-brand-alabaster-grey-100";
 
+function SidebarNavLink({
+  to,
+  end = false,
+  children,
+}: {
+  to: string;
+  end?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <NavLink
+      to={to}
+      end={end}
+      className={({ isActive, isPending }) =>
+        `flex shrink-0 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition ${
+          isActive
+            ? "bg-brand-light-green-950 text-brand-light-green-400"
+            : isPending
+              ? "bg-brand-carbon-black-800 text-brand-alabaster-grey-300"
+              : "text-brand-alabaster-grey-600 hover:bg-brand-carbon-black-800 hover:text-brand-alabaster-grey-100"
+        }`
+      }
+    >
+      {({ isPending }) => (
+        <>
+          {children}
+          {isPending ? (
+            <span className="border-brand-light-green-500/40 border-t-brand-light-green-400 ml-auto h-3.5 w-3.5 shrink-0 animate-spin rounded-full border-2" />
+          ) : null}
+        </>
+      )}
+    </NavLink>
+  );
+}
+
 export default function HomeSidebar() {
   const { auth, logout } = useAuth();
 
@@ -48,36 +84,36 @@ export default function HomeSidebar() {
           <p className="text-brand-alabaster-grey-600 hidden px-3 pb-1 text-[11px] font-semibold tracking-wider uppercase md:block">
             Dashboard
           </p>
-          <NavLink to="/" end className={navLinkClass}>
+          <SidebarNavLink to="/" end>
             <IconActivity className="h-4 w-4 shrink-0 opacity-70" />
             Overview
-          </NavLink>
-          <NavLink to="/camera" className={navLinkClass}>
+          </SidebarNavLink>
+          <SidebarNavLink to="/camera">
             <IconCamera className="h-4 w-4 shrink-0 opacity-70" />
             Camera stream
-          </NavLink>
-          <NavLink to="/search" className={navLinkClass}>
+          </SidebarNavLink>
+          <SidebarNavLink to="/search">
             <IconSearch className="h-4 w-4 shrink-0 opacity-70" />
             Search events
-          </NavLink>
+          </SidebarNavLink>
         </div>
 
         <div className="flex flex-row gap-1 md:mt-6 md:flex-col">
           <p className="text-brand-alabaster-grey-600 hidden px-3 pb-1 text-[11px] font-semibold tracking-wider uppercase md:block">
             System
           </p>
-          <NavLink to="/settings" className={navLinkClass}>
+          <SidebarNavLink to="/settings">
             <IconSettings className="h-4 w-4 shrink-0 opacity-70" />
             Settings
-          </NavLink>
+          </SidebarNavLink>
           <NavLink to="/docs" target="_blank" className={navLinkClass}>
             <IconDocs className="h-4 w-4 shrink-0 opacity-70" />
             Docs
           </NavLink>
-          <NavLink to="/graphs" className={navLinkClass}>
+          <SidebarNavLink to="/graphs">
             <IconBarChart className="h-4 w-4 shrink-0 opacity-70" />
             Scaling law results
-          </NavLink>
+          </SidebarNavLink>
           <a
             href={GRAFANA_URL.href}
             target="_blank"
