@@ -677,7 +677,7 @@ export default function Graphs() {
           >
             <table className="min-w-[1040px] border-collapse text-sm lg:w-full lg:min-w-0 lg:table-fixed">
               <colgroup>
-                <col className="lg:w-[18%]" />
+                <col className="lg:w-[14%]" />
                 <col className="lg:w-[11%]" />
                 <col className="lg:w-[8%]" />
                 <col className="lg:w-[10%]" />
@@ -690,34 +690,40 @@ export default function Graphs() {
               </colgroup>
               <thead>
                 <tr className="bg-brand-carbon-black-800">
-                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-left uppercase tracking-[0.16em]">
-                    Set Description
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-left align-bottom uppercase leading-tight tracking-[0.16em] whitespace-nowrap">
+                    <span className="block">Set</span>
+                    <span className="block">Description</span>
                   </th>
-                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-left uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-left align-bottom uppercase leading-tight tracking-[0.16em] whitespace-nowrap">
                     Size
                   </th>
-                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-left uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-left align-bottom uppercase leading-tight tracking-[0.16em] whitespace-nowrap">
                     Nodes
                   </th>
-                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
-                    Avg Seq 1
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom uppercase leading-tight tracking-[0.16em] whitespace-nowrap">
+                    <span className="block">Avg Seq</span>
+                    <span className="block">1</span>
                   </th>
-                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
-                    Avg Parallel
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom uppercase leading-tight tracking-[0.16em] whitespace-nowrap">
+                    <span className="block">Avg</span>
+                    <span className="block">Parallel</span>
                   </th>
-                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
-                    Avg Seq 2
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom uppercase leading-tight tracking-[0.16em] whitespace-nowrap">
+                    <span className="block">Avg Seq</span>
+                    <span className="block">2</span>
                   </th>
-                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
-                    Avg Total Time
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom uppercase leading-tight tracking-[0.16em] whitespace-nowrap">
+                    <span className="block">Avg Total</span>
+                    <span className="block">Time</span>
                   </th>
-                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom uppercase leading-tight tracking-[0.16em] whitespace-nowrap">
                     Std Dev
                   </th>
-                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
-                    Scaled Speedup
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom uppercase leading-tight tracking-[0.16em] whitespace-nowrap">
+                    <span className="block">Scaled</span>
+                    <span className="block">Speedup</span>
                   </th>
-                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom uppercase leading-tight tracking-[0.16em] whitespace-nowrap">
                     Efficiency
                   </th>
                 </tr>
