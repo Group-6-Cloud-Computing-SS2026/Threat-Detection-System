@@ -10,7 +10,7 @@ export default function PageIllustration({
         aria-hidden="true"
       >
         <img
-          className="max-w-none opacity-85 brightness-50 contrast-125 grayscale"
+          className="max-w-none opacity-85 brightness-60 contrast-125 grayscale"
           src="/images/page-illustration.svg"
           width={846}
           height={594}
@@ -24,7 +24,7 @@ export default function PageIllustration({
             aria-hidden="true"
           >
             <img
-              className="max-w-none opacity-50 brightness-50 contrast-125 grayscale"
+              className="max-w-none opacity-50 brightness-60 contrast-125 grayscale"
               src="/images/blurred-shape-gray.svg"
               width={760}
               height={668}
@@ -36,7 +36,7 @@ export default function PageIllustration({
             aria-hidden="true"
           >
             <img
-              className="max-w-none opacity-65 brightness-50 contrast-125 grayscale"
+              className="max-w-none opacity-65 brightness-60 contrast-125 grayscale"
               src="/images/blurred-shape.svg"
               width={760}
               height={668}
