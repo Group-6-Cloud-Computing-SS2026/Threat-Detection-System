@@ -18,8 +18,8 @@ The following table summarizes the work packages defined for this project, who i
 | Task | Category | Lead Developer | Status | Core Focus / Deliverables |
 |---|---|---|---|---|
 | **Task 1** | [Edge Infrastructure](task-01-edge-computing-infrastructure.md) | **Mohsin Abbasi / Hafiza Fatima Athar** | Completed | PXE network booting configuration, shared OS image overlays, chrony synchronization, and AI camera MQTT setup. |
-| **Task 2** | [HPL Performance](task-02-hpl.md) | **Maham Anis** | In Progress | HPL/LINPACK benchmarks on 2/4/7 nodes. 8-node tests blocked by admin/TCP issues. Results in `performance_using_hpl.md`. |
-| **Task 3** | [MPI Cluster](task-03-mpi.md) | **Sadia Saeed** | In Progress | MPI deployment, native C benchmarks, Amdahl's/Gustafson's Laws on 32 cores. Metrics on master SSD. |
+| **Task 2** | [HPL Performance](task-02-hpl.md) | **Maham Anis** | Completed | HPL/LINPACK benchmarks on 2/4/7 nodes. 8-node tests blocked by admin/TCP issues. Results in `performance_using_hpl.md`. |
+| **Task 3** | [MPI Cluster](task-03-mpi.md) | **Sadia Saeed** | Completed | MPI deployment, native C benchmarks, Amdahl's/Gustafson's Laws on 32 cores. Metrics on master SSD. |
 | **Task 4** | [Non-MPI Scaling](task-04-non-mpi-scaling-laws.md) | **Musfir & Sadia Saeed** | Done | Task distributor: repo setup, worker deployment, scalability law benchmarks. Results on SSD. |
 | **Task 5** | [Monitoring](task-05-monitoring.md) | **Awais Yaseen** | Done | Deploying Prometheus and Grafana on the Pi 5 Master with a flexible setup, allowing us to choose the easiest worker metrics collection method later without disrupting cluster operations. |
 | **Task 6** | [Object Detection Model](task-06-model-training.md) | **Muhammad Musfir** | Done | YOLO11n/YOLO8n python scripts and weights, Roboflow dataset, YOLO8n RPI4 configuration and performance metrics. |
