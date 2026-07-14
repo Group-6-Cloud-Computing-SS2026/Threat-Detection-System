@@ -106,7 +106,7 @@ export default function HomeSidebar() {
         <button
           type="button"
           onClick={logout}
-          className="text-brand-brick-red-300 hover:bg-brand-brick-red-950 mt-2 flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition"
+          className="text-brand-brick-red-300 hover:bg-brand-brick-red-950 mt-2 cursor-pointer flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition"
         >
           <IconLogout className="h-4 w-4 shrink-0" />
           Sign out
