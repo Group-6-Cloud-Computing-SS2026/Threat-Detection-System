@@ -11,7 +11,7 @@ export default function DocsPage() {
         content="Documentation hub for the Threat Detection System project, with setup notes, workflow snapshots, and links to the full docs."
       />
 
-      <section className="bg-brand-pitch-black-500 min-h-screen">
+      <section className="bg-brand-pitch-black-500">
         <DocsHero />
         <DocsOverview />
       </section>
