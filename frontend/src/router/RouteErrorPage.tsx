@@ -5,6 +5,13 @@ export default function RouteErrorPage() {
   const error = useRouteError();
   const routeError = isRouteErrorResponse(error) ? error : null;
   const isNotFound = routeError === null || routeError.status === 404;
+  const isEmbedded = (() => {
+    try {
+      return window.self !== window.top;
+    } catch {
+      return true;
+    }
+  })();
 
   const title = isNotFound ? "Page not found" : "Something went wrong";
   const message = isNotFound
@@ -24,8 +31,8 @@ export default function RouteErrorPage() {
       <p className="text-brand-alabaster-grey-600/80 mx-auto mt-3 max-w-md">
         {message}
       </p>
-      <Button href="/" className="mt-8">
-        Back to home
+      <Button href="/" target={isEmbedded ? "_top" : undefined} className="mt-8">
+          { isEmbedded ? "Exit" : "Back to Home" }
       </Button>
     </div>
   );
