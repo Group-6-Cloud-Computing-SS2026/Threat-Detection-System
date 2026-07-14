@@ -194,7 +194,7 @@ export default function OperationsPage() {
         data-aos="fade-up"
         data-aos-delay={80}
       >
-        <div className="flex flex-wrap gap-2 md:gap-3 justify-center">
+        <div className="flex flex-wrap justify-center gap-2 md:gap-3">
           {NAV_ITEMS.map((item) => (
             <button
               key={item.id}
