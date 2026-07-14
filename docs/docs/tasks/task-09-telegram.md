@@ -33,7 +33,7 @@ sequenceDiagram
 
 ## 2. Configuration & Credentials
 
-The Telegram integration is configured in [backend.yaml](../../k8s/backend.yaml) via the following environment variables:
+The Telegram integration is configured in [backend.yaml](../../../k8s/backend.yaml) via the following environment variables:
 
 | Variable | Description | Source / Reference |
 | :--- | :--- | :--- |

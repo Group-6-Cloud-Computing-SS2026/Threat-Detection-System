@@ -84,6 +84,28 @@ person            922       2190      0.843      0.607      0.723      0.458
 The conversion tool successfully translated the model into individual network hardware components (`cfgA.bin`, `sdpsA.bin`, `manifest.json`, etc.).
 ![Kaggle Yollo11n Summary](../assets/yollo8n_conversion_pass.png)
 
+
+### Experiment 3: YOLOv11n (Kaggle larger dataset ~30000 images)
+To squeeze more performance from the Raspberry Pi 4 AI Camera, another model training was done using a different dataset.
+
+![Dataset Class Distribution](../assets/yollo11n_kaggle_v2_dataset.png)
+
+```text
+YOLO8n summary (fused): 73 layers, 3,006,818 parameters, 0 gradients, 8.1 GFLOPs
+Class          Images  Instances      Box(P          R      mAP50  mAP50-95)
+all              3578       4652      0.894      0.797      0.868      0.687
+background       1104       1609      0.882      0.769       0.86      0.764
+fire              457        559       0.93      0.809       0.89      0.529
+person            511        622       0.91      0.814       0.85      0.761
+weapon           1472       1862      0.856      0.797      0.873      0.69
+```
+
+![Kaggle Yollo12n Summary](../assets/yollo11n_kaggle_v2.png)
+
+Unfortunately due to time constraints, this was not converted and deployed to the edge node.
+
+
+
 ---
 
 ## 3. Edge Deployment Roadblocks and Solutions
