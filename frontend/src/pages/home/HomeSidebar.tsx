@@ -1,6 +1,5 @@
 import { NavLink } from "react-router";
 import { useAuth } from "../auth/AuthContext.tsx";
-import Logo from "../../shared/components/ui/Logo.tsx";
 import {
   IconActivity,
   IconBarChart,
@@ -30,9 +29,15 @@ export default function HomeSidebar() {
   const { auth, logout } = useAuth();
 
   return (
-    <aside className="border-brand-carbon-black-800 bg-brand-carbon-black-900/60 flex shrink-0 flex-col border-b md:sticky md:top-0 md:h-screen md:w-64 md:border-r md:border-b-0">
-      <div className="border-brand-carbon-black-800 flex items-center justify-between gap-3 border-b p-4 md:block md:border-b md:p-5">
-        <Logo />
+    <aside className="border-brand-carbon-black-800/80 bg-[linear-gradient(180deg,rgba(18,18,18,0.98),rgba(8,8,8,0.98))] flex shrink-0 flex-col border-b md:sticky md:top-0 md:h-screen md:w-64 md:border-r md:border-b-0">
+      <div className="border-brand-carbon-black-800/80 flex items-center justify-between gap-3 border-b p-4 md:block md:border-b md:p-5">
+        <NavLink to="/landing">
+          <img
+            src="/images/wordmark-dark.svg"
+            alt="ThreatOff"
+            className="h-22 w-auto"
+          />
+        </NavLink>
         <p className="text-brand-alabaster-grey-600 mt-0 text-xs tracking-wide uppercase md:mt-3">
           Surveillance dashboard
         </p>
@@ -84,7 +89,7 @@ export default function HomeSidebar() {
         </div>
       </nav>
 
-      <div className="border-brand-carbon-black-800 border-t p-3">
+      <div className="border-brand-carbon-black-800/80 border-t p-3">
         <div className="bg-brand-carbon-black-800/60 flex items-center gap-3 rounded-lg px-3 py-2">
           <div className="from-brand-light-green-500 to-brand-light-green-800 text-brand-pitch-black-500 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-linear-to-br text-xs font-bold">
             {auth?.username.charAt(0).toUpperCase()}
