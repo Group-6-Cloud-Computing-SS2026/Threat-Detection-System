@@ -51,9 +51,10 @@ export default function AuthSidebar() {
         {SIDEBAR_CARDS.map((card) => (
           <div
             key={card.label}
-            className="group/card bg-brand-carbon-black-800 before:via-brand-light-green-500/25 after:from-brand-carbon-black-950/20 after:to-brand-carbon-black-950/30 relative h-full overflow-hidden rounded-2xl p-px transition-transform duration-300 ease-out before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:to-transparent after:pointer-events-none after:absolute after:inset-0 after:bg-linear-to-br after:via-transparent hover:-translate-y-1 hover:shadow-[0_18px_50px_rgba(0,0,0,0.28)]"
+            className="group/card bg-brand-carbon-black-800 relative h-full overflow-hidden rounded-2xl p-px transition-transform duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_18px_50px_rgba(0,0,0,0.28)]"
           >
-            <div className="bg-brand-pitch-black-500 relative z-20 h-full overflow-hidden rounded-[inherit]">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.16)_0%,rgba(255,255,255,0.08)_28%,transparent_62%)] opacity-0 transition-opacity duration-300 group-hover/card:opacity-100" />
+            <div className="bg-brand-pitch-black-500 relative z-10 h-full overflow-hidden rounded-[inherit]">
               <div className="p-6 text-center">
                 <h3 className="text-brand-alabaster-grey-100 text-xl leading-tight font-semibold">
                   {card.label}
