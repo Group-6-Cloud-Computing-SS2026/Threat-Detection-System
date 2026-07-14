@@ -67,10 +67,10 @@ export default function LoginPage() {
   return (
     <>
       <div
-        className="relative w-full max-w-304 overflow-hidden rounded-[28px] border border-brand-carbon-black-700/80 bg-brand-carbon-black-900/95 shadow-[0_28px_90px_rgba(0,0,0,0.62)] backdrop-blur-xl transition-[max-width,height,box-shadow,transform,opacity] duration-500 ease-out"
+        className="border-brand-carbon-black-700/80 bg-brand-carbon-black-900/95 relative w-full max-w-304 overflow-hidden rounded-[28px] border shadow-[0_28px_90px_rgba(0,0,0,0.62)] backdrop-blur-xl transition-[max-width,height,box-shadow,transform,opacity] duration-500 ease-out"
         style={panelHeight ? { height: `${panelHeight}px` } : undefined}
       >
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-brand-light-green-500/70 to-transparent motion-safe:bg-size-[200%_100%] motion-safe:animate-auth-sweep" />
+        <div className="via-brand-light-green-500/70 motion-safe:animate-auth-sweep pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent to-transparent motion-safe:bg-size-[200%_100%]" />
         <div ref={panelRef} className="grid lg:grid-cols-[1.05fr_0.95fr]">
           <AuthSidebar />
 
@@ -78,7 +78,7 @@ export default function LoginPage() {
             <div className="mb-8 flex items-center gap-3 lg:hidden">
               <img src="/favicon.svg" alt="ThreatOff" className="h-11 w-11" />
               <div>
-                <div className="text-brand-alabaster-grey-100 text-sm font-semibold uppercase tracking-[0.16em]">
+                <div className="text-brand-alabaster-grey-100 text-sm font-semibold tracking-[0.16em] uppercase">
                   ThreatOff
                 </div>
                 <div className="text-brand-alabaster-grey-600 text-sm">

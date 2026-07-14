@@ -6,11 +6,11 @@ type HeaderProps = {
 
 export default function AuthHeader({ mode }: HeaderProps) {
   return (
-    <div className="mb-6 max-w-xl motion-safe:animate-auth-fade">
-      <p className="text-brand-light-green-300 text-sm font-medium uppercase tracking-wide">
+    <div className="motion-safe:animate-auth-fade mb-6 max-w-xl">
+      <p className="text-brand-light-green-300 text-sm font-medium tracking-wide uppercase">
         {mode === "register" ? "Create account" : "Welcome back"}
       </p>
-      <h1 className="text-brand-alabaster-grey-50 mt-2 text-3xl font-semibold leading-tight sm:text-4xl">
+      <h1 className="text-brand-alabaster-grey-50 mt-2 text-3xl leading-tight font-semibold sm:text-4xl">
         {mode === "register"
           ? "Register a new operator"
           : "Sign in to your dashboard"}

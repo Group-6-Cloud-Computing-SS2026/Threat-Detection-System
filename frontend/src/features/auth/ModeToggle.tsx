@@ -7,7 +7,7 @@ type ModeToggleProps = {
 
 export default function ModeToggle({ mode, onChange }: ModeToggleProps) {
   return (
-    <div className="bg-brand-carbon-black-800 mb-6 flex rounded-xl border border-brand-carbon-black-700 p-1 text-sm font-medium">
+    <div className="bg-brand-carbon-black-800 border-brand-carbon-black-700 mb-6 flex rounded-xl border p-1 text-sm font-medium">
       <button
         type="button"
         onClick={() => onChange("login")}

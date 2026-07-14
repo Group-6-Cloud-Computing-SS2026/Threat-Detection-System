@@ -13,7 +13,7 @@ export default function Cta() {
         aria-hidden="true"
       >
         <img
-          className="max-w-none grayscale brightness-50 contrast-125 opacity-65"
+          className="max-w-none opacity-65 brightness-50 contrast-125 grayscale"
           src="/images/blurred-shape.svg"
           width={760}
           height={668}

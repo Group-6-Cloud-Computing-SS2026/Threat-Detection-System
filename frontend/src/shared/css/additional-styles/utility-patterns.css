@@ -1,8 +1,7 @@
 /* Buttons */
 .btn,
 .btn-sm {
-  @apply inline-flex items-center justify-center rounded-lg text-sm
-  font-medium whitespace-nowrap transition-all;
+  @apply inline-flex items-center justify-center rounded-lg text-sm font-medium whitespace-nowrap transition-all;
 }
 
 .btn {
@@ -14,10 +13,7 @@
 }
 
 .gradient-text {
-  @apply inline-block bg-linear-to-r
-  from-white via-brand-alabaster-grey-600 to-brand-alabaster-grey-100
-  bg-size-[400%] bg-clip-text text-transparent
-  motion-safe:animate-gradient;
+  @apply via-brand-alabaster-grey-600 to-brand-alabaster-grey-100 motion-safe:animate-gradient inline-block bg-linear-to-r from-white bg-size-[400%] bg-clip-text text-transparent;
 }
 
 /* Forms */
@@ -34,8 +30,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .form-select,
 .form-checkbox,
 .form-radio {
-  @apply border-brand-alabaster-grey-700 bg-brand-alabaster-grey-900/50
-  focus:border-brand-alabaster-grey-600 border focus:ring-0 focus:ring-offset-0;
+  @apply border-brand-alabaster-grey-700 bg-brand-alabaster-grey-900/50 focus:border-brand-alabaster-grey-600 border focus:ring-0 focus:ring-offset-0;
 }
 
 .form-input,

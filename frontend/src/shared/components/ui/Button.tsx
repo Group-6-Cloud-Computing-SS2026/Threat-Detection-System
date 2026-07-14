@@ -29,8 +29,7 @@ type ButtonAsAnchor = BaseProps &
 
 export type ButtonProps = ButtonAsButton | ButtonAsAnchor;
 type ButtonRestProps =
-  | Omit<ButtonAsButton, keyof BaseProps>
-  | Omit<ButtonAsAnchor, keyof BaseProps>;
+  Omit<ButtonAsButton, keyof BaseProps> | Omit<ButtonAsAnchor, keyof BaseProps>;
 
 const SIZE_CLASSES: Record<Size, string> = {
   sm: "px-3 py-[7px] text-sm",

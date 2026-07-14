@@ -13,7 +13,7 @@ export default function Footer() {
         aria-hidden="true"
       >
         <img
-          className="max-w-none grayscale contrast-125 opacity-95"
+          className="max-w-none opacity-95 contrast-125 grayscale"
           src="/images/footer-illustration.svg"
           width={1076}
           height={378}
@@ -67,7 +67,7 @@ export default function Footer() {
                 target="_blank"
                 aria-label={githubLink?.tag}
               >
-                <GithubIcon className="h-6 w-auto fill-current mt-1" />
+                <GithubIcon className="mt-1 h-6 w-auto fill-current" />
               </a>
             </div>
           </div>

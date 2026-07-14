@@ -46,7 +46,9 @@ export default function Features() {
           <div className="flex justify-center pb-4 md:pb-12" data-aos="fade-up">
             <img
               className="max-w-none"
-              style={{ filter: "grayscale(0.35) brightness(0.92) contrast(1.05)" }}
+              style={{
+                filter: "grayscale(0.35) brightness(0.92) contrast(1.05)",
+              }}
               src="/images/features.png"
               width={1104}
               height={384}

@@ -1,4 +1,4 @@
-import {Outlet, useLocation} from "react-router";
+import { Outlet, useLocation } from "react-router";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -18,7 +18,7 @@ export default function Root() {
   }, []);
 
   useEffect(() => {
-    AOS.refresh()
+    AOS.refresh();
   }, [pathname]);
 
   return (

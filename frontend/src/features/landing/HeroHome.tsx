@@ -20,7 +20,8 @@ export default function HeroHome() {
               />
             </div>
 
-            <h1 className="gradient-text font-nacelle m-8 pb-5 leading-20 text-4xl font-semibold md:text-5xl"
+            <h1
+              className="gradient-text font-nacelle m-8 pb-5 text-4xl leading-20 font-semibold md:text-5xl"
               data-aos="fade-up"
             >
               Smarter monitoring. Faster detection. Instant alerts at the edge.

@@ -1,6 +1,9 @@
 import type { SubmitEvent } from "react";
 import { useState } from "react";
-import { loginWithCredentials, registerAccount } from "../../features/auth/authApi.ts";
+import {
+  loginWithCredentials,
+  registerAccount,
+} from "../../features/auth/authApi.ts";
 
 type AuthRequestsDeps = {
   apiBaseUrl: string;
