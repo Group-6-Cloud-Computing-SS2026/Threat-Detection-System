@@ -3,6 +3,7 @@ import RawDetails from "../RawDetails.tsx";
 import SectionCard from "../SectionCard.tsx";
 import StatCard from "../StatCard.tsx";
 import StatusBadge from "../StatusBadge.tsx";
+import { operationsErrorClass } from "../operationsUtils.ts";
 import { formatDateTime } from "../../api.ts";
 
 export default function NotificationsSection({
@@ -64,7 +65,7 @@ export default function NotificationsSection({
         ))}
       </div>
       {error ? (
-        <div className="bg-brand-brick-red-950 text-brand-brick-red-300 mt-4 rounded-xl px-4 py-3 text-sm">
+        <div className={`${operationsErrorClass} mt-4`}>
           {error}
         </div>
       ) : null}

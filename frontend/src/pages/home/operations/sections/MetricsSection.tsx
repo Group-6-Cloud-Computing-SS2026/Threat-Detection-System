@@ -3,6 +3,7 @@ import { homeInnerFrameClass } from "../../homeSurface.ts";
 import type { ConsoleData } from "../operationsTypes.ts";
 import RawDetails from "../RawDetails.tsx";
 import SectionCard from "../SectionCard.tsx";
+import { operationsErrorClass } from "../operationsUtils.ts";
 
 function buildMetricsPreview(raw: string) {
   return raw
@@ -56,7 +57,7 @@ export default function MetricsSection({
         </div>
       )}
       {error ? (
-        <div className="bg-brand-brick-red-950 text-brand-brick-red-300 mt-4 rounded-xl px-4 py-3 text-sm">
+        <div className={`${operationsErrorClass} mt-4`}>
           {error}
         </div>
       ) : null}

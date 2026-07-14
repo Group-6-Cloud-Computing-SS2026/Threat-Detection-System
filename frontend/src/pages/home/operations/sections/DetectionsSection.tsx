@@ -2,6 +2,7 @@ import { buildImageUrl, formatDateTime, severityClasses } from "../../api.ts";
 import type { ConsoleData } from "../operationsTypes.ts";
 import SectionCard from "../SectionCard.tsx";
 import StatusBadge from "../StatusBadge.tsx";
+import { operationsErrorClass } from "../operationsUtils.ts";
 
 export default function DetectionsSection({
   data,
@@ -92,7 +93,7 @@ export default function DetectionsSection({
         </table>
       </div>
       {error ? (
-        <div className="bg-brand-brick-red-950 text-brand-brick-red-300 mt-4 rounded-xl px-4 py-3 text-sm">
+        <div className={`${operationsErrorClass} mt-4`}>
           {error}
         </div>
       ) : null}

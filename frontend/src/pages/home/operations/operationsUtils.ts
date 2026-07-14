@@ -27,3 +27,5 @@ export function buildMetricsPreview(raw: string) {
     .join("\n");
 }
 
+export const operationsErrorClass =
+  "rounded-xl border border-brand-brick-red-500/15 bg-brand-brick-red-950/45 px-4 py-3 text-sm text-brand-brick-red-200/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]";

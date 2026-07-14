@@ -12,7 +12,7 @@ import {
 import { homePanelClass } from "../homeSurface.ts";
 import { useApiSettings } from "../useApiSettings.ts";
 import type { ConsoleSection, SectionNavItem } from "./operationsTypes.ts";
-import { resolveApiOrigin } from "./operationsUtils.ts";
+import { operationsErrorClass, resolveApiOrigin } from "./operationsUtils.ts";
 import { useBackendConsole } from "./useBackendConsole.ts";
 import SummarySection from "./sections/SummarySection.tsx";
 import DetectionsSection from "./sections/DetectionsSection.tsx";
@@ -204,7 +204,7 @@ export default function OperationsPage() {
       ) : null}
 
       {Object.values(errors).some(Boolean) ? (
-        <div className="bg-brand-brick-red-950 text-brand-brick-red-300 rounded-xl px-4 py-3 text-sm">
+        <div className={operationsErrorClass}>
           Some backend panels could not be loaded. The page keeps the sections
           that did succeed.
         </div>
