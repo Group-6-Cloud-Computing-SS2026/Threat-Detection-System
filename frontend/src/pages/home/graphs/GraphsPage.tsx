@@ -1,5 +1,4 @@
 import Graphs from "./Graphs.tsx";
-import { homePanelClass } from "../homeSurface.ts";
 
 export default function GraphsPage() {
   return (
@@ -14,10 +13,7 @@ export default function GraphsPage() {
         content="Amdahl's and Gustafson's law scaling benchmark results."
       />
 
-      <section
-        className={`${homePanelClass} flex min-h-[calc(100vh-10rem)] flex-col p-5`}
-        data-aos="fade-up"
-      >
+      <section className="flex min-h-[calc(100vh-10rem)] flex-col" data-aos="fade-up">
         <Graphs />
       </section>
     </>
