@@ -42,11 +42,12 @@ export default function Settings() {
         />
       </label>
 
-      <div className="flex flex-wrap gap-3" data-aos="fade-up" data-aos-delay={220}>
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap" data-aos="fade-up" data-aos-delay={220}>
         <Button
           type="button"
           size="sm"
           onClick={() => saveApiBaseUrl(draftApiBaseUrl)}
+          className="w-full sm:w-auto"
         >
           Save connection
         </Button>
@@ -56,10 +57,17 @@ export default function Settings() {
           href={`${apiBaseUrl.replace(/\/api\/v1\/?$/, "")}/docs`}
           target="_blank"
           rel="noreferrer"
+          className="w-full sm:w-auto"
         >
           Open Swagger API
         </Button>
-        <Button type="button" size="sm" variant="danger" onClick={logout}>
+        <Button
+          type="button"
+          size="sm"
+          variant="danger"
+          onClick={logout}
+          className="w-full sm:w-auto"
+        >
           Sign out
         </Button>
       </div>
