@@ -14,7 +14,10 @@ export default function GraphsPage() {
         content="Amdahl's and Gustafson's law scaling benchmark results."
       />
 
-      <section className={`${homePanelClass} flex min-h-[calc(100vh-10rem)] flex-col p-5`}>
+      <section
+        className={`${homePanelClass} flex min-h-[calc(100vh-10rem)] flex-col p-5`}
+        data-aos="fade-up"
+      >
         <Graphs />
       </section>
     </>

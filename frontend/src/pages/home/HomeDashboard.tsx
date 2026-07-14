@@ -81,7 +81,7 @@ export default function HomeDashboard() {
 
   return (
     <div className="space-y-6">
-      <section className="grid gap-3 sm:grid-cols-3">
+      <section className="grid gap-3 sm:grid-cols-3" data-aos="fade-up">
         <StatTile
           label="Live detections"
           value={String(liveEvents.length)}
@@ -101,9 +101,11 @@ export default function HomeDashboard() {
       </section>
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <CameraFeed apiBaseUrl={apiBaseUrl} />
+        <div data-aos="fade-right">
+          <CameraFeed apiBaseUrl={apiBaseUrl} />
+        </div>
 
-        <section className={`${homePanelClass} p-5`}>
+        <section className={`${homePanelClass} p-5`} data-aos="fade-left" data-aos-delay={120}>
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 className="font-nacelle text-brand-alabaster-grey-100 text-lg font-semibold">
@@ -154,7 +156,7 @@ export default function HomeDashboard() {
             )}
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-3" data-aos="fade-up" data-aos-delay={180}>
             {liveEvents.map((event) => (
               <DetectionCard
                 key={event.id}
@@ -187,7 +189,7 @@ function StatTile({
   tone?: "default" | "danger";
 }) {
   return (
-    <div className={`${homePanelClass} p-4`}>
+    <div className={`${homePanelClass} p-4`} data-aos="zoom-in-up">
       <span className="text-brand-alabaster-grey-600 text-xs font-medium tracking-wide uppercase">
         {label}
       </span>

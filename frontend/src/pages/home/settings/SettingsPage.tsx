@@ -11,7 +11,7 @@ export default function SettingsPage() {
         content="Connection settings for the Threat Detection System dashboard."
       />
 
-      <section className={`${homePanelClass} max-w-xl p-5`}>
+      <section className={`${homePanelClass} max-w-xl p-5`} data-aos="fade-up">
         <Settings />
       </section>
     </>

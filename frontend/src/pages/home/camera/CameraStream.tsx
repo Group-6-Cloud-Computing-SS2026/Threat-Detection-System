@@ -21,7 +21,7 @@ export default function CameraStream() {
 
   return (
     <>
-      <div className="mb-4">
+      <div className="mb-4" data-aos="fade-up">
         <h2 className="font-nacelle text-brand-alabaster-grey-100 text-lg font-semibold">
           Camera stream
         </h2>
@@ -30,7 +30,11 @@ export default function CameraStream() {
         </p>
       </div>
 
-      <div className="mb-4 grid gap-3 sm:grid-cols-[1.6fr_1fr_auto] sm:items-end">
+      <div
+        className="mb-4 grid gap-3 sm:grid-cols-[1.6fr_1fr_auto] sm:items-end"
+        data-aos="fade-up"
+        data-aos-delay={120}
+      >
         <label className="space-y-1.5 text-sm">
           <span className="text-brand-alabaster-grey-500">Broker IP</span>
           <input
@@ -59,7 +63,11 @@ export default function CameraStream() {
         </Button>
       </div>
 
-      <div className={`${homeInnerFrameClass} flex aspect-video items-center justify-center overflow-hidden rounded-xl`}>
+      <div
+        className={`${homeInnerFrameClass} flex aspect-video items-center justify-center overflow-hidden rounded-xl`}
+        data-aos="zoom-in"
+        data-aos-delay={220}
+      >
         {imageSrc ? (
           <img
             className="h-full w-full object-contain"

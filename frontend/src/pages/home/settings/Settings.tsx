@@ -12,7 +12,7 @@ export default function Settings() {
 
   return (
     <>
-      <div className="mb-4">
+      <div className="mb-4" data-aos="fade-up">
         <h2 className="font-nacelle text-brand-alabaster-grey-100 text-lg font-semibold">
           Connection settings
         </h2>
@@ -23,6 +23,8 @@ export default function Settings() {
 
       <div
         className={`${homeInnerFrameClass} text-brand-alabaster-grey-400 mb-4 rounded-lg px-3 py-2 text-sm`}
+        data-aos="fade-up"
+        data-aos-delay={100}
       >
         Signed in as{" "}
         <strong className="text-brand-alabaster-grey-100">
@@ -30,7 +32,7 @@ export default function Settings() {
         </strong>
       </div>
 
-      <label className="mb-4 block space-y-1.5 text-sm">
+      <label className="mb-4 block space-y-1.5 text-sm" data-aos="fade-up" data-aos-delay={160}>
         <span className="text-brand-alabaster-grey-500">API base URL</span>
         <input
           className="border-brand-carbon-black-700 bg-brand-carbon-black-800 text-brand-alabaster-grey-100 focus:border-brand-light-green-500 w-full rounded-lg border px-3 py-2 text-sm transition outline-none"
@@ -40,7 +42,7 @@ export default function Settings() {
         />
       </label>
 
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-3" data-aos="fade-up" data-aos-delay={220}>
         <Button
           type="button"
           size="sm"

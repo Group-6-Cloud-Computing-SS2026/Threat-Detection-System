@@ -3,7 +3,7 @@ import { homeInnerFrameClass } from "../homeSurface.ts";
 export default function Graphs() {
   return (
     <>
-      <div className="mb-4">
+      <div className="mb-4" data-aos="fade-up">
         <h2 className="font-nacelle text-brand-alabaster-grey-100 text-lg font-semibold">
           Amdahl&rsquo;s &amp; Gustafson&rsquo;s law results
         </h2>
@@ -16,6 +16,8 @@ export default function Graphs() {
         src="amdahl-gustafson-graphs.html"
         title="Scaling law results"
         className={`${homeInnerFrameClass} flex-1 rounded-xl`}
+        data-aos="zoom-in"
+        data-aos-delay={120}
       />
     </>
   );

@@ -11,7 +11,7 @@ export default function SearchPage() {
         content="Search and filter historical detection events."
       />
 
-      <section className={`${homePanelClass} p-5`}>
+      <section className={`${homePanelClass} p-5`} data-aos="fade-up">
         <Search />
       </section>
     </>

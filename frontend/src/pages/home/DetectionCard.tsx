@@ -22,7 +22,7 @@ export default function DetectionCard({
   }
 
   return (
-    <article className={homePanelHoverClass}>
+    <article className={homePanelHoverClass} data-aos="fade-up">
       <button
         type="button"
         className="flex w-full items-center gap-4 p-4 text-left"
@@ -73,7 +73,11 @@ export default function DetectionCard({
       </button>
 
       {expanded ? (
-        <div className="border-brand-carbon-black-700/70 space-y-4 border-t p-4">
+        <div
+          className="border-brand-carbon-black-700/70 space-y-4 border-t p-4"
+          data-aos="fade-up"
+          data-aos-delay={80}
+        >
           <dl className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
             <div>
               <dt className="text-brand-alabaster-grey-600 text-xs">

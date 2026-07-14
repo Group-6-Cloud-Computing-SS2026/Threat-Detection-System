@@ -14,7 +14,7 @@ export default function CameraStreamPage() {
         content="Direct MQTT preview of the live camera stream."
       />
 
-      <section className={`${homePanelClass} p-5`}>
+      <section className={`${homePanelClass} p-5`} data-aos="fade-up">
         <CameraStream />
       </section>
     </>
