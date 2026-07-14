@@ -19,7 +19,7 @@ export default function DocsHero() {
               Docs
             </span>
           </div>
-          <h1 className="gradient-text font-nacelle text-brand-alabaster-grey-100 text-4xl font-semibold md:text-5xl">
+          <h1 className="gradient-text leading-16 font-nacelle text-brand-alabaster-grey-100 text-4xl mb-4 font-semibold md:text-5xl">
             Documentation built for the edge pipeline
           </h1>
           <p className="text-brand-alabaster-grey-600/80 mt-5 max-w-2xl text-lg">
@@ -44,11 +44,14 @@ export default function DocsHero() {
           </div>
         </div>
 
-        <div className="overflow-hidden p-3 shadow-lg" data-aos="fade-left">
+        <div
+          className="overflow-hidden p-3 shadow-lg lg:max-w-md lg:justify-self-end"
+          data-aos="fade-left"
+        >
           <img
             src="/images/docs-picture.png"
             alt="ThreatOff docs"
-            className="aspect-1229/819 w-full rounded-xl object-cover"
+            className="aspect-625/590 w-full rounded-xl object-cover"
           />
         </div>
       </div>
