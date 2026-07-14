@@ -6,7 +6,9 @@ import StatusBadge from "../StatusBadge.tsx";
 import { bytesToHuman } from "../operationsUtils.ts";
 
 export default function SummarySection({ data }: { data: ConsoleData }) {
-  const severityRows = Object.entries(data.summary?.detection_stats.by_severity ?? {});
+  const severityRows = Object.entries(
+    data.summary?.detection_stats.by_severity ?? {},
+  );
   const typeRows = Object.entries(data.summary?.detection_stats.by_type ?? {});
 
   return (
@@ -14,7 +16,9 @@ export default function SummarySection({ data }: { data: ConsoleData }) {
       <SectionCard
         title="Detection summary"
         subtitle="Aggregated counts from /dashboard/summary and /detections/statistics."
-        action={<StatusBadge status={data.infra?.overall_status ?? "unknown"} />}
+        action={
+          <StatusBadge status={data.infra?.overall_status ?? "unknown"} />
+        }
       >
         <div className="grid gap-3 sm:grid-cols-2">
           <StatCard
@@ -24,14 +28,16 @@ export default function SummarySection({ data }: { data: ConsoleData }) {
           />
           <StatCard
             label="Unacknowledged"
-            value={String(data.summary?.detection_stats.unacknowledged_count ?? 0)}
+            value={String(
+              data.summary?.detection_stats.unacknowledged_count ?? 0,
+            )}
             detail="Needs operator review"
           />
         </div>
 
         <div className="mt-4 grid gap-3 lg:grid-cols-2">
           <div className="space-y-2">
-            <div className="text-brand-alabaster-grey-100 text-sm font-semibold uppercase tracking-wide">
+            <div className="text-brand-alabaster-grey-100 text-sm font-semibold tracking-wide uppercase">
               By severity
             </div>
             {severityRows.length > 0 ? (
@@ -51,14 +57,14 @@ export default function SummarySection({ data }: { data: ConsoleData }) {
                 </div>
               ))
             ) : (
-              <div className="text-brand-alabaster-grey-600 rounded-xl border border-dashed border-brand-carbon-black-700 px-4 py-3 text-sm">
+              <div className="text-brand-alabaster-grey-600 border-brand-carbon-black-700 rounded-xl border border-dashed px-4 py-3 text-sm">
                 No severity breakdown available.
               </div>
             )}
           </div>
 
           <div className="space-y-2">
-            <div className="text-brand-alabaster-grey-100 text-sm font-semibold uppercase tracking-wide">
+            <div className="text-brand-alabaster-grey-100 text-sm font-semibold tracking-wide uppercase">
               By event type
             </div>
             {typeRows.length > 0 ? (
@@ -67,14 +73,16 @@ export default function SummarySection({ data }: { data: ConsoleData }) {
                   key={type}
                   className="bg-brand-carbon-black-800/60 border-brand-carbon-black-700 flex items-center justify-between rounded-xl border px-4 py-3"
                 >
-                  <span className="text-brand-alabaster-grey-300 text-sm">{type}</span>
+                  <span className="text-brand-alabaster-grey-300 text-sm">
+                    {type}
+                  </span>
                   <span className="text-brand-alabaster-grey-100 font-semibold tabular-nums">
                     {count}
                   </span>
                 </div>
               ))
             ) : (
-              <div className="text-brand-alabaster-grey-600 rounded-xl border border-dashed border-brand-carbon-black-700 px-4 py-3 text-sm">
+              <div className="text-brand-alabaster-grey-600 border-brand-carbon-black-700 rounded-xl border border-dashed px-4 py-3 text-sm">
                 No event-type breakdown available.
               </div>
             )}
@@ -85,42 +93,33 @@ export default function SummarySection({ data }: { data: ConsoleData }) {
       <SectionCard
         title="Infrastructure snapshot"
         subtitle="Backend service status, node summary, and storage state."
-        action={<StatusBadge status={data.infra?.overall_status ?? "unknown"} />}
+        action={
+          <StatusBadge status={data.infra?.overall_status ?? "unknown"} />
+        }
       >
         <div className="grid gap-3 sm:grid-cols-2">
-          <div className="bg-brand-carbon-black-800/60 border-brand-carbon-black-700 rounded-xl border px-4 py-3">
-            <div className="text-brand-alabaster-grey-600 text-[11px] uppercase tracking-[0.18em]">
-              Database
-            </div>
-            <div className="mt-2">
-              <StatusBadge status={data.infra?.database.status ?? "unknown"} />
-            </div>
-          </div>
-          <div className="bg-brand-carbon-black-800/60 border-brand-carbon-black-700 rounded-xl border px-4 py-3">
-            <div className="text-brand-alabaster-grey-600 text-[11px] uppercase tracking-[0.18em]">
-              MinIO
-            </div>
-            <div className="mt-2">
-              <StatusBadge status={data.infra?.minio.status ?? "unknown"} />
-            </div>
-          </div>
-          <div className="bg-brand-carbon-black-800/60 border-brand-carbon-black-700 rounded-xl border px-4 py-3">
-            <div className="text-brand-alabaster-grey-600 text-[11px] uppercase tracking-[0.18em]">
-              MQTT
-            </div>
-            <div className="mt-2">
-              <StatusBadge status={data.infra?.mqtt.status ?? "unknown"} />
-            </div>
-          </div>
-          <div className="bg-brand-carbon-black-800/60 border-brand-carbon-black-700 rounded-xl border px-4 py-3">
-            <div className="text-brand-alabaster-grey-600 text-[11px] uppercase tracking-[0.18em]">
-              Storage
-            </div>
-            <div className="text-brand-alabaster-grey-100 mt-2 text-sm font-medium">
-              {bytesToHuman(data.storage?.used_bytes)} used of{" "}
-              {bytesToHuman(data.storage?.total_bytes)}
-            </div>
-          </div>
+          <StatCard
+            label="Database"
+            value={data.infra?.database.status ?? "unknown"}
+            detail="Backend data store"
+          />
+          <StatCard
+            label="MinIO"
+            value={data.infra?.minio.status ?? "unknown"}
+            detail={data.infra?.minio.endpoint ?? "Object storage endpoint"}
+          />
+          <StatCard
+            label="MQTT"
+            value={data.infra?.mqtt.status ?? "unknown"}
+            detail={`${data.infra?.mqtt.broker_host ?? "Broker"}: ${data.infra?.mqtt.broker_port ?? 0}`}
+          />
+          <StatCard
+            label="Storage"
+            value={bytesToHuman(
+              data.storage?.used_bytes ?? data.infra?.minio.used_bytes,
+            )}
+            detail={`${data.storage?.used_percent ?? data.infra?.minio.used_percent ?? 0}% used of ${bytesToHuman(data.storage?.total_bytes ?? data.infra?.minio.total_bytes)}`}
+          />
         </div>
       </SectionCard>
     </div>
