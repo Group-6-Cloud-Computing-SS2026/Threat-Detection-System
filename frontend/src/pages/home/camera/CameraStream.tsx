@@ -1,4 +1,5 @@
 import { IconCamera } from "../../../shared/components/ui/icons/NavIcons.tsx";
+import Button from "../../../shared/components/ui/Button.tsx";
 import { useMqttCameraStream } from "./useMqttCameraStream.ts";
 
 export default function CameraStream() {
@@ -47,14 +48,14 @@ export default function CameraStream() {
             disabled={connected || connecting}
           />
         </label>
-        <button
+        <Button
+          size="sm"
           type="button"
           onClick={() => (connected ? disconnect() : void connect())}
           disabled={connecting}
-          className="from-brand-light-green-500 to-brand-light-green-700 text-brand-pitch-black-500 rounded-lg bg-linear-to-br px-4 py-2 text-sm font-semibold transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {connecting ? "Connecting..." : connected ? "Disconnect" : "Connect"}
-        </button>
+        </Button>
       </div>
 
       <div className="border-brand-carbon-black-800 bg-brand-pitch-black-500 flex aspect-video items-center justify-center overflow-hidden rounded-xl border">
