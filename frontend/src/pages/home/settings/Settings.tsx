@@ -54,7 +54,7 @@ export default function Settings() {
         >
           Open Swagger API
         </Button>
-        <Button type="button" size="sm" variant="secondary" onClick={logout}>
+        <Button type="button" size="sm" variant="danger" onClick={logout}>
           Sign out
         </Button>
       </div>
