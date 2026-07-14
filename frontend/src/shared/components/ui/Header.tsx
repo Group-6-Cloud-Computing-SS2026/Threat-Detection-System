@@ -9,12 +9,12 @@ export default function Header() {
         <Logo />
         <nav className="flex items-center gap-5">
           <NavLink
-            to="/login"
+            to="/auth"
             className="text-brand-alabaster-grey-600 hover:text-brand-alabaster-grey-100 text-sm font-medium transition"
           >
             Login
           </NavLink>
-          <Button href="/login?tab=register" size="sm">
+          <Button href="/auth?tab=register" size="sm">
             Register
           </Button>
         </nav>
