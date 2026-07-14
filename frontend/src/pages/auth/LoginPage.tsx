@@ -1,11 +1,5 @@
 import { useNavigate, useSearchParams } from "react-router";
 import type { AuthMode } from "../../shared/types";
-import {
-  useAuthFields,
-  useAuthMode,
-  useAuthRequests,
-  usePanelHeight,
-} from "../../shared/hooks";
 import { useAuth } from "./AuthContext.tsx";
 import { useApiSettings } from "../home/useApiSettings.ts";
 import AuthHeader from "./AuthHeader.tsx";
@@ -14,6 +8,10 @@ import AuthSidebar from "./AuthSidebar.tsx";
 import LoginForm from "./LoginForm.tsx";
 import ModeToggle from "./ModeToggle.tsx";
 import RegisterForm from "./RegisterForm.tsx";
+import { useAuthFields } from "./useAuthFields.ts";
+import { useAuthMode } from "./useAuthMode.ts";
+import { useAuthRequests } from "./useAuthRequests.ts";
+import { usePanelHeight } from "../../shared/hooks";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -50,7 +48,7 @@ export default function LoginPage() {
     email,
     password,
     role,
-    onLoginSuccess: (token, username) => {
+    onLoginSuccess: (token: string, username: string) => {
       login(token, username);
       navigate("/");
     },
