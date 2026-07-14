@@ -81,6 +81,13 @@ const router = createBrowserRouter([
                 .default,
             }),
           },
+          {
+            path: "operations",
+            lazy: async () => ({
+              Component: (await import("../pages/home/operations/OperationsPage.tsx"))
+                .default,
+            }),
+          },
         ],
       },
     ],
