@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import type { AuthMode } from "../../shared/types";
 import { useAuth } from "./AuthContext.tsx";
@@ -15,7 +16,7 @@ import { usePanelHeight } from "../../shared/hooks";
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const { apiBaseUrl } = useApiSettings();
   const [searchParams] = useSearchParams();
 
@@ -57,6 +58,13 @@ export default function LoginPage() {
       switchMode("login");
     },
   });
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
   function handleModeChange(nextMode: AuthMode) {
     clearMessages();
     switchMode(nextMode);
