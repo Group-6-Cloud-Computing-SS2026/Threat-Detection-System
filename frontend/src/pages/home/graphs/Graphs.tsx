@@ -29,10 +29,37 @@ type GustRow = {
   eff: number;
 };
 
+type ChartScaleLike = {
+  grid?: {
+    color?: string;
+    drawBorder?: boolean;
+  };
+  ticks?: {
+    color?: string;
+    callback?: (value: unknown) => string;
+  };
+};
+
+type ChartOptionsLike = {
+  scales?: Record<string, ChartScaleLike>;
+  plugins?: {
+    legend?: {
+      labels?: {
+        color?: string;
+      };
+    };
+    tooltip?: {
+      titleColor?: string;
+      bodyColor?: string;
+      borderColor?: string;
+    };
+  };
+};
+
 type ChartInstance = {
   destroy: () => void;
   update: () => void;
-  options: Record<string, any>;
+  options: ChartOptionsLike;
 };
 
 type ChartCtor = {
@@ -40,7 +67,7 @@ type ChartCtor = {
     font: { family: string; size: number };
     color: string;
   };
-  new (canvas: HTMLCanvasElement, config: Record<string, any>): ChartInstance;
+  new (canvas: HTMLCanvasElement, config: Record<string, unknown>): ChartInstance;
 };
 
 declare global {
@@ -195,7 +222,7 @@ export default function Graphs() {
 
       chartsRef.current.forEach((chart) => {
         if (chart.options.scales) {
-          Object.values(chart.options.scales).forEach((scale: any) => {
+          Object.values(chart.options.scales).forEach((scale) => {
             scale.grid = { color: gridColor, drawBorder: false };
             scale.ticks = { color: textColor };
           });
@@ -356,7 +383,7 @@ export default function Graphs() {
       <header className="space-y-4" data-aos="fade-up">
         <div className="flex items-center gap-3">
           <span className="text-brand-light-green-300 text-xs font-semibold tracking-[0.22em] uppercase">
-            Native React report
+            Benchmark report
           </span>
           <span className="bg-brand-carbon-black-800 text-brand-alabaster-grey-300 rounded-full px-2.5 py-1 text-[11px] font-medium">
             TSX
@@ -366,11 +393,11 @@ export default function Graphs() {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
             <h1 className="text-brand-alabaster-grey-100 text-3xl font-semibold md:text-4xl">
-              Amdahl&apos;s and Gustafson&apos;s law results
+              Scaling results
             </h1>
             <p className="text-brand-alabaster-grey-600 mt-3 text-sm md:text-base">
-              The benchmark report now renders directly in React with the brand font,
-              brand surfaces, and brand chart colors.
+              Amdahl and Gustafson results, shown in a React page with the
+              same surface and chart styling as the rest of the app.
             </p>
           </div>
 
