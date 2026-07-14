@@ -401,7 +401,7 @@ export default function Graphs() {
             </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             {summaries.map((item) => (
               <div
                 key={item.label}
@@ -423,8 +423,8 @@ export default function Graphs() {
 
       <section className="grid gap-4 lg:grid-cols-2" data-aos="fade-up" data-aos-delay={80}>
         <article className={chartCardClass}>
-          <div className="mb-4 flex items-start justify-between gap-4">
-            <div>
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0">
               <h2 className="text-brand-alabaster-grey-100 text-lg font-semibold">
                 Amdahl&apos;s law
               </h2>
@@ -432,7 +432,7 @@ export default function Graphs() {
                 Avg total time by node count.
               </p>
             </div>
-            <span className="text-brand-light-green-300 bg-brand-light-green-950/70 border-brand-light-green-500/20 rounded-full border px-2.5 py-1 text-[11px] font-medium">
+            <span className="text-brand-light-green-300 bg-brand-light-green-950/70 border-brand-light-green-500/20 rounded-full border px-2.5 py-1 text-[11px] font-medium self-start">
               max speedup {amdahlMaxSpeedup}x
             </span>
           </div>
@@ -455,8 +455,8 @@ export default function Graphs() {
         </article>
 
         <article className={chartCardClass}>
-          <div className="mb-4 flex items-start justify-between gap-4">
-            <div>
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0">
               <h2 className="text-brand-alabaster-grey-100 text-lg font-semibold">
                 Gustafson&apos;s law
               </h2>
@@ -464,7 +464,7 @@ export default function Graphs() {
                 Avg total time by scaled workload.
               </p>
             </div>
-            <span className="text-brand-brick-red-300 bg-brand-brick-red-950/70 border-brand-brick-red-500/20 rounded-full border px-2.5 py-1 text-[11px] font-medium">
+            <span className="text-brand-brick-red-300 bg-brand-brick-red-950/70 border-brand-brick-red-500/20 rounded-full border px-2.5 py-1 text-[11px] font-medium self-start">
               max speedup {gustMaxSpeedup}x
             </span>
           </div>
@@ -488,8 +488,8 @@ export default function Graphs() {
       </section>
 
       <section className="space-y-4" data-aos="fade-up" data-aos-delay={140}>
-        <div className="flex items-end justify-between gap-3">
-          <div>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div className="min-w-0">
             <h2 className="text-brand-alabaster-grey-100 text-lg font-semibold">
               Results tables
             </h2>
@@ -502,34 +502,45 @@ export default function Graphs() {
 
         <article className={tableCardClass}>
           <div className={`${homeInnerFrameClass} overflow-x-auto`}>
-            <table className="w-full border-collapse text-sm">
+            <table className="min-w-[920px] border-collapse text-sm lg:w-full lg:min-w-0 lg:table-fixed">
+              <colgroup>
+                <col className="lg:w-[16%]" />
+                <col className="lg:w-[8%]" />
+                <col className="lg:w-[11%]" />
+                <col className="lg:w-[11%]" />
+                <col className="lg:w-[11%]" />
+                <col className="lg:w-[13%]" />
+                <col className="lg:w-[10%]" />
+                <col className="lg:w-[10%]" />
+                <col className="lg:w-[10%]" />
+              </colgroup>
               <thead>
                 <tr className="bg-brand-carbon-black-800">
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-left uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-left uppercase tracking-[0.16em]">
                     Workload
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-left uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-left uppercase tracking-[0.16em]">
                     Nodes
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
                     Avg Seq 1
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
                     Avg Parallel
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
                     Avg Seq 2
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
                     Avg Total Time
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
                     Std Dev
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
                     Speedup
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
                     Efficiency
                   </th>
                 </tr>
@@ -591,37 +602,49 @@ export default function Graphs() {
 
         <article className={tableCardClass}>
           <div className={`${homeInnerFrameClass} overflow-x-auto`}>
-            <table className="w-full border-collapse text-sm">
+            <table className="min-w-[1040px] border-collapse text-sm lg:w-full lg:min-w-0 lg:table-fixed">
+              <colgroup>
+                <col className="lg:w-[18%]" />
+                <col className="lg:w-[11%]" />
+                <col className="lg:w-[8%]" />
+                <col className="lg:w-[10%]" />
+                <col className="lg:w-[10%]" />
+                <col className="lg:w-[10%]" />
+                <col className="lg:w-[13%]" />
+                <col className="lg:w-[10%]" />
+                <col className="lg:w-[10%]" />
+                <col className="lg:w-[10%]" />
+              </colgroup>
               <thead>
                 <tr className="bg-brand-carbon-black-800">
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-left uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-left uppercase tracking-[0.16em]">
                     Set Description
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-left uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-left uppercase tracking-[0.16em]">
                     Size
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-left uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-left uppercase tracking-[0.16em]">
                     Nodes
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
                     Avg Seq 1
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
                     Avg Parallel
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
                     Avg Seq 2
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
                     Avg Total Time
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
                     Std Dev
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
                     Scaled Speedup
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
                     Efficiency
                   </th>
                 </tr>
