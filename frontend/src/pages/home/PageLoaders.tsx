@@ -29,7 +29,7 @@ export function PanelSkeleton({
     <div className={className}>
       {title ? (
         <div className="mb-3 flex items-center gap-3">
-          <div className="bg-brand-carbon-black-700 h-4 w-4 rounded-full animate-pulse" />
+          <div className="bg-brand-carbon-black-700 h-4 w-4 animate-pulse rounded-full" />
           <div className="text-brand-alabaster-grey-600 text-sm">{title}</div>
         </div>
       ) : null}
@@ -37,7 +37,7 @@ export function PanelSkeleton({
         {Array.from({ length: lines }).map((_, index) => (
           <div
             key={index}
-            className="bg-brand-carbon-black-700/80 h-4 rounded-full animate-pulse"
+            className="bg-brand-carbon-black-700/80 h-4 animate-pulse rounded-full"
             style={{ width: `${92 - index * 18}%` }}
           />
         ))}

@@ -13,9 +13,15 @@ export default function LogsSection({
   error?: string;
 }) {
   const logs = data.logs?.items ?? [];
-  const errorCount = logs.filter((item) => item.level.toLowerCase() === "error").length;
-  const warningCount = logs.filter((item) => item.level.toLowerCase() === "warn").length;
-  const infoCount = logs.filter((item) => item.level.toLowerCase() === "info").length;
+  const errorCount = logs.filter(
+    (item) => item.level.toLowerCase() === "error",
+  ).length;
+  const warningCount = logs.filter(
+    (item) => item.level.toLowerCase() === "warn",
+  ).length;
+  const infoCount = logs.filter(
+    (item) => item.level.toLowerCase() === "info",
+  ).length;
 
   return (
     <SectionCard
@@ -23,10 +29,26 @@ export default function LogsSection({
       subtitle="Recent entries from /logs, including source, level, message, and context."
     >
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Log entries" value={String(logs.length)} detail="Recent /logs items" />
-        <StatCard label="Errors" value={String(errorCount)} detail="Level = error" />
-        <StatCard label="Warnings" value={String(warningCount)} detail="Level = warn" />
-        <StatCard label="Info" value={String(infoCount)} detail="Level = info" />
+        <StatCard
+          label="Log entries"
+          value={String(logs.length)}
+          detail="Recent /logs items"
+        />
+        <StatCard
+          label="Errors"
+          value={String(errorCount)}
+          detail="Level = error"
+        />
+        <StatCard
+          label="Warnings"
+          value={String(warningCount)}
+          detail="Level = warn"
+        />
+        <StatCard
+          label="Info"
+          value={String(infoCount)}
+          detail="Level = info"
+        />
       </div>
 
       <div className="mt-4 space-y-3">
@@ -49,7 +71,7 @@ export default function LogsSection({
                   </div>
                   {item.context ? (
                     <details className="text-xs">
-                      <summary className="cursor-pointer text-brand-alabaster-grey-600">
+                      <summary className="text-brand-alabaster-grey-600 cursor-pointer">
                         Context
                       </summary>
                       <pre className="text-brand-alabaster-grey-200 mt-2 overflow-auto rounded-lg bg-black/20 p-3 whitespace-pre-wrap">
@@ -65,15 +87,13 @@ export default function LogsSection({
             </article>
           ))
         ) : (
-          <div className="text-brand-alabaster-grey-600 rounded-xl border border-dashed border-brand-carbon-black-700 px-4 py-3 text-sm">
+          <div className="text-brand-alabaster-grey-600 border-brand-carbon-black-700 rounded-xl border border-dashed px-4 py-3 text-sm">
             No log entries available.
           </div>
         )}
       </div>
       {error ? (
-        <div className={`${operationsErrorClass} mt-4`}>
-          {error}
-        </div>
+        <div className={`${operationsErrorClass} mt-4`}>{error}</div>
       ) : null}
     </SectionCard>
   );

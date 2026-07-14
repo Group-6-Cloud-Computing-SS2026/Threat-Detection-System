@@ -15,11 +15,7 @@ function bytesToHuman(value: number | undefined) {
   return `${current.toFixed(current >= 10 || unit === 0 ? 0 : 1)} ${units[unit]}`;
 }
 
-export default function InfrastructureSection({
-  data,
-}: {
-  data: ConsoleData;
-}) {
+export default function InfrastructureSection({ data }: { data: ConsoleData }) {
   return (
     <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
       <SectionCard
@@ -50,7 +46,9 @@ export default function InfrastructureSection({
       <SectionCard
         title="Storage and cluster"
         subtitle="Infrastructure status plus MinIO usage and node summaries."
-        action={<StatusBadge status={data.infra?.overall_status ?? "unknown"} />}
+        action={
+          <StatusBadge status={data.infra?.overall_status ?? "unknown"} />
+        }
       >
         <div className="grid gap-3 sm:grid-cols-2">
           <StatCard
@@ -78,12 +76,16 @@ export default function InfrastructureSection({
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <StatCard
             label="MinIO status"
-            value={data.storage?.status ?? data.infra?.minio.status ?? "unknown"}
+            value={
+              data.storage?.status ?? data.infra?.minio.status ?? "unknown"
+            }
             detail={data.infra?.minio.endpoint ?? "Object storage endpoint"}
           />
           <StatCard
             label="Storage used"
-            value={bytesToHuman(data.storage?.used_bytes ?? data.infra?.minio.used_bytes)}
+            value={bytesToHuman(
+              data.storage?.used_bytes ?? data.infra?.minio.used_bytes,
+            )}
             detail={`${data.storage?.used_percent ?? data.infra?.minio.used_percent ?? 0}% used`}
           />
         </div>

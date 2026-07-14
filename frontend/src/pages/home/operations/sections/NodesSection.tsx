@@ -17,7 +17,7 @@ export default function NodesSection({
       subtitle="Cluster inventory with status, heartbeat, location, and latest health snapshot."
       action={<StatusBadge status={data.infra?.overall_status ?? "unknown"} />}
     >
-      <div className="overflow-hidden rounded-xl border border-brand-carbon-black-700">
+      <div className="border-brand-carbon-black-700 overflow-hidden rounded-xl border">
         <table className="w-full text-sm">
           <thead className="bg-brand-carbon-black-800">
             <tr>
@@ -40,18 +40,25 @@ export default function NodesSection({
           </thead>
           <tbody>
             {(data.infra?.nodes ?? []).map((node) => (
-              <tr key={node.id} className="border-brand-carbon-black-700 border-t align-top">
+              <tr
+                key={node.id}
+                className="border-brand-carbon-black-700 border-t align-top"
+              >
                 <td className="px-4 py-3">
                   <div className="text-brand-alabaster-grey-100 font-medium">
                     {node.name}
                   </div>
-                  <div className="text-brand-alabaster-grey-600 text-xs">{node.id}</div>
+                  <div className="text-brand-alabaster-grey-600 text-xs">
+                    {node.id}
+                  </div>
                 </td>
                 <td className="px-4 py-3">
                   <StatusBadge status={node.status} />
                 </td>
                 <td className="text-brand-alabaster-grey-300 px-4 py-3">
-                  {node.last_heartbeat ? formatDateTime(node.last_heartbeat) : "N/A"}
+                  {node.last_heartbeat
+                    ? formatDateTime(node.last_heartbeat)
+                    : "N/A"}
                 </td>
                 <td className="px-4 py-3">
                   {node.health ? (
@@ -84,9 +91,7 @@ export default function NodesSection({
         </table>
       </div>
       {error ? (
-        <div className={`${operationsErrorClass} mt-4`}>
-          {error}
-        </div>
+        <div className={`${operationsErrorClass} mt-4`}>{error}</div>
       ) : null}
     </SectionCard>
   );

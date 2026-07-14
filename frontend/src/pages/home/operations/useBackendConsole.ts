@@ -41,39 +41,66 @@ export function useBackendConsole(
       {
         key: "summary" as const,
         run: () =>
-          apiFetch(apiBaseUrl, token, "/dashboard/summary") as Promise<DashboardSummary>,
+          apiFetch(
+            apiBaseUrl,
+            token,
+            "/dashboard/summary",
+          ) as Promise<DashboardSummary>,
       },
       {
         key: "detections" as const,
         run: () =>
-          apiFetch(apiBaseUrl, token, "/detections/recent?limit=12") as Promise<DetectionEvent[]>,
+          apiFetch(apiBaseUrl, token, "/detections/recent?limit=12") as Promise<
+            DetectionEvent[]
+          >,
       },
       {
         key: "logs" as const,
         run: () =>
-          apiFetch(apiBaseUrl, token, "/logs?limit=20") as Promise<PaginatedResponse<SystemLog>>,
+          apiFetch(apiBaseUrl, token, "/logs?limit=20") as Promise<
+            PaginatedResponse<SystemLog>
+          >,
       },
       {
         key: "notifications" as const,
         run: () =>
-          apiFetch(apiBaseUrl, token, "/notifications?limit=20") as Promise<PaginatedResponse<NotificationItem>>,
+          apiFetch(apiBaseUrl, token, "/notifications?limit=20") as Promise<
+            PaginatedResponse<NotificationItem>
+          >,
       },
       {
         key: "infra" as const,
         run: () =>
-          apiFetch(apiBaseUrl, token, "/infrastructure/status") as Promise<InfrastructureStatus>,
+          apiFetch(
+            apiBaseUrl,
+            token,
+            "/infrastructure/status",
+          ) as Promise<InfrastructureStatus>,
       },
       {
         key: "services" as const,
-        run: () => apiFetch(apiBaseUrl, token, "/infrastructure/services") as Promise<ServiceStatus[]>,
+        run: () =>
+          apiFetch(apiBaseUrl, token, "/infrastructure/services") as Promise<
+            ServiceStatus[]
+          >,
       },
       {
         key: "storage" as const,
-        run: () => apiFetch(apiBaseUrl, token, "/infrastructure/storage") as Promise<StorageStatus>,
+        run: () =>
+          apiFetch(
+            apiBaseUrl,
+            token,
+            "/infrastructure/storage",
+          ) as Promise<StorageStatus>,
       },
       {
         key: "clusterHistory" as const,
-        run: () => apiFetch(apiBaseUrl, token, "/cluster/mpi/history?limit=8") as Promise<ClusterRun[]>,
+        run: () =>
+          apiFetch(
+            apiBaseUrl,
+            token,
+            "/cluster/mpi/history?limit=8",
+          ) as Promise<ClusterRun[]>,
       },
       {
         key: "clusterComparison" as const,
@@ -90,17 +117,21 @@ export function useBackendConsole(
       },
       {
         key: "auth" as const,
-        run: () => apiFetch(apiBaseUrl, token, "/auth/me") as Promise<UserProfile>,
+        run: () =>
+          apiFetch(apiBaseUrl, token, "/auth/me") as Promise<UserProfile>,
       },
       {
         key: "metrics" as const,
         run: async () => {
-          const response = await fetch(`${apiBaseUrl.replace(/\/$/, "")}/metrics`, {
-            headers: {
-              accept: "text/plain",
-              ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          const response = await fetch(
+            `${apiBaseUrl.replace(/\/$/, "")}/metrics`,
+            {
+              headers: {
+                accept: "text/plain",
+                ...(token ? { Authorization: `Bearer ${token}` } : {}),
+              },
             },
-          });
+          );
           if (!response.ok) {
             throw new Error(`Failed to load metrics: ${response.status}`);
           }
@@ -112,7 +143,9 @@ export function useBackendConsole(
     setLoading(true);
     setErrors({});
 
-    const settled = await Promise.allSettled(requests.map((request) => request.run()));
+    const settled = await Promise.allSettled(
+      requests.map((request) => request.run()),
+    );
     const nextData: Partial<ConsoleData> = {};
     const nextErrors: ConsoleErrors = {};
 
@@ -122,7 +155,9 @@ export function useBackendConsole(
         nextData[key] = result.value as never;
       } else {
         nextErrors[key] =
-          result.reason instanceof Error ? result.reason.message : "Request failed";
+          result.reason instanceof Error
+            ? result.reason.message
+            : "Request failed";
       }
     });
 
@@ -137,4 +172,3 @@ export function useBackendConsole(
 
   return { data, errors, loading, refresh: load };
 }
-

@@ -30,11 +30,7 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
 const externalLinkClass =
   "flex w-full shrink-0 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-brand-alabaster-grey-600 transition hover:bg-brand-carbon-black-800 hover:text-brand-alabaster-grey-100";
 
-function ChevronDownIcon({
-  className = "",
-}: {
-  className?: string;
-}) {
+function ChevronDownIcon({ className = "" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -93,7 +89,7 @@ export default function HomeSidebar() {
   const swaggerUrl = `${apiBaseUrl.replace(/\/api\/v1\/?$/, "").replace(/\/$/, "")}/docs`;
 
   return (
-    <aside className="border-brand-carbon-black-800/80 bg-[linear-gradient(180deg,rgba(18,18,18,0.98),rgba(8,8,8,0.98))] flex shrink-0 flex-col border-b md:sticky md:top-0 md:h-screen md:w-64 md:border-r md:border-b-0">
+    <aside className="border-brand-carbon-black-800/80 flex shrink-0 flex-col border-b bg-[linear-gradient(180deg,rgba(18,18,18,0.98),rgba(8,8,8,0.98))] md:sticky md:top-0 md:h-screen md:w-64 md:border-r md:border-b-0">
       <div className="border-brand-carbon-black-800/80 flex items-center justify-between gap-3 border-b p-4 md:block md:border-b md:p-5">
         <div className="flex min-w-0 flex-1 flex-col items-start gap-2">
           <NavLink to="/landing">
@@ -125,7 +121,7 @@ export default function HomeSidebar() {
 
       <nav
         id="home-sidebar-nav"
-        className={`flex flex-1 flex-col p-3 md:flex md:overflow-visible md:gap-1 ${
+        className={`flex flex-1 flex-col p-3 md:flex md:gap-1 md:overflow-visible ${
           mobileNavOpen ? "flex" : "hidden"
         }`}
       >
@@ -147,7 +143,7 @@ export default function HomeSidebar() {
           </SidebarNavLink>
         </div>
 
-        <div className="flex flex-col gap-0.5 md:gap-1 md:mt-6">
+        <div className="flex flex-col gap-0.5 md:mt-6 md:gap-1">
           <p className="text-brand-alabaster-grey-600 hidden px-3 pb-1 text-[11px] font-semibold tracking-wider uppercase md:block">
             System
           </p>
@@ -175,11 +171,7 @@ export default function HomeSidebar() {
             <IconGrafana className="h-4 w-4 shrink-0 opacity-70" />
             Grafana
           </a>
-          <a
-              href={swaggerUrl}
-              target="_blank"
-              className={externalLinkClass}
-          >
+          <a href={swaggerUrl} target="_blank" className={externalLinkClass}>
             <IconFileCode className="h-4 w-4 shrink-0 opacity-70" />
             Swagger UI
           </a>
@@ -203,7 +195,7 @@ export default function HomeSidebar() {
         <button
           type="button"
           onClick={logout}
-          className="text-brand-brick-red-300 hover:bg-brand-brick-red-950 mt-2 cursor-pointer flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition"
+          className="text-brand-brick-red-300 hover:bg-brand-brick-red-950 mt-2 flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition"
         >
           <IconLogout className="h-4 w-4 shrink-0" />
           Sign out

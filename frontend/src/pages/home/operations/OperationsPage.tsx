@@ -25,15 +25,39 @@ import AuthSection from "./sections/AuthSection.tsx";
 import MetricsSection from "./sections/MetricsSection.tsx";
 
 const NAV_ITEMS: SectionNavItem[] = [
-  { id: "summary", label: "Overview", icon: <IconActivity className="h-4 w-4" /> },
-  { id: "detections", label: "Detections", icon: <IconSearch className="h-4 w-4" /> },
+  {
+    id: "summary",
+    label: "Overview",
+    icon: <IconActivity className="h-4 w-4" />,
+  },
+  {
+    id: "detections",
+    label: "Detections",
+    icon: <IconSearch className="h-4 w-4" />,
+  },
   { id: "logs", label: "Logs", icon: <IconFileCode className="h-4 w-4" /> },
   { id: "nodes", label: "Nodes", icon: <IconSettings className="h-4 w-4" /> },
-  { id: "notifications", label: "Notifications", icon: <IconDocs className="h-4 w-4" /> },
-  { id: "infrastructure", label: "Infrastructure", icon: <IconBarChart className="h-4 w-4" /> },
-  { id: "cluster", label: "Cluster", icon: <IconBarChart className="h-4 w-4" /> },
+  {
+    id: "notifications",
+    label: "Notifications",
+    icon: <IconDocs className="h-4 w-4" />,
+  },
+  {
+    id: "infrastructure",
+    label: "Infrastructure",
+    icon: <IconBarChart className="h-4 w-4" />,
+  },
+  {
+    id: "cluster",
+    label: "Cluster",
+    icon: <IconBarChart className="h-4 w-4" />,
+  },
   { id: "auth", label: "Auth", icon: <IconSettings className="h-4 w-4" /> },
-  { id: "metrics", label: "Metrics", icon: <IconFileCode className="h-4 w-4" /> },
+  {
+    id: "metrics",
+    label: "Metrics",
+    icon: <IconFileCode className="h-4 w-4" />,
+  },
 ];
 
 function HeaderStat({
@@ -47,7 +71,7 @@ function HeaderStat({
 }) {
   return (
     <div className={`${homePanelClass} p-4`}>
-      <div className="text-brand-alabaster-grey-600 text-[11px] uppercase tracking-[0.18em]">
+      <div className="text-brand-alabaster-grey-600 text-[11px] tracking-[0.18em] uppercase">
         {label}
       </div>
       <div className="text-brand-alabaster-grey-100 mt-1 text-2xl font-semibold tabular-nums">
@@ -63,7 +87,10 @@ export default function OperationsPage() {
   const { apiBaseUrl } = useApiSettings();
   const token = auth?.token;
   const apiOrigin = useMemo(() => resolveApiOrigin(apiBaseUrl), [apiBaseUrl]);
-  const { data, errors, loading, refresh } = useBackendConsole(apiBaseUrl, token);
+  const { data, errors, loading, refresh } = useBackendConsole(
+    apiBaseUrl,
+    token,
+  );
   const [activeSection, setActiveSection] = useState<ConsoleSection>("summary");
 
   const overviewCards = useMemo(() => {
@@ -76,7 +103,10 @@ export default function OperationsPage() {
       },
       {
         label: "Nodes",
-        value: summary?.cluster_health.total_nodes ?? data.infra?.nodes_summary.total ?? 0,
+        value:
+          summary?.cluster_health.total_nodes ??
+          data.infra?.nodes_summary.total ??
+          0,
         detail: `${summary?.cluster_health.online_nodes ?? data.infra?.nodes_summary.online ?? 0} online`,
       },
       {
@@ -86,7 +116,9 @@ export default function OperationsPage() {
       },
       {
         label: "Services",
-        value: data.services?.filter((service) => service.status === "connected").length ?? 0,
+        value:
+          data.services?.filter((service) => service.status === "connected")
+            .length ?? 0,
         detail: `${data.services?.length ?? 0} monitored`,
       },
     ];
@@ -98,14 +130,14 @@ export default function OperationsPage() {
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-3xl space-y-4 self-start">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-brand-light-green-300 bg-brand-light-green-950/70 border-brand-light-green-500/20 rounded-full border px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.18em]">
+              <span className="text-brand-light-green-300 bg-brand-light-green-950/70 border-brand-light-green-500/20 rounded-full border px-2.5 py-1 text-[11px] font-medium tracking-[0.18em] uppercase">
                 Backend console
               </span>
               <span className="text-brand-alabaster-grey-600 border-brand-carbon-black-700 bg-brand-carbon-black-800 rounded-full border px-2.5 py-1 text-[11px] font-medium">
                 {loading ? "Refreshing" : "Live"}
               </span>
             </div>
-            <div className="space-y-2 mb-8">
+            <div className="mb-8 space-y-2">
               <h1 className="text-brand-alabaster-grey-100 text-3xl font-semibold md:text-4xl">
                 Backend operations
               </h1>
@@ -157,14 +189,18 @@ export default function OperationsPage() {
         </div>
       </section>
 
-      <section className={`${homePanelClass} p-4 md:p-5`} data-aos="fade-up" data-aos-delay={80}>
+      <section
+        className={`${homePanelClass} p-4 md:p-5`}
+        data-aos="fade-up"
+        data-aos-delay={80}
+      >
         <div className="flex flex-wrap gap-2">
           {NAV_ITEMS.map((item) => (
             <button
               key={item.id}
               type="button"
               onClick={() => setActiveSection(item.id)}
-              className={`cursor-pointer flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition hover:-translate-y-px ${
+              className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition hover:-translate-y-px ${
                 activeSection === item.id
                   ? "border-brand-light-green-500/30 bg-brand-light-green-950/70 text-brand-light-green-300 hover:border-brand-light-green-400/50 hover:bg-brand-light-green-950/90"
                   : "border-brand-carbon-black-700 bg-brand-carbon-black-800 text-brand-alabaster-grey-500 hover:border-brand-carbon-black-500 hover:bg-brand-carbon-black-700 hover:text-brand-alabaster-grey-300"
@@ -200,7 +236,11 @@ export default function OperationsPage() {
       {activeSection === "cluster" ? <ClusterSection data={data} /> : null}
       {activeSection === "auth" ? <AuthSection data={data} /> : null}
       {activeSection === "metrics" ? (
-        <MetricsSection data={data} apiBaseUrl={apiBaseUrl} error={errors.metrics} />
+        <MetricsSection
+          data={data}
+          apiBaseUrl={apiBaseUrl}
+          error={errors.metrics}
+        />
       ) : null}
 
       {Object.values(errors).some(Boolean) ? (

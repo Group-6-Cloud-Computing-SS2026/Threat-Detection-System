@@ -28,7 +28,9 @@ export default function DetectionCard({
         className="flex w-full items-center gap-4 p-4 text-left"
         onClick={toggle}
       >
-        <div className={`${homeInnerFrameClass} h-16 w-16 shrink-0 overflow-hidden rounded-lg`}>
+        <div
+          className={`${homeInnerFrameClass} h-16 w-16 shrink-0 overflow-hidden rounded-lg`}
+        >
           {event.preview_image_url ? (
             <img
               className="h-full w-full object-cover"
@@ -132,8 +134,10 @@ export default function DetectionCard({
               {event.images.map((image) => (
                 <figure
                   key={image.id}
-                className={homeInnerFrameClass + " overflow-hidden rounded-lg"}
-              >
+                  className={
+                    homeInnerFrameClass + " overflow-hidden rounded-lg"
+                  }
+                >
                   <img
                     className="aspect-video w-full object-cover"
                     src={event.imageUrls?.[image.id]}

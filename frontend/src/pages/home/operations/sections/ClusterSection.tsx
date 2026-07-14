@@ -9,7 +9,7 @@ export default function ClusterSection({ data }: { data: ConsoleData }) {
         title="MPI history"
         subtitle="Last distributed runs from /cluster/mpi/history."
       >
-        <div className="overflow-hidden rounded-xl border border-brand-carbon-black-700">
+        <div className="border-brand-carbon-black-700 overflow-hidden rounded-xl border">
           <table className="w-full text-sm">
             <thead className="bg-brand-carbon-black-800">
               <tr>
@@ -29,7 +29,10 @@ export default function ClusterSection({ data }: { data: ConsoleData }) {
             </thead>
             <tbody>
               {(data.clusterHistory ?? []).map((run) => (
-                <tr key={run.id} className="border-brand-carbon-black-700 border-t">
+                <tr
+                  key={run.id}
+                  className="border-brand-carbon-black-700 border-t"
+                >
                   <td className="text-brand-alabaster-grey-300 px-4 py-3">
                     {formatDateTime(run.executed_at)}
                   </td>

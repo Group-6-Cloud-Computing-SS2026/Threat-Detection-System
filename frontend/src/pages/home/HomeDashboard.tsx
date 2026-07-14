@@ -115,8 +115,8 @@ export default function HomeDashboard() {
             Live detections, camera feed, and backend tools
           </h2>
           <p className="text-brand-alabaster-grey-600 mt-2 text-sm md:text-base">
-            Check recent detections here, then jump into operations or docs
-            when you need logs, nodes, metrics, or the API surface.
+            Check recent detections here, then jump into operations or docs when
+            you need logs, nodes, metrics, or the API surface.
           </p>
         </div>
 
@@ -132,16 +132,20 @@ export default function HomeDashboard() {
           <CameraFeed apiBaseUrl={apiBaseUrl} />
         </div>
 
-        <section className={`${homePanelClass} p-5`} data-aos="fade-left" data-aos-delay={120}>
+        <section
+          className={`${homePanelClass} p-5`}
+          data-aos="fade-left"
+          data-aos-delay={120}
+        >
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h2 className="font-nacelle text-brand-alabaster-grey-100 text-lg font-semibold">
-              Live detections
-            </h2>
-            <p className="text-brand-alabaster-grey-600 text-sm">
-              Updates every 10 seconds from /detections/recent.
-            </p>
-          </div>
+            <div>
+              <h2 className="font-nacelle text-brand-alabaster-grey-100 text-lg font-semibold">
+                Live detections
+              </h2>
+              <p className="text-brand-alabaster-grey-600 text-sm">
+                Updates every 10 seconds from /detections/recent.
+              </p>
+            </div>
             <button
               type="button"
               onClick={() => setAutoRefresh((value) => !value)}

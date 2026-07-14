@@ -70,7 +70,11 @@ export default function Features() {
                 a single, coordinated infrastructure.
               </p>
             </article>
-            <article data-aos="fade-up" data-aos-once="true" data-aos-delay={80}>
+            <article
+              data-aos="fade-up"
+              data-aos-once="true"
+              data-aos-delay={80}
+            >
               <svg
                 className="fill-brand-light-green-500 mb-3"
                 xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +92,11 @@ export default function Features() {
                 depends on a round trip to the cloud.
               </p>
             </article>
-            <article data-aos="fade-up" data-aos-once="true" data-aos-delay={160}>
+            <article
+              data-aos="fade-up"
+              data-aos-once="true"
+              data-aos-delay={160}
+            >
               <svg
                 className="fill-brand-brick-red-500 mb-3"
                 xmlns="http://www.w3.org/2000/svg"
@@ -130,7 +138,11 @@ export default function Features() {
                 students and researchers can rebuild the setup themselves.
               </p>
             </article>
-            <article data-aos="fade-up" data-aos-once="true" data-aos-delay={80}>
+            <article
+              data-aos="fade-up"
+              data-aos-once="true"
+              data-aos-delay={80}
+            >
               <svg
                 className="fill-brand-brick-red-500 mb-3"
                 xmlns="http://www.w3.org/2000/svg"
@@ -156,7 +168,11 @@ export default function Features() {
                 dashboard within seconds of detection.
               </p>
             </article>
-            <article data-aos="fade-up" data-aos-once="true" data-aos-delay={160}>
+            <article
+              data-aos="fade-up"
+              data-aos-once="true"
+              data-aos-delay={160}
+            >
               <svg
                 className="fill-brand-brick-red-500 mb-3"
                 xmlns="http://www.w3.org/2000/svg"

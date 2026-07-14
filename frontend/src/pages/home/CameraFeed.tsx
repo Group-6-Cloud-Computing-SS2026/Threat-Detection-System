@@ -25,7 +25,10 @@ export default function CameraFeed({ apiBaseUrl }: { apiBaseUrl: string }) {
 
   return (
     <section className={`${homePanelClass} p-5`} data-aos="fade-right">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3" data-aos="fade-up">
+      <div
+        className="mb-4 flex flex-wrap items-center justify-between gap-3"
+        data-aos="fade-up"
+      >
         <div>
           <h2 className="font-nacelle text-brand-alabaster-grey-100 text-lg font-semibold">
             Camera feed
@@ -41,7 +44,11 @@ export default function CameraFeed({ apiBaseUrl }: { apiBaseUrl: string }) {
         </span>
       </div>
 
-      <div className={`${homeInnerFrameClass} flex aspect-video items-center justify-center overflow-hidden rounded-xl`} data-aos="zoom-in" data-aos-delay={100}>
+      <div
+        className={`${homeInnerFrameClass} flex aspect-video items-center justify-center overflow-hidden rounded-xl`}
+        data-aos="zoom-in"
+        data-aos-delay={100}
+      >
         {imageSrc ? (
           <img
             className="h-full w-full object-cover"
@@ -60,7 +67,11 @@ export default function CameraFeed({ apiBaseUrl }: { apiBaseUrl: string }) {
         )}
       </div>
 
-      <div className="text-brand-alabaster-grey-600 mt-3 flex flex-wrap gap-5 text-xs" data-aos="fade-up" data-aos-delay={160}>
+      <div
+        className="text-brand-alabaster-grey-600 mt-3 flex flex-wrap gap-5 text-xs"
+        data-aos="fade-up"
+        data-aos-delay={160}
+      >
         <span>
           Latency:{" "}
           <strong className="text-brand-alabaster-grey-300 font-mono font-medium">

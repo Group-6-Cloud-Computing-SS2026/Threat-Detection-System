@@ -56,8 +56,9 @@ const router = createBrowserRouter([
           {
             path: "camera",
             lazy: async () => ({
-              Component: (await import("../pages/home/camera/CameraStreamPage.tsx"))
-                .default,
+              Component: (
+                await import("../pages/home/camera/CameraStreamPage.tsx")
+              ).default,
             }),
           },
           {
@@ -70,8 +71,9 @@ const router = createBrowserRouter([
           {
             path: "settings",
             lazy: async () => ({
-              Component: (await import("../pages/home/settings/SettingsPage.tsx"))
-                .default,
+              Component: (
+                await import("../pages/home/settings/SettingsPage.tsx")
+              ).default,
             }),
           },
           {
@@ -84,8 +86,9 @@ const router = createBrowserRouter([
           {
             path: "operations",
             lazy: async () => ({
-              Component: (await import("../pages/home/operations/OperationsPage.tsx"))
-                .default,
+              Component: (
+                await import("../pages/home/operations/OperationsPage.tsx")
+              ).default,
             }),
           },
         ],

@@ -1,9 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
-import {
-  homeInnerFrameClass,
-  homePanelClass,
-} from "../homeSurface.ts";
+import { homeInnerFrameClass, homePanelClass } from "../homeSurface.ts";
 
 type AmdahlRow = {
   wl: string;
@@ -68,7 +65,10 @@ type ChartCtor = {
     font: { family: string; size: number };
     color: string;
   };
-  new (canvas: HTMLCanvasElement, config: Record<string, unknown>): ChartInstance;
+  new (
+    canvas: HTMLCanvasElement,
+    config: Record<string, unknown>,
+  ): ChartInstance;
 };
 
 declare global {
@@ -88,41 +88,369 @@ const BRANDS = {
 };
 
 const amdahlRawData: AmdahlRow[] = [
-  { wl: "200x150", n: 1, s1: 0.005, p: 3.015, s2: 0.007, t: 3.027, sd: 0.71, sp: 1.0, eff: 100 },
-  { wl: "200x150", n: 2, s1: 0.003, p: 2.215, s2: 0.022, t: 2.24, sd: 0.45, sp: 1.35, eff: 68 },
-  { wl: "200x150", n: 4, s1: 0.003, p: 2.028, s2: 0.026, t: 2.057, sd: 0.01, sp: 1.47, eff: 37 },
-  { wl: "200x150", n: 8, s1: 0.003, p: 2.05, s2: 0.03, t: 2.083, sd: 0.01, sp: 1.45, eff: 18 },
-  { wl: "400x300", n: 1, s1: 0.003, p: 2.209, s2: 0.004, t: 2.216, sd: 0.45, sp: 1.0, eff: 100 },
-  { wl: "400x300", n: 2, s1: 0.003, p: 2.816, s2: 0.051, t: 2.87, sd: 0.45, sp: 0.77, eff: 39 },
-  { wl: "400x300", n: 4, s1: 0.003, p: 2.228, s2: 0.053, t: 2.284, sd: 0.46, sp: 0.97, eff: 24 },
-  { wl: "400x300", n: 8, s1: 0.003, p: 2.045, s2: 0.055, t: 2.103, sd: 0.01, sp: 1.05, eff: 13 },
-  { wl: "800x600", n: 1, s1: 0.003, p: 4.014, s2: 0.005, t: 4.022, sd: 0.0, sp: 1.0, eff: 100 },
-  { wl: "800x600", n: 2, s1: 0.003, p: 3.618, s2: 0.135, t: 3.756, sd: 0.54, sp: 1.07, eff: 54 },
-  { wl: "800x600", n: 4, s1: 0.003, p: 3.028, s2: 0.137, t: 3.168, sd: 0.01, sp: 1.27, eff: 32 },
-  { wl: "800x600", n: 8, s1: 0.003, p: 3.056, s2: 0.146, t: 3.205, sd: 0.02, sp: 1.26, eff: 16 },
-  { wl: "1600x1200", n: 1, s1: 0.003, p: 10.03, s2: 0.005, t: 10.038, sd: 0.71, sp: 1.0, eff: 100 },
-  { wl: "1600x1200", n: 2, s1: 0.003, p: 8.433, s2: 0.375, t: 8.811, sd: 0.91, sp: 1.14, eff: 57 },
-  { wl: "1600x1200", n: 4, s1: 0.003, p: 6.036, s2: 0.465, t: 6.504, sd: 0.02, sp: 1.54, eff: 39 },
-  { wl: "1600x1200", n: 8, s1: 0.003, p: 5.057, s2: 0.472, t: 5.532, sd: 0.02, sp: 1.81, eff: 23 },
-  { wl: "2000x1504", n: 8, s1: null, p: null, s2: null, t: 8.366, sd: 0.54, sp: null, eff: null },
-  { wl: "3200x2400", n: 1, s1: 0.003, p: 51.141, s2: 0.008, t: 51.152, sd: 3.55, sp: 1.0, eff: 100 },
-  { wl: "3200x2400", n: 2, s1: 0.003, p: 28.483, s2: 1.224, t: 29.71, sd: 1.66, sp: 1.72, eff: 86 },
-  { wl: "3200x2400", n: 4, s1: 0.003, p: 18.466, s2: 1.303, t: 19.772, sd: 0.89, sp: 2.59, eff: 65 },
-  { wl: "3200x2400", n: 8, s1: 0.003, p: 13.478, s2: 1.654, t: 15.135, sd: 0.5, sp: 3.38, eff: 42 },
-  { wl: "6400x4800", n: 1, s1: 0.0, p: 0.0, s2: 0.0, t: 0.0, sd: 0.0, sp: null, eff: null },
-  { wl: "6400x4800", n: 4, s1: 0.003, p: 172.707, s2: 5.473, t: 178.183, sd: 37.45, sp: null, eff: null },
-  { wl: "6400x4800", n: 8, s1: 0.004, p: 130.054, s2: 7.071, t: 137.129, sd: 42.19, sp: null, eff: null },
+  {
+    wl: "200x150",
+    n: 1,
+    s1: 0.005,
+    p: 3.015,
+    s2: 0.007,
+    t: 3.027,
+    sd: 0.71,
+    sp: 1.0,
+    eff: 100,
+  },
+  {
+    wl: "200x150",
+    n: 2,
+    s1: 0.003,
+    p: 2.215,
+    s2: 0.022,
+    t: 2.24,
+    sd: 0.45,
+    sp: 1.35,
+    eff: 68,
+  },
+  {
+    wl: "200x150",
+    n: 4,
+    s1: 0.003,
+    p: 2.028,
+    s2: 0.026,
+    t: 2.057,
+    sd: 0.01,
+    sp: 1.47,
+    eff: 37,
+  },
+  {
+    wl: "200x150",
+    n: 8,
+    s1: 0.003,
+    p: 2.05,
+    s2: 0.03,
+    t: 2.083,
+    sd: 0.01,
+    sp: 1.45,
+    eff: 18,
+  },
+  {
+    wl: "400x300",
+    n: 1,
+    s1: 0.003,
+    p: 2.209,
+    s2: 0.004,
+    t: 2.216,
+    sd: 0.45,
+    sp: 1.0,
+    eff: 100,
+  },
+  {
+    wl: "400x300",
+    n: 2,
+    s1: 0.003,
+    p: 2.816,
+    s2: 0.051,
+    t: 2.87,
+    sd: 0.45,
+    sp: 0.77,
+    eff: 39,
+  },
+  {
+    wl: "400x300",
+    n: 4,
+    s1: 0.003,
+    p: 2.228,
+    s2: 0.053,
+    t: 2.284,
+    sd: 0.46,
+    sp: 0.97,
+    eff: 24,
+  },
+  {
+    wl: "400x300",
+    n: 8,
+    s1: 0.003,
+    p: 2.045,
+    s2: 0.055,
+    t: 2.103,
+    sd: 0.01,
+    sp: 1.05,
+    eff: 13,
+  },
+  {
+    wl: "800x600",
+    n: 1,
+    s1: 0.003,
+    p: 4.014,
+    s2: 0.005,
+    t: 4.022,
+    sd: 0.0,
+    sp: 1.0,
+    eff: 100,
+  },
+  {
+    wl: "800x600",
+    n: 2,
+    s1: 0.003,
+    p: 3.618,
+    s2: 0.135,
+    t: 3.756,
+    sd: 0.54,
+    sp: 1.07,
+    eff: 54,
+  },
+  {
+    wl: "800x600",
+    n: 4,
+    s1: 0.003,
+    p: 3.028,
+    s2: 0.137,
+    t: 3.168,
+    sd: 0.01,
+    sp: 1.27,
+    eff: 32,
+  },
+  {
+    wl: "800x600",
+    n: 8,
+    s1: 0.003,
+    p: 3.056,
+    s2: 0.146,
+    t: 3.205,
+    sd: 0.02,
+    sp: 1.26,
+    eff: 16,
+  },
+  {
+    wl: "1600x1200",
+    n: 1,
+    s1: 0.003,
+    p: 10.03,
+    s2: 0.005,
+    t: 10.038,
+    sd: 0.71,
+    sp: 1.0,
+    eff: 100,
+  },
+  {
+    wl: "1600x1200",
+    n: 2,
+    s1: 0.003,
+    p: 8.433,
+    s2: 0.375,
+    t: 8.811,
+    sd: 0.91,
+    sp: 1.14,
+    eff: 57,
+  },
+  {
+    wl: "1600x1200",
+    n: 4,
+    s1: 0.003,
+    p: 6.036,
+    s2: 0.465,
+    t: 6.504,
+    sd: 0.02,
+    sp: 1.54,
+    eff: 39,
+  },
+  {
+    wl: "1600x1200",
+    n: 8,
+    s1: 0.003,
+    p: 5.057,
+    s2: 0.472,
+    t: 5.532,
+    sd: 0.02,
+    sp: 1.81,
+    eff: 23,
+  },
+  {
+    wl: "2000x1504",
+    n: 8,
+    s1: null,
+    p: null,
+    s2: null,
+    t: 8.366,
+    sd: 0.54,
+    sp: null,
+    eff: null,
+  },
+  {
+    wl: "3200x2400",
+    n: 1,
+    s1: 0.003,
+    p: 51.141,
+    s2: 0.008,
+    t: 51.152,
+    sd: 3.55,
+    sp: 1.0,
+    eff: 100,
+  },
+  {
+    wl: "3200x2400",
+    n: 2,
+    s1: 0.003,
+    p: 28.483,
+    s2: 1.224,
+    t: 29.71,
+    sd: 1.66,
+    sp: 1.72,
+    eff: 86,
+  },
+  {
+    wl: "3200x2400",
+    n: 4,
+    s1: 0.003,
+    p: 18.466,
+    s2: 1.303,
+    t: 19.772,
+    sd: 0.89,
+    sp: 2.59,
+    eff: 65,
+  },
+  {
+    wl: "3200x2400",
+    n: 8,
+    s1: 0.003,
+    p: 13.478,
+    s2: 1.654,
+    t: 15.135,
+    sd: 0.5,
+    sp: 3.38,
+    eff: 42,
+  },
+  {
+    wl: "6400x4800",
+    n: 1,
+    s1: 0.0,
+    p: 0.0,
+    s2: 0.0,
+    t: 0.0,
+    sd: 0.0,
+    sp: null,
+    eff: null,
+  },
+  {
+    wl: "6400x4800",
+    n: 4,
+    s1: 0.003,
+    p: 172.707,
+    s2: 5.473,
+    t: 178.183,
+    sd: 37.45,
+    sp: null,
+    eff: null,
+  },
+  {
+    wl: "6400x4800",
+    n: 8,
+    s1: 0.004,
+    p: 130.054,
+    s2: 7.071,
+    t: 137.129,
+    sd: 42.19,
+    sp: null,
+    eff: null,
+  },
 ];
 
 const gustRawData: GustRow[] = [
-  { set: "Gustafson Set 1", sz: "1600x600", n: 1, s1: 0.004, p: 5.62, s2: 0.006, t: 5.63, sd: 0.9, sp: 1.0, eff: 100 },
-  { set: "Gustafson Set 1", sz: "1600x1200", n: 2, s1: 0.003, p: 8.233, s2: 0.387, t: 8.623, sd: 1.11, sp: 1.95, eff: 98 },
-  { set: "Gustafson Set 1", sz: "3200x1200", n: 4, s1: 0.003, p: 9.449, s2: 0.772, t: 10.224, sd: 0.87, sp: 3.77, eff: 94 },
-  { set: "Gustafson Set 1", sz: "3200x2400", n: 8, s1: 0.004, p: 14.889, s2: 1.648, t: 16.541, sd: 1.31, sp: 7.3, eff: 91 },
-  { set: "Gustafson Set 2", sz: "3200x1200", n: 1, s1: 0.004, p: 14.441, s2: 0.005, t: 14.45, sd: 0.55, sp: 1.0, eff: 100 },
-  { set: "Gustafson Set 2", sz: "3200x2400", n: 2, s1: 0.003, p: 27.682, s2: 1.163, t: 28.848, sd: 1.33, sp: 1.96, eff: 98 },
-  { set: "Gustafson Set 2", sz: "4800x2400", n: 4, s1: 0.002, p: 27.492, s2: 1.655, t: 29.149, sd: 0.89, sp: 3.83, eff: 96 },
-  { set: "Gustafson Set 2", sz: "6400x4800", n: 8, s1: 0.004, p: 130.054, s2: 7.071, t: 137.129, sd: 42.19, sp: 7.64, eff: 95 },
+  {
+    set: "Gustafson Set 1",
+    sz: "1600x600",
+    n: 1,
+    s1: 0.004,
+    p: 5.62,
+    s2: 0.006,
+    t: 5.63,
+    sd: 0.9,
+    sp: 1.0,
+    eff: 100,
+  },
+  {
+    set: "Gustafson Set 1",
+    sz: "1600x1200",
+    n: 2,
+    s1: 0.003,
+    p: 8.233,
+    s2: 0.387,
+    t: 8.623,
+    sd: 1.11,
+    sp: 1.95,
+    eff: 98,
+  },
+  {
+    set: "Gustafson Set 1",
+    sz: "3200x1200",
+    n: 4,
+    s1: 0.003,
+    p: 9.449,
+    s2: 0.772,
+    t: 10.224,
+    sd: 0.87,
+    sp: 3.77,
+    eff: 94,
+  },
+  {
+    set: "Gustafson Set 1",
+    sz: "3200x2400",
+    n: 8,
+    s1: 0.004,
+    p: 14.889,
+    s2: 1.648,
+    t: 16.541,
+    sd: 1.31,
+    sp: 7.3,
+    eff: 91,
+  },
+  {
+    set: "Gustafson Set 2",
+    sz: "3200x1200",
+    n: 1,
+    s1: 0.004,
+    p: 14.441,
+    s2: 0.005,
+    t: 14.45,
+    sd: 0.55,
+    sp: 1.0,
+    eff: 100,
+  },
+  {
+    set: "Gustafson Set 2",
+    sz: "3200x2400",
+    n: 2,
+    s1: 0.003,
+    p: 27.682,
+    s2: 1.163,
+    t: 28.848,
+    sd: 1.33,
+    sp: 1.96,
+    eff: 98,
+  },
+  {
+    set: "Gustafson Set 2",
+    sz: "4800x2400",
+    n: 4,
+    s1: 0.002,
+    p: 27.492,
+    s2: 1.655,
+    t: 29.149,
+    sd: 0.89,
+    sp: 3.83,
+    eff: 96,
+  },
+  {
+    set: "Gustafson Set 2",
+    sz: "6400x4800",
+    n: 8,
+    s1: 0.004,
+    p: 130.054,
+    s2: 7.071,
+    t: 137.129,
+    sd: 42.19,
+    sp: 7.64,
+    eff: 95,
+  },
 ];
 
 const chartJsLoader = {
@@ -247,10 +575,10 @@ function useHorizontalDragScroll() {
 const amdahlMaxSpeedup = Math.max(
   ...amdahlRawData.map((row) => row.sp ?? 0),
 ).toFixed(2);
-const gustMaxSpeedup = Math.max(
-  ...gustRawData.map((row) => row.sp),
-).toFixed(2);
-const amdahlLowSignalRows = amdahlRawData.filter((row) => row.sp === null).length;
+const gustMaxSpeedup = Math.max(...gustRawData.map((row) => row.sp)).toFixed(2);
+const amdahlLowSignalRows = amdahlRawData.filter(
+  (row) => row.sp === null,
+).length;
 
 export default function Graphs() {
   const amdahlCanvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -427,7 +755,9 @@ export default function Graphs() {
       } catch (cause) {
         if (!active) return;
         setError(
-          cause instanceof Error ? cause.message : "Unable to load chart assets.",
+          cause instanceof Error
+            ? cause.message
+            : "Unable to load chart assets.",
         );
       }
     };
@@ -468,8 +798,8 @@ export default function Graphs() {
               Scaling results
             </h1>
             <p className="text-brand-alabaster-grey-600 mt-3 text-sm md:text-base">
-              Amdahl and Gustafson results, shown in a React page with the
-              same surface and chart styling as the rest of the app.
+              Amdahl and Gustafson results, shown in a React page with the same
+              surface and chart styling as the rest of the app.
             </p>
           </div>
 
@@ -479,7 +809,7 @@ export default function Graphs() {
                 key={item.label}
                 className="bg-brand-carbon-black-800/60 border-brand-carbon-black-700 rounded-xl border px-3 py-2"
               >
-                <div className="text-brand-alabaster-grey-600 text-[11px] uppercase tracking-[0.2em]">
+                <div className="text-brand-alabaster-grey-600 text-[11px] tracking-[0.2em] uppercase">
                   {item.label}
                 </div>
                 <div className="text-brand-alabaster-grey-100 mt-1 text-lg font-semibold tabular-nums">
@@ -490,10 +820,14 @@ export default function Graphs() {
           </div>
         </div>
 
-        <div className="bg-linear-to-r from-transparent via-brand-light-green-500/40 to-transparent h-px" />
+        <div className="via-brand-light-green-500/40 h-px bg-linear-to-r from-transparent to-transparent" />
       </header>
 
-      <section className="grid gap-4 lg:grid-cols-2" data-aos="fade-up" data-aos-delay={80}>
+      <section
+        className="grid gap-4 lg:grid-cols-2"
+        data-aos="fade-up"
+        data-aos-delay={80}
+      >
         <article className={chartCardClass}>
           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0">
@@ -504,7 +838,7 @@ export default function Graphs() {
                 Avg total time by node count.
               </p>
             </div>
-            <span className="text-brand-light-green-300 bg-brand-light-green-950/70 border-brand-light-green-500/20 rounded-full border px-2.5 py-1 text-[11px] font-medium self-start">
+            <span className="text-brand-light-green-300 bg-brand-light-green-950/70 border-brand-light-green-500/20 self-start rounded-full border px-2.5 py-1 text-[11px] font-medium">
               max speedup {amdahlMaxSpeedup}x
             </span>
           </div>
@@ -536,7 +870,7 @@ export default function Graphs() {
                 Avg total time by scaled workload.
               </p>
             </div>
-            <span className="text-brand-brick-red-300 bg-brand-brick-red-950/70 border-brand-brick-red-500/20 rounded-full border px-2.5 py-1 text-[11px] font-medium self-start">
+            <span className="text-brand-brick-red-300 bg-brand-brick-red-950/70 border-brand-brick-red-500/20 self-start rounded-full border px-2.5 py-1 text-[11px] font-medium">
               max speedup {gustMaxSpeedup}x
             </span>
           </div>
@@ -566,15 +900,15 @@ export default function Graphs() {
               Results tables
             </h2>
             <p className="text-brand-alabaster-grey-600 text-sm">
-              {amdahlLowSignalRows} Amdahl rows are missing speedup values and are
-              marked accordingly.
+              {amdahlLowSignalRows} Amdahl rows are missing speedup values and
+              are marked accordingly.
             </p>
           </div>
         </div>
 
         <article className={tableCardClass}>
           <div
-            className={`${homeInnerFrameClass} cursor-grab active:cursor-grabbing overflow-x-auto`}
+            className={`${homeInnerFrameClass} cursor-grab overflow-x-auto active:cursor-grabbing`}
             {...amdahlTableDrag}
           >
             <table className="min-w-[920px] border-collapse text-sm">
@@ -591,31 +925,31 @@ export default function Graphs() {
               </colgroup>
               <thead>
                 <tr className="bg-brand-carbon-black-800">
-                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-left uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-left tracking-[0.16em] whitespace-nowrap uppercase">
                     Workload
                   </th>
-                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-left uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-left tracking-[0.16em] whitespace-nowrap uppercase">
                     Nodes
                   </th>
-                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right tracking-[0.16em] whitespace-nowrap uppercase">
                     Avg Seq 1
                   </th>
-                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right tracking-[0.16em] whitespace-nowrap uppercase">
                     Avg Parallel
                   </th>
-                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right tracking-[0.16em] whitespace-nowrap uppercase">
                     Avg Seq 2
                   </th>
-                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right tracking-[0.16em] whitespace-nowrap uppercase">
                     Avg Total Time
                   </th>
-                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right tracking-[0.16em] whitespace-nowrap uppercase">
                     Std Dev
                   </th>
-                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right tracking-[0.16em] whitespace-nowrap uppercase">
                     Speedup
                   </th>
-                  <th className="text-brand-alabaster-grey-100 whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.16em]">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right tracking-[0.16em] whitespace-nowrap uppercase">
                     Efficiency
                   </th>
                 </tr>
@@ -677,7 +1011,7 @@ export default function Graphs() {
 
         <article className={tableCardClass}>
           <div
-            className={`${homeInnerFrameClass} cursor-grab active:cursor-grabbing overflow-x-auto`}
+            className={`${homeInnerFrameClass} cursor-grab overflow-x-auto active:cursor-grabbing`}
             {...gustTableDrag}
           >
             <table className="min-w-[1040px] border-collapse text-sm">
@@ -695,40 +1029,40 @@ export default function Graphs() {
               </colgroup>
               <thead>
                 <tr className="bg-brand-carbon-black-800">
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-left align-bottom uppercase leading-tight tracking-[0.16em] whitespace-nowrap">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-left align-bottom leading-tight tracking-[0.16em] whitespace-nowrap uppercase">
                     <span className="block">Set</span>
                     <span className="block">Description</span>
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-left align-bottom uppercase leading-tight tracking-[0.16em] whitespace-nowrap">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-left align-bottom leading-tight tracking-[0.16em] whitespace-nowrap uppercase">
                     Size
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-left align-bottom uppercase leading-tight tracking-[0.16em] whitespace-nowrap">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-left align-bottom leading-tight tracking-[0.16em] whitespace-nowrap uppercase">
                     Nodes
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom uppercase leading-tight tracking-[0.16em] whitespace-nowrap">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom leading-tight tracking-[0.16em] whitespace-nowrap uppercase">
                     <span className="block">Avg Seq</span>
                     <span className="block">1</span>
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom uppercase leading-tight tracking-[0.16em] whitespace-nowrap">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom leading-tight tracking-[0.16em] whitespace-nowrap uppercase">
                     <span className="block">Avg</span>
                     <span className="block">Parallel</span>
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom uppercase leading-tight tracking-[0.16em] whitespace-nowrap">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom leading-tight tracking-[0.16em] whitespace-nowrap uppercase">
                     <span className="block">Avg Seq</span>
                     <span className="block">2</span>
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom uppercase leading-tight tracking-[0.16em] whitespace-nowrap">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom leading-tight tracking-[0.16em] whitespace-nowrap uppercase">
                     <span className="block">Avg Total</span>
                     <span className="block">Time</span>
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom uppercase leading-tight tracking-[0.16em] whitespace-nowrap">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom leading-tight tracking-[0.16em] whitespace-nowrap uppercase">
                     Std Dev
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom uppercase leading-tight tracking-[0.16em] whitespace-nowrap">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom leading-tight tracking-[0.16em] whitespace-nowrap uppercase">
                     <span className="block">Scaled</span>
                     <span className="block">Speedup</span>
                   </th>
-                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom uppercase leading-tight tracking-[0.16em] whitespace-nowrap">
+                  <th className="text-brand-alabaster-grey-100 px-4 py-3 text-right align-bottom leading-tight tracking-[0.16em] whitespace-nowrap uppercase">
                     Efficiency
                   </th>
                 </tr>

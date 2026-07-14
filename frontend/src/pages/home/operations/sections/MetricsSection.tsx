@@ -52,14 +52,12 @@ export default function MetricsSection({
           <RawDetails label="Full payload" value={data.metrics} />
         </>
       ) : (
-        <div className="text-brand-alabaster-grey-600 rounded-xl border border-dashed border-brand-carbon-black-700 px-4 py-3 text-sm">
+        <div className="text-brand-alabaster-grey-600 border-brand-carbon-black-700 rounded-xl border border-dashed px-4 py-3 text-sm">
           Metrics endpoint not available or returned no payload.
         </div>
       )}
       {error ? (
-        <div className={`${operationsErrorClass} mt-4`}>
-          {error}
-        </div>
+        <div className={`${operationsErrorClass} mt-4`}>{error}</div>
       ) : null}
     </SectionCard>
   );

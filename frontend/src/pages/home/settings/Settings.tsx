@@ -32,7 +32,11 @@ export default function Settings() {
         </strong>
       </div>
 
-      <label className="mb-4 block space-y-1.5 text-sm" data-aos="fade-up" data-aos-delay={160}>
+      <label
+        className="mb-4 block space-y-1.5 text-sm"
+        data-aos="fade-up"
+        data-aos-delay={160}
+      >
         <span className="text-brand-alabaster-grey-500">API base URL</span>
         <input
           className="border-brand-carbon-black-700 bg-brand-carbon-black-800 text-brand-alabaster-grey-100 focus:border-brand-light-green-500 w-full rounded-lg border px-3 py-2 text-sm transition outline-none"
@@ -42,7 +46,11 @@ export default function Settings() {
         />
       </label>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap" data-aos="fade-up" data-aos-delay={220}>
+      <div
+        className="flex flex-col gap-3 sm:flex-row sm:flex-wrap"
+        data-aos="fade-up"
+        data-aos-delay={220}
+      >
         <Button
           type="button"
           size="sm"

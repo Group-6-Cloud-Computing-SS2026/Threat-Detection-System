@@ -79,7 +79,10 @@ export default function Search() {
 
   return (
     <>
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3" data-aos="fade-up">
+      <div
+        className="mb-4 flex flex-wrap items-center justify-between gap-3"
+        data-aos="fade-up"
+      >
         <div>
           <h2 className="font-nacelle text-brand-alabaster-grey-100 text-lg font-semibold">
             Search historical events
@@ -100,7 +103,11 @@ export default function Search() {
         </Button>
       </div>
 
-      <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3" data-aos="fade-up" data-aos-delay={100}>
+      <div
+        className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
+        data-aos="fade-up"
+        data-aos-delay={100}
+      >
         <label className={labelClass}>
           <span className={labelTextClass}>Event type</span>
           <input
@@ -221,7 +228,11 @@ export default function Search() {
         </label>
       </div>
 
-      <div className="mb-4 flex flex-wrap gap-3" data-aos="fade-up" data-aos-delay={180}>
+      <div
+        className="mb-4 flex flex-wrap gap-3"
+        data-aos="fade-up"
+        data-aos-delay={180}
+      >
         <Button
           type="button"
           size="sm"
@@ -232,12 +243,18 @@ export default function Search() {
       </div>
 
       {searchError ? (
-        <div className={`${homeInnerFrameClass} mb-4 rounded-lg px-3 py-2 text-sm text-brand-brick-red-300`}>
+        <div
+          className={`${homeInnerFrameClass} text-brand-brick-red-300 mb-4 rounded-lg px-3 py-2 text-sm`}
+        >
           {searchError}
         </div>
       ) : null}
 
-      <div className="text-brand-alabaster-grey-600 mb-3 flex flex-col gap-1 text-xs sm:flex-row sm:items-center sm:justify-between" data-aos="fade-up" data-aos-delay={220}>
+      <div
+        className="text-brand-alabaster-grey-600 mb-3 flex flex-col gap-1 text-xs sm:flex-row sm:items-center sm:justify-between"
+        data-aos="fade-up"
+        data-aos-delay={220}
+      >
         <span>{filterTotals.total} result(s)</span>
         <span>Showing {filteredEvents.length} item(s)</span>
       </div>

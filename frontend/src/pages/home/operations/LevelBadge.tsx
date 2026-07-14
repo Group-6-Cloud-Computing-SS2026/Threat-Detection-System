@@ -10,9 +10,10 @@ export default function LevelBadge({ level }: { level: string }) {
           : "bg-brand-carbon-black-700 text-brand-alabaster-grey-400";
 
   return (
-    <span className={`rounded-full px-2.5 py-1 text-[11px] font-medium ${className}`}>
+    <span
+      className={`rounded-full px-2.5 py-1 text-[11px] font-medium ${className}`}
+    >
       {key}
     </span>
   );
 }
-

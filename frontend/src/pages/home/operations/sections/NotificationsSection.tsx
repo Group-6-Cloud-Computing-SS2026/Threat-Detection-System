@@ -17,7 +17,11 @@ export default function NotificationsSection({
     <SectionCard
       title="Notifications"
       subtitle="Delivery status, retry counts, and payload summaries from /notifications."
-      action={<StatusBadge status={`${data.summary?.unread_notifications ?? 0} unread`} />}
+      action={
+        <StatusBadge
+          status={`${data.summary?.unread_notifications ?? 0} unread`}
+        />
+      }
     >
       <div className="space-y-3">
         {(data.notifications?.items ?? []).map((item) => (
@@ -36,7 +40,7 @@ export default function NotificationsSection({
                 {item.channel} · retries {item.retry_count}
               </span>
             </summary>
-            <div className="border-brand-carbon-black-700 border-t space-y-3 p-4">
+            <div className="border-brand-carbon-black-700 space-y-3 border-t p-4">
               <p className="text-brand-alabaster-grey-300 text-sm">
                 {item.message_body}
               </p>
@@ -65,9 +69,7 @@ export default function NotificationsSection({
         ))}
       </div>
       {error ? (
-        <div className={`${operationsErrorClass} mt-4`}>
-          {error}
-        </div>
+        <div className={`${operationsErrorClass} mt-4`}>{error}</div>
       ) : null}
     </SectionCard>
   );

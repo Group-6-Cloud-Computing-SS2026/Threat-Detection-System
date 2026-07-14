@@ -11,7 +11,7 @@ export default function StatCard({
 }) {
   return (
     <div className={`${homePanelClass} p-4`}>
-      <div className="text-brand-alabaster-grey-600 text-[11px] uppercase tracking-[0.18em]">
+      <div className="text-brand-alabaster-grey-600 text-[11px] tracking-[0.18em] uppercase">
         {label}
       </div>
       <div className="text-brand-alabaster-grey-100 mt-1 text-2xl font-semibold tabular-nums">
@@ -21,4 +21,3 @@ export default function StatCard({
     </div>
   );
 }
-

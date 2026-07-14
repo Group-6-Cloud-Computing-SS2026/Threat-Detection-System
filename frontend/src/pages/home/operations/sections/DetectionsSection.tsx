@@ -15,7 +15,9 @@ export default function DetectionsSection({
   error?: string;
 }) {
   const detections = data.detections ?? [];
-  const acknowledgedCount = detections.filter((item) => item.acknowledged).length;
+  const acknowledgedCount = detections.filter(
+    (item) => item.acknowledged,
+  ).length;
   const highSeverityCount = detections.filter((item) =>
     ["high", "critical"].includes(item.severity.toLowerCase()),
   ).length;
@@ -26,7 +28,9 @@ export default function DetectionsSection({
       subtitle="Latest events from /detections/recent with preview images and acknowledgement state."
       action={
         <StatusBadge
-          status={String(data.summary?.detection_stats.unacknowledged_count ?? 0)}
+          status={String(
+            data.summary?.detection_stats.unacknowledged_count ?? 0,
+          )}
         />
       }
     >
@@ -38,7 +42,9 @@ export default function DetectionsSection({
         />
         <StatCard
           label="Unacknowledged"
-          value={String(data.summary?.detection_stats.unacknowledged_count ?? 0)}
+          value={String(
+            data.summary?.detection_stats.unacknowledged_count ?? 0,
+          )}
           detail="Needs operator review"
         />
         <StatCard
@@ -72,7 +78,7 @@ export default function DetectionsSection({
                       className="h-16 w-20 shrink-0 rounded-lg object-cover"
                     />
                   ) : (
-                    <div className="bg-brand-carbon-black-700 flex h-16 w-20 shrink-0 items-center justify-center rounded-lg text-[10px] text-brand-alabaster-grey-600">
+                    <div className="bg-brand-carbon-black-700 text-brand-alabaster-grey-600 flex h-16 w-20 shrink-0 items-center justify-center rounded-lg text-[10px]">
                       No image
                     </div>
                   )}
@@ -100,7 +106,7 @@ export default function DetectionsSection({
 
                 <div className="grid min-w-[12rem] grid-cols-2 gap-2 sm:min-w-[14rem]">
                   <div>
-                    <div className="text-brand-alabaster-grey-600 text-[11px] uppercase tracking-[0.18em]">
+                    <div className="text-brand-alabaster-grey-600 text-[11px] tracking-[0.18em] uppercase">
                       Confidence
                     </div>
                     <div className="text-brand-alabaster-grey-100 mt-1 text-lg font-semibold tabular-nums">
@@ -108,7 +114,7 @@ export default function DetectionsSection({
                     </div>
                   </div>
                   <div>
-                    <div className="text-brand-alabaster-grey-600 text-[11px] uppercase tracking-[0.18em]">
+                    <div className="text-brand-alabaster-grey-600 text-[11px] tracking-[0.18em] uppercase">
                       Sensor
                     </div>
                     <div className="text-brand-alabaster-grey-100 mt-1 truncate text-sm font-medium">
@@ -120,15 +126,13 @@ export default function DetectionsSection({
             </article>
           ))
         ) : (
-          <div className="text-brand-alabaster-grey-600 rounded-xl border border-dashed border-brand-carbon-black-700 px-4 py-3 text-sm">
+          <div className="text-brand-alabaster-grey-600 border-brand-carbon-black-700 rounded-xl border border-dashed px-4 py-3 text-sm">
             No detections available.
           </div>
         )}
       </div>
       {error ? (
-        <div className={`${operationsErrorClass} mt-4`}>
-          {error}
-        </div>
+        <div className={`${operationsErrorClass} mt-4`}>{error}</div>
       ) : null}
     </SectionCard>
   );
