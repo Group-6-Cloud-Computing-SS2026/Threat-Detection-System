@@ -20,13 +20,11 @@ export default function DocsHero() {
             </span>
           </div>
           <h1 className="gradient-text font-nacelle text-brand-alabaster-grey-100 mb-4 text-4xl leading-16 font-semibold md:text-5xl">
-            Documentation built for the edge pipeline
+            Project documentation
           </h1>
           <p className="text-brand-alabaster-grey-600/80 mt-5 max-w-2xl text-lg">
-            This page is the entry point for the project documentation. It
-            summarizes the moving parts, shows the core workflow, and sends you
-            to the full project docs when you need the complete setup and
-            deployment notes.
+            Start here for setup notes, architecture, workflows, and the full
+            project documentation when you need more detail.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -36,10 +34,10 @@ export default function DocsHero() {
               target="_blank"
               rel="noreferrer"
             >
-              Open Full Docs
+              Open docs
             </Button>
             <Button variant="secondary" className="bg-transparent" href="/">
-              Back to Home
+              Back home
             </Button>
           </div>
         </div>
