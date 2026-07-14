@@ -13,7 +13,9 @@ export default function CameraStreamPage() {
         content="Direct MQTT preview of the live camera stream."
       />
 
-      <CameraStream />
+        <section className="border-brand-carbon-black-800 bg-brand-carbon-black-900/60 rounded-2xl border p-5">
+            <CameraStream />
+        </section>
     </>
   );
 }

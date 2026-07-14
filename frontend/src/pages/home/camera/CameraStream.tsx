@@ -18,7 +18,7 @@ export default function CameraStream() {
   const connecting = status === "connecting";
 
   return (
-    <section className="border-brand-carbon-black-800 bg-brand-carbon-black-900/60 rounded-2xl border p-5">
+    <>
       <div className="mb-4">
         <h2 className="font-nacelle text-brand-alabaster-grey-100 text-lg font-semibold">
           Camera stream
@@ -76,6 +76,6 @@ export default function CameraStream() {
           </div>
         )}
       </div>
-    </section>
+    </>
   );
 }
