@@ -95,8 +95,8 @@ export default function OperationsPage() {
   return (
     <div className="space-y-6">
       <section className={`${homePanelClass} p-5 md:p-6`} data-aos="fade-up">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-3xl space-y-4">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+          <div className="max-w-3xl space-y-4 self-start">
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-brand-light-green-300 bg-brand-light-green-950/70 border-brand-light-green-500/20 rounded-full border px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.18em]">
                 Backend console
@@ -105,7 +105,7 @@ export default function OperationsPage() {
                 {loading ? "Refreshing" : "Live"}
               </span>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 mb-8">
               <h1 className="text-brand-alabaster-grey-100 text-3xl font-semibold md:text-4xl">
                 Backend operations
               </h1>
@@ -135,7 +135,7 @@ export default function OperationsPage() {
                 Open Swagger UI
               </Button>
               <Button
-                className="cursor-pointer transition-transform hover:-translate-y-px"
+                className="transition-transform hover:-translate-y-px"
                 variant="secondary"
                 onClick={() => void refresh()}
               >
