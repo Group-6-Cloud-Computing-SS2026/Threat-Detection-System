@@ -1,0 +1,16 @@
+import Search from "./Search.tsx";
+
+export default function SearchPage() {
+  return (
+    <>
+      <title>Search | Threat Detection System</title>
+      <meta property="og:title" content="Search | Threat Detection System" />
+      <meta
+        name="description"
+        content="Search and filter historical detection events."
+      />
+
+      <Search />
+    </>
+  );
+}
