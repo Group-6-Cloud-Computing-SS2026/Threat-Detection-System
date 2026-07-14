@@ -38,8 +38,6 @@ export default function HeroHome() {
                   <Button
                     variant="github"
                     href="/auth"
-                    target="_blank"
-                    rel="noreferrer"
                     className="w-full sm:w-auto"
                   >
                     Open Dashboard
