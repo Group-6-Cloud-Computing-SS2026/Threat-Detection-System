@@ -5,7 +5,7 @@ let aosInitialized = false;
 
 export const aosOptions: AosOptions = {
   once: false,
-  disable: "phone",
+  disable: () => window.innerWidth < 768,
   duration: 600,
   easing: "ease-out-sine",
 };
