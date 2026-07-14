@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useState } from "react";
 import { NavLink } from "react-router";
 import { useAuth } from "../auth/AuthContext.tsx";
 import {
@@ -20,14 +21,35 @@ const GRAFANA_URL = new URL(
 );
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-  `flex shrink-0 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition ${
+  `flex w-full shrink-0 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition ${
     isActive
       ? "bg-brand-light-green-950 text-brand-light-green-400"
       : "text-brand-alabaster-grey-600 hover:bg-brand-carbon-black-800 hover:text-brand-alabaster-grey-100"
   }`;
 
 const externalLinkClass =
-  "flex shrink-0 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-brand-alabaster-grey-600 transition hover:bg-brand-carbon-black-800 hover:text-brand-alabaster-grey-100";
+  "flex w-full shrink-0 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-brand-alabaster-grey-600 transition hover:bg-brand-carbon-black-800 hover:text-brand-alabaster-grey-100";
+
+function ChevronDownIcon({
+  className = "",
+}: {
+  className?: string;
+}) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
 
 function SidebarNavLink({
   to,
@@ -43,7 +65,7 @@ function SidebarNavLink({
       to={to}
       end={end}
       className={({ isActive, isPending }) =>
-        `flex shrink-0 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition ${
+        `flex w-full shrink-0 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition ${
           isActive
             ? "bg-brand-light-green-950 text-brand-light-green-400"
             : isPending
@@ -67,25 +89,47 @@ function SidebarNavLink({
 export default function HomeSidebar() {
   const { auth, logout } = useAuth();
   const { apiBaseUrl } = useApiSettings();
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const swaggerUrl = `${apiBaseUrl.replace(/\/api\/v1\/?$/, "").replace(/\/$/, "")}/docs`;
 
   return (
     <aside className="border-brand-carbon-black-800/80 bg-[linear-gradient(180deg,rgba(18,18,18,0.98),rgba(8,8,8,0.98))] flex shrink-0 flex-col border-b md:sticky md:top-0 md:h-screen md:w-64 md:border-r md:border-b-0">
       <div className="border-brand-carbon-black-800/80 flex items-center justify-between gap-3 border-b p-4 md:block md:border-b md:p-5">
-        <NavLink to="/landing">
-          <img
-            src="/images/wordmark-dark.svg"
-            alt="ThreatOff"
-            className="h-22 w-auto"
+        <div className="flex min-w-0 flex-1 flex-col items-start gap-2">
+          <NavLink to="/landing">
+            <img
+              src="/images/wordmark-dark.svg"
+              alt="ThreatOff"
+              className="h-22 w-auto"
+            />
+          </NavLink>
+          <p className="text-brand-alabaster-grey-600 mt-0 text-xs tracking-wide uppercase md:mt-3">
+            Surveillance dashboard
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setMobileNavOpen((value) => !value)}
+          aria-expanded={mobileNavOpen}
+          aria-controls="home-sidebar-nav"
+          className="text-brand-alabaster-grey-300 hover:bg-brand-carbon-black-800 inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-lg transition md:hidden"
+        >
+          <ChevronDownIcon
+            className={`h-4 w-4 transition-transform ${
+              mobileNavOpen ? "rotate-180" : "rotate-0"
+            }`}
           />
-        </NavLink>
-        <p className="text-brand-alabaster-grey-600 mt-0 text-xs tracking-wide uppercase md:mt-3">
-          Surveillance dashboard
-        </p>
+        </button>
       </div>
 
-      <nav className="flex flex-1 flex-row gap-1 overflow-x-auto p-3 md:flex-col md:overflow-visible">
-        <div className="flex flex-row gap-1 md:flex-col">
+      <nav
+        id="home-sidebar-nav"
+        className={`flex flex-1 flex-col p-3 md:flex md:overflow-visible md:gap-1 ${
+          mobileNavOpen ? "flex" : "hidden"
+        }`}
+      >
+        <div className="flex flex-col gap-0.5 md:gap-1">
           <p className="text-brand-alabaster-grey-600 hidden px-3 pb-1 text-[11px] font-semibold tracking-wider uppercase md:block">
             Dashboard
           </p>
@@ -103,7 +147,7 @@ export default function HomeSidebar() {
           </SidebarNavLink>
         </div>
 
-        <div className="flex flex-row gap-1 md:mt-6 md:flex-col">
+        <div className="flex flex-col gap-0.5 md:gap-1 md:mt-6">
           <p className="text-brand-alabaster-grey-600 hidden px-3 pb-1 text-[11px] font-semibold tracking-wider uppercase md:block">
             System
           </p>
