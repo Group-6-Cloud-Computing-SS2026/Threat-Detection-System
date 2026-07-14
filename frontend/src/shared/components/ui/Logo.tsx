@@ -10,7 +10,7 @@ export default function Logo() {
     >
       <img
         src="/favicon.svg"
-        alt="ThreatOff"
+        alt=""
         width={32}
         height={32}
         className="h-8 w-8"

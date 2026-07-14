@@ -14,7 +14,7 @@ export default function PageIllustration({
           src="/images/page-illustration.svg"
           width={846}
           height={594}
-          alt="Page illustration"
+          alt=""
         />
       </div>
       {multiple && (
@@ -28,7 +28,7 @@ export default function PageIllustration({
               src="/images/blurred-shape-gray.svg"
               width={760}
               height={668}
-              alt="Blurred shape"
+              alt=""
             />
           </div>
           <div
@@ -40,7 +40,7 @@ export default function PageIllustration({
               src="/images/blurred-shape.svg"
               width={760}
               height={668}
-              alt="Blurred shape"
+              alt=""
             />
           </div>
         </>
