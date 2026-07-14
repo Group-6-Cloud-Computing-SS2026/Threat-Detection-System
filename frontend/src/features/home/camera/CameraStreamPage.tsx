@@ -1,0 +1,19 @@
+import CameraStream from "./CameraStream.tsx";
+
+export default function CameraStreamPage() {
+  return (
+    <>
+      <title>Camera Stream | Threat Detection System</title>
+      <meta
+        property="og:title"
+        content="Camera Stream | Threat Detection System"
+      />
+      <meta
+        name="description"
+        content="Direct MQTT preview of the live camera stream."
+      />
+
+      <CameraStream />
+    </>
+  );
+}
