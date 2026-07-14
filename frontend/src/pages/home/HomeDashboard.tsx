@@ -7,7 +7,7 @@ import type { CardState, DetectionEvent } from "../../shared/types";
 import { useApiSettings } from "./useApiSettings.ts";
 import { toCardState, useDetectionDetailLoader } from "./useDetectionCards.ts";
 
-export default function Overview() {
+export default function HomeDashboard() {
   const { auth } = useAuth();
   const { apiBaseUrl } = useApiSettings();
   const token = auth?.token;

@@ -1,4 +1,4 @@
-import Overview from "./Overview.tsx";
+import HomeDashboard from "./HomeDashboard.tsx";
 
 export default function HomePage() {
   return (
@@ -10,7 +10,7 @@ export default function HomePage() {
         content="Overview dashboard for the Threat Detection System."
       />
 
-      <Overview />
+      <HomeDashboard />
     </>
   );
 }
