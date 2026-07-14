@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { AuthMode } from "../types";
+import type { AuthMode } from "../../shared/types";
 
 export function useAuthMode(initialMode: AuthMode) {
   const [mode, setMode] = useState<AuthMode>(initialMode);

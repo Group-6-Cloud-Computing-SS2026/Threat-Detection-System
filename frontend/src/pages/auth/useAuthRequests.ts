@@ -3,7 +3,7 @@ import { useState } from "react";
 import {
   loginWithCredentials,
   registerAccount,
-} from "../../pages/auth/authApi.ts";
+} from "./authApi.ts";
 
 type AuthRequestsDeps = {
   apiBaseUrl: string;
