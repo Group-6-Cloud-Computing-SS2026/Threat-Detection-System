@@ -5,12 +5,14 @@ import {
   IconActivity,
   IconBarChart,
   IconCamera,
+  IconFileCode,
   IconDocs,
   IconGrafana,
   IconLogout,
   IconSearch,
   IconSettings,
 } from "../../shared/components/ui/icons/NavIcons.tsx";
+import { useApiSettings } from "./useApiSettings.ts";
 
 const GRAFANA_URL = new URL(
   "http://192.168.1.50:3000/d/rpi-cluster-v4/raspberry-pi-cluster-e28094-monitoring?orgId=1&refresh=1m",
@@ -63,6 +65,8 @@ function SidebarNavLink({
 
 export default function HomeSidebar() {
   const { auth, logout } = useAuth();
+  const { apiBaseUrl } = useApiSettings();
+  const swaggerUrl = `${apiBaseUrl.replace(/\/api\/v1\/?$/, "").replace(/\/$/, "")}/docs`;
 
   return (
     <aside className="border-brand-carbon-black-800/80 bg-[linear-gradient(180deg,rgba(18,18,18,0.98),rgba(8,8,8,0.98))] flex shrink-0 flex-col border-b md:sticky md:top-0 md:h-screen md:w-64 md:border-r md:border-b-0">
@@ -121,6 +125,14 @@ export default function HomeSidebar() {
           >
             <IconGrafana className="h-4 w-4 shrink-0 opacity-70" />
             Grafana
+          </a>
+          <a
+              href={swaggerUrl}
+              target="_blank"
+              className={externalLinkClass}
+          >
+            <IconFileCode className="h-4 w-4 shrink-0 opacity-70" />
+            API docs
           </a>
         </div>
       </nav>
