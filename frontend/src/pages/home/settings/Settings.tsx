@@ -3,6 +3,7 @@ import { useAuth } from "../../auth/AuthContext.tsx";
 import Button from "../../../shared/components/ui/Button.tsx";
 import { DEFAULT_API_BASE_URL } from "../api.ts";
 import { useApiSettings } from "../useApiSettings.ts";
+import { homeInnerFrameClass } from "../homeSurface.ts";
 
 export default function Settings() {
   const { auth, logout } = useAuth();
@@ -20,7 +21,9 @@ export default function Settings() {
         </p>
       </div>
 
-      <div className="bg-brand-carbon-black-800/60 text-brand-alabaster-grey-400 mb-4 rounded-lg px-3 py-2 text-sm">
+      <div
+        className={`${homeInnerFrameClass} text-brand-alabaster-grey-400 mb-4 rounded-lg px-3 py-2 text-sm`}
+      >
         Signed in as{" "}
         <strong className="text-brand-alabaster-grey-100">
           {auth?.username}

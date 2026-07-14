@@ -3,6 +3,7 @@ import { useAuth } from "../auth/AuthContext.tsx";
 import { apiFetch } from "./api.ts";
 import CameraFeed from "./CameraFeed.tsx";
 import DetectionCard from "./DetectionCard.tsx";
+import { homePanelClass } from "./homeSurface.ts";
 import type { CardState, DetectionEvent } from "../../shared/types";
 import { useApiSettings } from "./useApiSettings.ts";
 import { toCardState, useDetectionDetailLoader } from "./useDetectionCards.ts";
@@ -102,7 +103,7 @@ export default function HomeDashboard() {
       <div className="grid gap-6 xl:grid-cols-2">
         <CameraFeed apiBaseUrl={apiBaseUrl} />
 
-        <section className="border-brand-carbon-black-800 bg-brand-carbon-black-900/60 rounded-2xl border p-5">
+        <section className={`${homePanelClass} p-5`}>
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 className="font-nacelle text-brand-alabaster-grey-100 text-lg font-semibold">
@@ -186,7 +187,7 @@ function StatTile({
   tone?: "default" | "danger";
 }) {
   return (
-    <div className="border-brand-carbon-black-800 bg-brand-carbon-black-900/60 rounded-2xl border p-4">
+    <div className={`${homePanelClass} p-4`}>
       <span className="text-brand-alabaster-grey-600 text-xs font-medium tracking-wide uppercase">
         {label}
       </span>

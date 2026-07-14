@@ -15,6 +15,7 @@ import type {
   QueryState,
 } from "../../../shared/types";
 import { useApiSettings } from "../useApiSettings.ts";
+import { homeInnerFrameClass } from "../homeSurface.ts";
 import { toCardState, useDetectionDetailLoader } from "../useDetectionCards.ts";
 
 const inputClass =
@@ -230,7 +231,7 @@ export default function Search() {
       </div>
 
       {searchError ? (
-        <div className="bg-brand-brick-red-950 text-brand-brick-red-300 mb-4 rounded-lg px-3 py-2 text-sm">
+        <div className={`${homeInnerFrameClass} mb-4 rounded-lg px-3 py-2 text-sm text-brand-brick-red-300`}>
           {searchError}
         </div>
       ) : null}

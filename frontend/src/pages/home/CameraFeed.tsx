@@ -1,6 +1,7 @@
 import { IconCamera } from "../../shared/components/ui/icons/NavIcons.tsx";
 import { useCameraStream } from "./useCameraStream.ts";
 import { useAuth } from "../auth/AuthContext.tsx";
+import { homeInnerFrameClass, homePanelClass } from "./homeSurface.ts";
 
 const STATUS_STYLES: Record<string, string> = {
   connected: "bg-brand-light-green-950 text-brand-light-green-400",
@@ -22,7 +23,7 @@ export default function CameraFeed({ apiBaseUrl }: { apiBaseUrl: string }) {
   );
 
   return (
-    <section className="border-brand-carbon-black-800 bg-brand-carbon-black-900/60 rounded-2xl border p-5">
+    <section className={`${homePanelClass} p-5`}>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="font-nacelle text-brand-alabaster-grey-100 text-lg font-semibold">
@@ -39,7 +40,7 @@ export default function CameraFeed({ apiBaseUrl }: { apiBaseUrl: string }) {
         </span>
       </div>
 
-      <div className="border-brand-carbon-black-800 bg-brand-pitch-black-500 flex aspect-video items-center justify-center overflow-hidden rounded-xl border">
+      <div className={`${homeInnerFrameClass} flex aspect-video items-center justify-center overflow-hidden rounded-xl`}>
         {imageSrc ? (
           <img
             className="h-full w-full object-cover"

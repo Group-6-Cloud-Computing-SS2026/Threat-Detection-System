@@ -1,6 +1,7 @@
 import { IconCamera } from "../../../shared/components/ui/icons/NavIcons.tsx";
 import Button from "../../../shared/components/ui/Button.tsx";
 import { useMqttCameraStream } from "./useMqttCameraStream.ts";
+import { homeInnerFrameClass } from "../homeSurface.ts";
 
 export default function CameraStream() {
   const {
@@ -58,7 +59,7 @@ export default function CameraStream() {
         </Button>
       </div>
 
-      <div className="border-brand-carbon-black-800 bg-brand-pitch-black-500 flex aspect-video items-center justify-center overflow-hidden rounded-xl border">
+      <div className={`${homeInnerFrameClass} flex aspect-video items-center justify-center overflow-hidden rounded-xl`}>
         {imageSrc ? (
           <img
             className="h-full w-full object-contain"

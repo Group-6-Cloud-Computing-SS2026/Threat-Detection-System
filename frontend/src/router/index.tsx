@@ -12,7 +12,7 @@ import SettingsPage from "../pages/home/settings/SettingsPage.tsx";
 import GraphsPage from "../pages/home/graphs/GraphsPage.tsx";
 import CameraStreamPage from "../pages/home/camera/CameraStreamPage.tsx";
 import LandingPage from "../pages/landing/LandingPage.tsx";
-import RequireAuth from "./RequireAuth.tsx";
+// import RequireAuth from "./RequireAuth.tsx";
 
 const router = createBrowserRouter([
   {
@@ -46,7 +46,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    Component: RequireAuth,
+    // FIXME: add Component: RequireAuth,
     ErrorBoundary: RouteErrorPage,
     children: [
       {

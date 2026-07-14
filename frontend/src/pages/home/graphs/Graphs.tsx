@@ -1,3 +1,5 @@
+import { homeInnerFrameClass } from "../homeSurface.ts";
+
 export default function Graphs() {
   return (
     <>
@@ -13,7 +15,7 @@ export default function Graphs() {
       <iframe
         src="amdahl-gustafson-graphs.html"
         title="Scaling law results"
-        className="border-brand-carbon-black-800 bg-brand-pitch-black-500 flex-1 rounded-xl border"
+        className={`${homeInnerFrameClass} flex-1 rounded-xl`}
       />
     </>
   );

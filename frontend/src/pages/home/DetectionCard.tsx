@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { formatDateTime, severityClasses } from "./api.ts";
 import type { CardState } from "../../shared/types";
+import { homeInnerFrameClass, homePanelHoverClass } from "./homeSurface.ts";
 
 export default function DetectionCard({
   event,
@@ -21,13 +22,13 @@ export default function DetectionCard({
   }
 
   return (
-    <article className="border-brand-carbon-black-800 bg-brand-carbon-black-900/60 overflow-hidden rounded-2xl border">
+    <article className={homePanelHoverClass}>
       <button
         type="button"
         className="flex w-full items-center gap-4 p-4 text-left"
         onClick={toggle}
       >
-        <div className="bg-brand-carbon-black-800 h-16 w-16 shrink-0 overflow-hidden rounded-lg">
+        <div className={`${homeInnerFrameClass} h-16 w-16 shrink-0 overflow-hidden rounded-lg`}>
           {event.preview_image_url ? (
             <img
               className="h-full w-full object-cover"
@@ -72,7 +73,7 @@ export default function DetectionCard({
       </button>
 
       {expanded ? (
-        <div className="border-brand-carbon-black-800 space-y-4 border-t p-4">
+        <div className="border-brand-carbon-black-700/70 space-y-4 border-t p-4">
           <dl className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
             <div>
               <dt className="text-brand-alabaster-grey-600 text-xs">
@@ -127,8 +128,8 @@ export default function DetectionCard({
               {event.images.map((image) => (
                 <figure
                   key={image.id}
-                  className="border-brand-carbon-black-800 overflow-hidden rounded-lg border"
-                >
+                className={homeInnerFrameClass + " overflow-hidden rounded-lg"}
+              >
                   <img
                     className="aspect-video w-full object-cover"
                     src={event.imageUrls?.[image.id]}
