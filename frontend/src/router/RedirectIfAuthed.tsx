@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router";
-import { useAuth } from "../features/auth/AuthContext.tsx";
+import { useAuth } from "../pages/auth/AuthContext.tsx";
 
 export default function RedirectIfAuthed() {
   const { isAuthenticated } = useAuth();
