@@ -194,7 +194,7 @@ function useHorizontalDragScroll() {
   });
 
   const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (event.pointerType !== "mouse" || event.button !== 0) return;
+    if (event.pointerType === "mouse" && event.button !== 0) return;
     const target = event.currentTarget;
     if (target.scrollWidth <= target.clientWidth) return;
 
@@ -569,10 +569,10 @@ export default function Graphs() {
 
         <article className={tableCardClass}>
           <div
-            className={`${homeInnerFrameClass} cursor-grab overflow-x-auto`}
+            className={`${homeInnerFrameClass} cursor-grab active:cursor-grabbing overflow-x-auto`}
             {...amdahlTableDrag}
           >
-            <table className="min-w-[920px] border-collapse text-sm lg:w-full lg:min-w-0 lg:table-fixed">
+            <table className="min-w-[920px] border-collapse text-sm">
               <colgroup>
                 <col className="lg:w-[16%]" />
                 <col className="lg:w-[8%]" />
@@ -672,10 +672,10 @@ export default function Graphs() {
 
         <article className={tableCardClass}>
           <div
-            className={`${homeInnerFrameClass} cursor-grab overflow-x-auto`}
+            className={`${homeInnerFrameClass} cursor-grab active:cursor-grabbing overflow-x-auto`}
             {...gustTableDrag}
           >
-            <table className="min-w-[1040px] border-collapse text-sm lg:w-full lg:min-w-0 lg:table-fixed">
+            <table className="min-w-[1040px] border-collapse text-sm">
               <colgroup>
                 <col className="lg:w-[14%]" />
                 <col className="lg:w-[11%]" />
