@@ -5,7 +5,7 @@ import type {
 } from "react";
 import { Link } from "react-router";
 
-type Variant = "primary" | "secondary" | "github";
+type Variant = "primary" | "secondary" | "github" | "danger";
 type Size = "sm" | "md";
 type DuotoneVariant = Exclude<Variant, "secondary">;
 
@@ -54,6 +54,13 @@ const DUOTONE_STYLES: Record<
     inner:
       "bg-black text-white group-hover:bg-transparent group-hover:text-black",
     ring: "focus:ring-neutral-400/40",
+  },
+  danger: {
+    outer:
+      "border border-1 border-brand-brick-red-500 bg-transparent hover:bg-brand-brick-red-500/10",
+    inner:
+      "bg-transparent text-brand-brick-red-400 group-hover:bg-transparent group-hover:text-brand-brick-red-300",
+    ring: "focus:ring-brand-brick-red-500/30",
   },
 };
 
