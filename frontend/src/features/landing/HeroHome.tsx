@@ -55,10 +55,10 @@ export default function HeroHome() {
                 <div data-aos="fade-up" data-aos-delay={600}>
                   <Button
                     variant="secondary"
-                    href="#workflows"
+                    href="/docs"
                     className="w-full sm:w-auto"
                   >
-                    See How It Works
+                    Learn More
                   </Button>
                 </div>
               </div>
