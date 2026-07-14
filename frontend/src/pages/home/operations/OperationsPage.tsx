@@ -245,8 +245,7 @@ export default function OperationsPage() {
 
       {Object.values(errors).some(Boolean) ? (
         <div className={operationsErrorClass}>
-          Some backend panels could not be loaded. The page keeps the sections
-          that did succeed.
+          Some backend panels could not be loaded.
         </div>
       ) : null}
     </div>
