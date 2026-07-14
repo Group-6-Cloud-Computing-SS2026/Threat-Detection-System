@@ -100,7 +100,7 @@ export default function Search() {
         </Button>
       </div>
 
-      <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3" data-aos="fade-up" data-aos-delay={100}>
+      <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3" data-aos="fade-up" data-aos-delay={100}>
         <label className={labelClass}>
           <span className={labelTextClass}>Event type</span>
           <input
@@ -237,7 +237,7 @@ export default function Search() {
         </div>
       ) : null}
 
-      <div className="text-brand-alabaster-grey-600 mb-3 flex justify-between text-xs" data-aos="fade-up" data-aos-delay={220}>
+      <div className="text-brand-alabaster-grey-600 mb-3 flex flex-col gap-1 text-xs sm:flex-row sm:items-center sm:justify-between" data-aos="fade-up" data-aos-delay={220}>
         <span>{filterTotals.total} result(s)</span>
         <span>Showing {filteredEvents.length} item(s)</span>
       </div>
