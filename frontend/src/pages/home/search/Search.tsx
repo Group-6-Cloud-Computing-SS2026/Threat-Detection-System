@@ -92,6 +92,7 @@ export default function Search() {
           size="sm"
           type="button"
           onClick={resetFilters}
+          className="cursor-pointer"
         >
           Clear filters
         </Button>
