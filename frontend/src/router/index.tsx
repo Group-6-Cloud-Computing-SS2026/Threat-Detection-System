@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router";
 import Root from "./Root.tsx";
-import AuthLayout from "./AuthLayout.tsx";
+import AuthLayout from "../features/auth/AuthLayout.tsx";
 import AppLayout from "./AppLayout.tsx";
 import RequireAuth from "./RequireAuth.tsx";
 import RedirectIfAuthed from "./RedirectIfAuthed.tsx";
