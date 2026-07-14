@@ -21,7 +21,19 @@
   }
 
   /* Automatic & Manual Dark Mode */
-  html[data-theme="dark"],
+  html[data-theme="dark"] {
+    --bg-base: #0a0f1e;
+    --bg-surface: #0d1525;
+    --bg-elevated: #111f2e;
+    --border-default: #1a3040;
+    --border-subtle: #0d1525;
+    --text-primary: #e2e8f0;
+    --text-secondary: #4a7c6b;
+    --text-muted: #94a3b8;
+    --accent-title: #00ff88;
+    --accent-sub: #00cc66;
+  }
+
   @media (prefers-color-scheme: dark) {
     :root {
       --bg-base: #0a0f1e;
