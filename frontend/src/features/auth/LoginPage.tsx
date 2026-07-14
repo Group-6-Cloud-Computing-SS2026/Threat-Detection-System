@@ -1,343 +1,122 @@
-import { useEffect, useLayoutEffect, useRef, useState, type SubmitEvent } from "react";
-import { NavLink, useNavigate, useSearchParams } from "react-router";
-import Button from "../../shared/components/ui/Button.tsx";
-import { useApiSettings } from "../home/useApiSettings.ts";
+import { useNavigate, useSearchParams } from "react-router";
+import type { AuthMode } from "../../shared/types";
+import {
+  useAuthFields,
+  useAuthMode,
+  useAuthRequests,
+  usePanelHeight,
+} from "../../shared/hooks";
 import { useAuth } from "./AuthContext.tsx";
-
-const inputClass =
-  "w-full rounded-lg border border-brand-carbon-black-700 bg-brand-carbon-black-900 px-3 py-2 text-brand-alabaster-grey-100 outline-none shadow-inner shadow-black/20 transition placeholder:text-brand-alabaster-grey-700 focus:border-brand-light-green-600 focus:ring-2 focus:ring-brand-light-green-600/20";
-const labelClass = "text-sm font-medium text-brand-alabaster-grey-500";
-
-type Tab = "login" | "register";
+import { useApiSettings } from "../home/useApiSettings.ts";
+import AuthHeader from "./AuthHeader.tsx";
+import AuthMessages from "./AuthMessages.tsx";
+import AuthSidebar from "./AuthSidebar.tsx";
+import LoginForm from "./LoginForm.tsx";
+import ModeToggle from "./ModeToggle.tsx";
+import RegisterForm from "./RegisterForm.tsx";
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const { apiBaseUrl } = useApiSettings();
   const [searchParams] = useSearchParams();
-  const panelRef = useRef<HTMLDivElement>(null);
 
-  const [tab, setTab] = useState<Tab>(
-    searchParams.get("tab") === "register" ? "register" : "login",
-  );
-  const [panelHeight, setPanelHeight] = useState<number | null>(null);
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("viewer");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const initialMode: AuthMode =
+    searchParams.get("tab") === "register" ? "register" : "login";
 
-  function switchTab(next: Tab) {
-    setTab(next);
-    setError(null);
-    setSuccess(null);
-  }
-
-  useLayoutEffect(() => {
-    const element = panelRef.current;
-    if (!element) return;
-
-    const updateHeight = () => {
-      setPanelHeight(element.scrollHeight);
-    };
-
-    updateHeight();
-  }, [tab]);
-
-  useEffect(() => {
-    const element = panelRef.current;
-    if (!element) return;
-
-    const updateHeight = () => {
-      setPanelHeight(element.scrollHeight);
-    };
-
-    const observer = new ResizeObserver(() => {
-      requestAnimationFrame(updateHeight);
-    });
-
-    observer.observe(element);
-
-    const onResize = () => {
-      updateHeight();
-    };
-
-    window.addEventListener("resize", onResize);
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", onResize);
-    };
-  }, []);
-
-  async function handleLogin(event: SubmitEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError(null);
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch(`${apiBaseUrl}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-      const data = (await response.json().catch(() => null)) as {
-        access_token?: string;
-        detail?: string;
-      } | null;
-      if (!response.ok || !data?.access_token) {
-        setError(
-          data?.detail ??
-            `Sign-in failed (${response.status}). Is the API reachable at "${apiBaseUrl}"?`,
-        );
-        return;
-      }
-
-      login(data.access_token, username);
+  const { mode, switchMode } = useAuthMode(initialMode);
+  const { panelRef, panelHeight } = usePanelHeight(mode);
+  const {
+    username,
+    email,
+    password,
+    role,
+    setUsername,
+    setEmail,
+    setPassword,
+    setRole,
+    resetPassword,
+  } = useAuthFields();
+  const {
+    isSubmitting,
+    error,
+    success,
+    clearMessages,
+    handleLogin,
+    handleRegister,
+  } = useAuthRequests({
+    apiBaseUrl,
+    username,
+    email,
+    password,
+    role,
+    onLoginSuccess: (token, username) => {
+      login(token, username);
       navigate("/");
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Invalid username or password.",
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
-
-  async function handleRegister(event: SubmitEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError(null);
-    setSuccess(null);
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch(`${apiBaseUrl}/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password, role }),
-      });
-      const data = (await response.json().catch(() => ({}))) as {
-        detail?: string;
-      };
-      if (!response.ok) {
-        setError(
-          data.detail ??
-            `Registration failed (${response.status}). Is the API reachable at "${apiBaseUrl}"?`,
-        );
-        return;
-      }
-
-      setSuccess("Account created! You can now sign in.");
-      switchTab("login");
-      setPassword("");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Registration failed.");
-    } finally {
-      setIsSubmitting(false);
-    }
+    },
+    onRegisterSuccess: () => {
+      resetPassword();
+      switchMode("login");
+    },
+  });
+  function handleModeChange(nextMode: AuthMode) {
+    clearMessages();
+    switchMode(nextMode);
   }
 
   return (
     <>
-      <title>
-        {tab === "login" ? "Login" : "Register"} | Threat Detection System
-      </title>
-      <meta property="og:title" content="Login | Threat Detection System" />
-      <meta
-        name="description"
-        content="Sign in to access the Threat Detection System dashboard."
-      />
-
       <div
-        className={`relative w-full overflow-hidden rounded-2xl border border-brand-carbon-black-700 bg-brand-carbon-black-900/95 shadow-[0_24px_80px_rgba(0,0,0,0.55)] backdrop-blur-xl transition-[max-width,height,box-shadow,transform] duration-500 ease-out ${
-          tab === "login" ? "max-w-md" : "max-w-208"
-        }`}
+        className="relative w-full max-w-304 overflow-hidden rounded-[28px] border border-brand-carbon-black-700/80 bg-brand-carbon-black-900/95 shadow-[0_28px_90px_rgba(0,0,0,0.62)] backdrop-blur-xl transition-[max-width,height,box-shadow,transform,opacity] duration-500 ease-out"
         style={panelHeight ? { height: `${panelHeight}px` } : undefined}
       >
-        <div ref={panelRef} className="p-8 sm:p-10">
-          <NavLink to="/landing" className="mb-8 flex justify-center">
-            <img
-              src="/images/wordmark-dark.svg"
-              alt="ThreatOff"
-              className="h-28 w-auto opacity-95"
-            />
-          </NavLink>
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-brand-light-green-500/70 to-transparent motion-safe:bg-size-[200%_100%] motion-safe:animate-auth-sweep" />
+        <div ref={panelRef} className="grid lg:grid-cols-[1.05fr_0.95fr]">
+          <AuthSidebar />
 
-          <div className="bg-brand-carbon-black-800 mb-6 flex rounded-lg border border-brand-carbon-black-700 p-1 text-sm font-medium">
-            <button
-              type="button"
-              onClick={() => switchTab("login")}
-              className={`flex-1 cursor-pointer rounded-md py-1.5 transition ${
-                tab === "login"
-                  ? "bg-brand-carbon-black-900 text-brand-alabaster-grey-100 shadow-sm"
-                  : "text-brand-alabaster-grey-600 hover:text-brand-alabaster-grey-200"
-              }`}
-            >
-              Sign In
-            </button>
-            <button
-              type="button"
-              onClick={() => switchTab("register")}
-              className={`flex-1 cursor-pointer rounded-md py-1.5 transition ${
-                tab === "register"
-                  ? "bg-brand-carbon-black-900 text-brand-alabaster-grey-100 shadow-sm"
-                  : "text-brand-alabaster-grey-600 hover:text-brand-alabaster-grey-200"
-              }`}
-            >
-              Register
-            </button>
-          </div>
-
-          {success && (
-            <div
-              className="mb-4 rounded-lg border border-brand-light-green-900/60 bg-brand-light-green-950/40 px-3 py-2 text-sm text-brand-light-green-200"
-              role="status"
-            >
-              {success}
-            </div>
-          )}
-          {error && (
-            <div
-              id="login-message"
-              className="mb-4 rounded-lg border border-brand-brick-red-900/70 bg-brand-brick-red-950/45 px-3 py-2 text-sm text-brand-brick-red-100"
-              role="alert"
-              aria-live="polite"
-            >
-              {error}
-            </div>
-          )}
-
-          {tab === "login" ? (
-            <form
-              className="space-y-4"
-              onSubmit={handleLogin}
-              aria-labelledby="login-title"
-              noValidate
-            >
-              <h1 id="login-title" className="sr-only">
-                Sign in
-              </h1>
-
-              <div className="grid gap-4">
-                <div className="space-y-1.5">
-                  <label htmlFor="username" className={labelClass}>
-                    Username
-                  </label>
-                  <input
-                    id="username"
-                    type="text"
-                    placeholder="Who are you?"
-                    autoComplete="username"
-                    required
-                    value={username}
-                    onChange={(event) => setUsername(event.target.value)}
-                    className={inputClass}
-                  />
+          <section className="bg-brand-pitch-black-950/92 p-6 sm:p-8 lg:p-10">
+            <div className="mb-8 flex items-center gap-3 lg:hidden">
+              <img src="/favicon.svg" alt="ThreatOff" className="h-11 w-11" />
+              <div>
+                <div className="text-brand-alabaster-grey-100 text-sm font-semibold uppercase tracking-[0.16em]">
+                  ThreatOff
                 </div>
-
-                <div className="space-y-1.5">
-                  <label htmlFor="password" className={labelClass}>
-                    Password
-                  </label>
-                  <input
-                    id="password"
-                    type="password"
-                    autoComplete="current-password"
-                    required
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                    className={inputClass}
-                  />
+                <div className="text-brand-alabaster-grey-600 text-sm">
+                  Secure access portal
                 </div>
               </div>
+            </div>
 
-              <div className="flex h-3" />
-              <Button type="submit" disabled={isSubmitting} fullWidth>
-                {isSubmitting ? "Signing in..." : "Sign In"}
-              </Button>
-            </form>
-          ) : (
-            <form
-              className="space-y-4"
-              onSubmit={handleRegister}
-              aria-labelledby="login-title"
-              noValidate
-            >
-              <h1 id="login-title" className="sr-only">
-                Create account
-              </h1>
+            <AuthHeader mode={mode} />
+            <ModeToggle mode={mode} onChange={handleModeChange} />
+            <AuthMessages error={error} success={success} />
 
-              <div className="grid gap-4 lg:grid-cols-2">
-                <div className="space-y-1.5">
-                  <label htmlFor="reg-username" className={labelClass}>
-                    Username
-                  </label>
-                  <input
-                    id="reg-username"
-                    type="text"
-                    autoComplete="username"
-                    required
-                    value={username}
-                    onChange={(event) => setUsername(event.target.value)}
-                    className={inputClass}
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label htmlFor="reg-email" className={labelClass}>
-                    Email
-                  </label>
-                  <input
-                    id="reg-email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    className={inputClass}
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label htmlFor="reg-password" className={labelClass}>
-                    Password
-                  </label>
-                  <input
-                    id="reg-password"
-                    type="password"
-                    autoComplete="new-password"
-                    required
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                    className={inputClass}
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label htmlFor="reg-role" className={labelClass}>
-                    Role
-                  </label>
-                  <select
-                    id="reg-role"
-                    value={role}
-                    onChange={(event) => setRole(event.target.value)}
-                    className={inputClass}
-                  >
-                    <option value="viewer">Viewer</option>
-                    <option value="operator">Operator</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="flex h-3" />
-              <Button type="submit" disabled={isSubmitting} fullWidth>
-                {isSubmitting ? "Creating account..." : "Create account"}
-              </Button>
-            </form>
-          )}
+            <div key={mode} className="motion-safe:animate-auth-fade">
+              {mode === "register" ? (
+                <RegisterForm
+                  username={username}
+                  email={email}
+                  password={password}
+                  role={role}
+                  isSubmitting={isSubmitting}
+                  onUsernameChange={setUsername}
+                  onEmailChange={setEmail}
+                  onPasswordChange={setPassword}
+                  onRoleChange={setRole}
+                  onSubmit={handleRegister}
+                />
+              ) : (
+                <LoginForm
+                  username={username}
+                  password={password}
+                  isSubmitting={isSubmitting}
+                  onUsernameChange={setUsername}
+                  onPasswordChange={setPassword}
+                  onSubmit={handleLogin}
+                />
+              )}
+            </div>
+          </section>
         </div>
       </div>
     </>
