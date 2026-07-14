@@ -31,9 +31,9 @@ export default function RouteErrorPage() {
       <p className="text-brand-alabaster-grey-600/80 mx-auto mt-3 max-w-md">
         {message}
       </p>
-      <Button href="/" target={isEmbedded ? "_top" : undefined} className="mt-8">
-          { isEmbedded ? "Exit" : "Back to Home" }
-      </Button>
+        { !isEmbedded && <Button href="/" className="mt-8">
+            Back to Home
+        </Button> }
     </div>
   );
 }
