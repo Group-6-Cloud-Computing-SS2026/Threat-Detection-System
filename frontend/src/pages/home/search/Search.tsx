@@ -77,7 +77,7 @@ export default function Search() {
   }
 
   return (
-    <section className="border-brand-carbon-black-800 bg-brand-carbon-black-900/60 rounded-2xl border p-5">
+    <>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="font-nacelle text-brand-alabaster-grey-100 text-lg font-semibold">
@@ -246,6 +246,6 @@ export default function Search() {
           </p>
         ) : null}
       </div>
-    </section>
+    </>
   );
 }
