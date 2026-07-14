@@ -15,7 +15,7 @@
 
 .gradient-text {
   @apply inline-block bg-linear-to-r
-  from-brand-alabaster-grey-100 via-brand-alabaster-grey-600 to-brand-alabaster-grey-100
+  from-white via-brand-alabaster-grey-600 to-brand-alabaster-grey-100
   bg-size-[400%] bg-clip-text text-transparent
   motion-safe:animate-gradient;
 }
