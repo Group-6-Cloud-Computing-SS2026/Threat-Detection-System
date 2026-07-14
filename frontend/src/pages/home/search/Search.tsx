@@ -3,7 +3,6 @@ import { useAuth } from "../../auth/AuthContext.tsx";
 import Button from "../../../shared/components/ui/Button.tsx";
 import {
   apiFetch,
-  buildImageUrl,
   buildQueryString,
   EMPTY_QUERY,
   SEVERITY_ORDER,
@@ -11,12 +10,15 @@ import {
 import DetectionCard from "../DetectionCard.tsx";
 import type {
   CardState,
-  DetectionDetail,
   DetectionEvent,
   PaginatedResponse,
   QueryState,
 } from "../../../shared/types";
 import { useApiSettings } from "../useApiSettings.ts";
+import {
+  toCardState,
+  useDetectionDetailLoader,
+} from "../useDetectionCards.ts";
 
 const inputClass =
   "w-full rounded-lg border border-brand-carbon-black-700 bg-brand-carbon-black-800 px-3 py-2 text-sm text-brand-alabaster-grey-100 outline-none transition focus:border-brand-light-green-500";
@@ -37,6 +39,12 @@ export default function Search() {
   const [query, setQuery] = useState<QueryState>(EMPTY_QUERY);
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
+  const loadDetectionDetail = useDetectionDetailLoader(
+    apiBaseUrl,
+    token,
+    setFilteredEvents,
+    setSearchError,
+  );
 
   async function fetchFilteredEvents() {
     setSearchLoading(true);
@@ -47,15 +55,7 @@ export default function Search() {
         token,
         `/detections?${buildQueryString(query)}`,
       )) as PaginatedResponse<DetectionEvent>;
-      setFilteredEvents(
-        data.items.map((item) => ({
-          ...item,
-          preview_image_url: buildImageUrl(item.preview_image_url, apiBaseUrl),
-          detailLoaded: false,
-          imageUrls: {},
-          images: [],
-        })),
-      );
+      setFilteredEvents(data.items.map((item) => toCardState(item, apiBaseUrl)));
       setFilterTotals({
         total: data.total,
         skip: data.skip,
@@ -67,49 +67,6 @@ export default function Search() {
       );
     } finally {
       setSearchLoading(false);
-    }
-  }
-
-  async function loadDetectionDetail(eventId: string) {
-    const target = filteredEvents.find((item) => item.id === eventId);
-    if (!target || target.detailLoaded) {
-      return;
-    }
-
-    try {
-      const detail = (await apiFetch(
-        apiBaseUrl,
-        token,
-        `/detections/${eventId}`,
-      )) as DetectionDetail;
-      const imageUrls: Record<string, string> = {};
-      const apiOrigin = apiBaseUrl.replace(/\/api\/v1\/?$/, "");
-
-      for (const image of detail.images || []) {
-        imageUrls[image.id] = `${apiOrigin}/api/v1/images/${image.id}/download`;
-      }
-
-      const resolvedPreviewUrl = buildImageUrl(
-        detail.preview_image_url,
-        apiBaseUrl,
-      );
-      setFilteredEvents((prev) =>
-        prev.map((item) =>
-          item.id === eventId
-            ? {
-                ...item,
-                ...detail,
-                preview_image_url: resolvedPreviewUrl ?? item.preview_image_url,
-                detailLoaded: true,
-                imageUrls,
-              }
-            : item,
-        ),
-      );
-    } catch (error) {
-      setSearchError(
-        error instanceof Error ? error.message : "Failed to load event detail",
-      );
     }
   }
 
@@ -280,7 +237,7 @@ export default function Search() {
             key={event.id}
             event={event}
             listName="search"
-            onToggle={() => void loadDetectionDetail(event.id)}
+            onToggle={() => void loadDetectionDetail(event.id, filteredEvents)}
           />
         ))}
         {filteredEvents.length === 0 && !searchLoading ? (

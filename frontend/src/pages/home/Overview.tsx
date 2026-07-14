@@ -1,10 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../auth/AuthContext.tsx";
-import { apiFetch, buildImageUrl } from "./api.ts";
+import { apiFetch } from "./api.ts";
 import CameraFeed from "./CameraFeed.tsx";
 import DetectionCard from "./DetectionCard.tsx";
-import type { CardState, DetectionDetail, DetectionEvent } from "../../shared/types";
+import type { CardState, DetectionEvent } from "../../shared/types";
 import { useApiSettings } from "./useApiSettings.ts";
+import {
+  toCardState,
+  useDetectionDetailLoader,
+} from "./useDetectionCards.ts";
 
 export default function Overview() {
   const { auth } = useAuth();
@@ -16,6 +20,12 @@ export default function Overview() {
   const [liveLoading, setLiveLoading] = useState(false);
   const [liveError, setLiveError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
+  const loadDetectionDetail = useDetectionDetailLoader(
+    apiBaseUrl,
+    token,
+    setLiveEvents,
+    setLiveError,
+  );
 
   const liveSummary = useMemo(() => {
     const counts: Record<string, number> = {};
@@ -42,15 +52,7 @@ export default function Overview() {
         token,
         "/detections/recent?limit=8",
       )) as DetectionEvent[];
-      setLiveEvents(
-        data.map((item) => ({
-          ...item,
-          preview_image_url: buildImageUrl(item.preview_image_url, apiBaseUrl),
-          detailLoaded: false,
-          imageUrls: {},
-          images: [],
-        })),
-      );
+      setLiveEvents(data.map((item) => toCardState(item, apiBaseUrl)));
       setLastUpdated(new Date().toLocaleTimeString());
     } catch (error) {
       setLiveError(
@@ -60,49 +62,6 @@ export default function Overview() {
       );
     } finally {
       setLiveLoading(false);
-    }
-  }
-
-  async function loadDetectionDetail(eventId: string) {
-    const target = liveEvents.find((item) => item.id === eventId);
-    if (!target || target.detailLoaded) {
-      return;
-    }
-
-    try {
-      const detail = (await apiFetch(
-        apiBaseUrl,
-        token,
-        `/detections/${eventId}`,
-      )) as DetectionDetail;
-      const imageUrls: Record<string, string> = {};
-      const apiOrigin = apiBaseUrl.replace(/\/api\/v1\/?$/, "");
-
-      for (const image of detail.images || []) {
-        imageUrls[image.id] = `${apiOrigin}/api/v1/images/${image.id}/download`;
-      }
-
-      const resolvedPreviewUrl = buildImageUrl(
-        detail.preview_image_url,
-        apiBaseUrl,
-      );
-      setLiveEvents((prev) =>
-        prev.map((item) =>
-          item.id === eventId
-            ? {
-                ...item,
-                ...detail,
-                preview_image_url: resolvedPreviewUrl ?? item.preview_image_url,
-                detailLoaded: true,
-                imageUrls,
-              }
-            : item,
-        ),
-      );
-    } catch (error) {
-      setLiveError(
-        error instanceof Error ? error.message : "Failed to load event detail",
-      );
     }
   }
 
@@ -203,7 +162,7 @@ export default function Overview() {
                 key={event.id}
                 event={event}
                 listName="live"
-                onToggle={() => void loadDetectionDetail(event.id)}
+                onToggle={() => void loadDetectionDetail(event.id, liveEvents)}
               />
             ))}
             {liveEvents.length === 0 && !liveLoading ? (
