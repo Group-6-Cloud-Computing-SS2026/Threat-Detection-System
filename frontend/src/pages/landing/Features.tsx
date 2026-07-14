@@ -28,7 +28,11 @@ export default function Features() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="[border-image:linear-gradient(to_right,transparent,--theme(--color-brand-carbon-black-700/.5),transparent)1] border-t py-12 md:py-20">
           {/* Section header */}
-          <div className="mx-auto max-w-3xl pb-4 text-center mb-10 md:pb-12">
+          <div
+            className="mx-auto mb-10 max-w-3xl pb-4 text-center md:pb-12"
+            data-aos="fade-up"
+            data-aos-once="true"
+          >
             <div className="before:to-brand-light-green-200/50 after:to-brand-light-green-200/50 inline-flex items-center gap-3 pb-3 before:h-px before:w-8 before:bg-linear-to-r before:from-transparent after:h-px after:w-8 after:bg-linear-to-l after:from-transparent">
               <span className="from-brand-light-green-500 to-brand-light-green-200 inline-flex bg-linear-to-r bg-clip-text text-transparent">
                 System Capabilities
@@ -45,7 +49,7 @@ export default function Features() {
           </div>
           {/* Items */}
           <div className="mx-auto grid max-w-sm gap-12 sm:max-w-none sm:grid-cols-2 md:gap-x-14 md:gap-y-16 lg:grid-cols-3">
-            <article>
+            <article data-aos="fade-up" data-aos-once="true">
               <svg
                 className="fill-brand-light-green-500 mb-3"
                 xmlns="http://www.w3.org/2000/svg"
@@ -66,7 +70,7 @@ export default function Features() {
                 a single, coordinated infrastructure.
               </p>
             </article>
-            <article>
+            <article data-aos="fade-up" data-aos-once="true" data-aos-delay={80}>
               <svg
                 className="fill-brand-light-green-500 mb-3"
                 xmlns="http://www.w3.org/2000/svg"
@@ -84,7 +88,7 @@ export default function Features() {
                 depends on a round trip to the cloud.
               </p>
             </article>
-            <article>
+            <article data-aos="fade-up" data-aos-once="true" data-aos-delay={160}>
               <svg
                 className="fill-brand-brick-red-500 mb-3"
                 xmlns="http://www.w3.org/2000/svg"
@@ -105,7 +109,7 @@ export default function Features() {
                 real time, frame by frame.
               </p>
             </article>
-            <article>
+            <article data-aos="fade-up" data-aos-once="true">
               <svg
                 className="fill-brand-light-green-500 mb-3"
                 xmlns="http://www.w3.org/2000/svg"
@@ -126,7 +130,7 @@ export default function Features() {
                 students and researchers can rebuild the setup themselves.
               </p>
             </article>
-            <article>
+            <article data-aos="fade-up" data-aos-once="true" data-aos-delay={80}>
               <svg
                 className="fill-brand-brick-red-500 mb-3"
                 xmlns="http://www.w3.org/2000/svg"
@@ -152,7 +156,7 @@ export default function Features() {
                 dashboard within seconds of detection.
               </p>
             </article>
-            <article>
+            <article data-aos="fade-up" data-aos-once="true" data-aos-delay={160}>
               <svg
                 className="fill-brand-brick-red-500 mb-3"
                 xmlns="http://www.w3.org/2000/svg"

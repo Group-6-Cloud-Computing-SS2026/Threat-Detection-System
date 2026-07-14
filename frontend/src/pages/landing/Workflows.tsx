@@ -42,7 +42,11 @@ export default function Workflows() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="pb-12 md:pb-20">
           {/* Section header */}
-          <div className="mx-auto max-w-3xl pb-12 text-center md:pb-20">
+          <div
+            className="mx-auto max-w-3xl pb-12 text-center md:pb-20"
+            data-aos="fade-up"
+            data-aos-once="true"
+          >
             <div className="before:to-brand-light-green-200/50 after:to-brand-light-green-200/50 inline-flex items-center gap-3 pb-3 before:h-px before:w-8 before:bg-linear-to-r before:from-transparent after:h-px after:w-8 after:bg-linear-to-l after:from-transparent">
               <span className="text-brand-light-green-300 inline-flex font-medium tracking-wide">
                 How It Works
@@ -62,6 +66,9 @@ export default function Workflows() {
             {steps.map((step, index) => (
               <div
                 key={step.label}
+                data-aos="fade-up"
+                data-aos-once="true"
+                data-aos-delay={index * 120}
                 className={`group/card bg-brand-carbon-black-800/95 border-brand-carbon-black-700/70 relative h-full overflow-hidden rounded-2xl border p-px shadow-lg before:pointer-events-none before:absolute before:-top-10 before:-left-40 before:z-10 before:h-80 before:w-80 before:translate-x-(--mouse-x) before:translate-y-(--mouse-y) before:rounded-full before:opacity-0 before:blur-3xl before:transition-opacity before:duration-500 group-hover:before:opacity-100 after:pointer-events-none after:absolute after:-top-48 after:-left-48 after:z-30 after:h-64 after:w-64 after:translate-x-(--mouse-x) after:translate-y-(--mouse-y) after:rounded-full after:opacity-0 after:blur-3xl after:transition-opacity after:duration-500 hover:after:opacity-20 ${ACCENT_CLASSES[step.accent].glow} `}
               >
                 <div className="bg-brand-pitch-black-500/95 after:from-brand-carbon-black-900/55 after:via-brand-carbon-black-800/30 after:to-brand-carbon-black-900/55 relative z-20 h-full overflow-hidden rounded-[inherit] after:absolute after:inset-0 after:bg-linear-to-br">

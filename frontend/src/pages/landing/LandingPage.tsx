@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import AOS from "aos";
 import PageIllustration from "./PageIllustration.tsx";
 import HeroHome from "./HeroHome.tsx";
 import Workflows from "./Workflows.tsx";
@@ -5,6 +7,20 @@ import Features from "./Features.tsx";
 import Cta from "./Cta.tsx";
 
 export default function LandingPage() {
+  useEffect(() => {
+    const refreshAos = () => {
+      AOS.refreshHard();
+    };
+
+    const frameId = window.requestAnimationFrame(refreshAos);
+    window.addEventListener("load", refreshAos, { once: true });
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      window.removeEventListener("load", refreshAos);
+    };
+  }, []);
+
   return (
     <>
       <title>ThreatOff — Edge Computing Threat Detection</title>

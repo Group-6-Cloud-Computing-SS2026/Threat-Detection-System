@@ -19,6 +19,7 @@ export default function HeroHome() {
             <h1
               className="gradient-text font-nacelle m-8 pb-5 text-4xl leading-20 font-semibold md:text-5xl"
               data-aos="fade-up"
+              data-aos-once="true"
             >
               Smarter monitoring. Faster detection. Instant alerts at the edge.
             </h1>
@@ -27,6 +28,7 @@ export default function HeroHome() {
                 className="text-brand-alabaster-grey-600/80 mb-8 text-xl"
                 data-aos="fade-up"
                 data-aos-delay={200}
+                data-aos-once="true"
               >
                 ThreatOff turns single-board sensor nodes into an intelligent
                 monitoring network. It identifies people and flags threat events
@@ -34,24 +36,26 @@ export default function HeroHome() {
                 waiting on a round trip to the cloud.
               </p>
               <div className="mx-auto flex max-w-xs flex-col gap-4 sm:max-w-none sm:flex-row sm:justify-center">
-                <div data-aos="fade-up" data-aos-delay={400}>
-                  <Button
-                    variant="github"
-                    href="/auth"
-                    className="w-full sm:w-auto"
-                  >
-                    Open Dashboard
-                  </Button>
-                </div>
-                <div data-aos="fade-up" data-aos-delay={600}>
-                  <Button
-                    variant="secondary"
-                    href="/docs"
-                    className="w-full sm:w-auto"
-                  >
-                    Learn More
-                  </Button>
-                </div>
+                <Button
+                  variant="github"
+                  href="/auth"
+                  className="w-full sm:w-auto"
+                  data-aos="fade-up"
+                  data-aos-delay={400}
+                  data-aos-once="true"
+                >
+                  Open Dashboard
+                </Button>
+                <Button
+                  variant="secondary"
+                  href="/docs"
+                  className="w-full sm:w-auto"
+                  data-aos="fade-up"
+                  data-aos-delay={600}
+                  data-aos-once="true"
+                >
+                  Learn More
+                </Button>
               </div>
             </div>
           </div>
@@ -60,6 +64,7 @@ export default function HeroHome() {
             className="mx-auto flex max-w-3xl flex-col items-center gap-6 sm:flex-row sm:justify-center sm:gap-12"
             data-aos="fade-up"
             data-aos-delay={200}
+            data-aos-once="true"
           >
             <div className="text-center">
               <div className="font-nacelle text-brand-alabaster-grey-100 text-2xl font-semibold">

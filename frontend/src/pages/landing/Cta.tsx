@@ -26,6 +26,7 @@ export default function Cta() {
             <h2
               className="font-nacelle text-brand-alabaster-grey-100 pb-4 text-3xl font-semibold md:text-4xl"
               data-aos="fade-up"
+              data-aos-once="true"
             >
               See ThreatOff in action
             </h2>
@@ -33,38 +34,41 @@ export default function Cta() {
               className="text-brand-alabaster-grey-600/80 mx-auto mb-8 max-w-2xl text-lg"
               data-aos="fade-up"
               data-aos-delay={200}
+              data-aos-once="true"
             >
               Explore the source code, the reproducible edge-computing setup,
               and the course this project was built for.
             </p>
             <div className="mx-auto flex max-w-xs flex-col gap-4 sm:max-w-none sm:flex-row sm:justify-center">
-              <div data-aos="fade-up" data-aos-delay={400}>
-                <Button
-                  variant="github"
-                  className="w-full sm:w-auto"
-                  href={githubLink ? githubLink.url.href : "https://github.com"}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <GithubIcon />
-                  View on GitHub
-                </Button>
-              </div>
-              <div data-aos="fade-up" data-aos-delay={600}>
-                <Button
-                  variant="secondary"
-                  className="w-full border-transparent bg-transparent sm:w-auto"
-                  href={
-                    teacherPageLink
-                      ? teacherPageLink.url.href
-                      : "https://www.christianbaun.de/"
-                  }
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Course Page →
-                </Button>
-              </div>
+              <Button
+                variant="github"
+                className="w-full sm:w-auto"
+                href={githubLink ? githubLink.url.href : "https://github.com"}
+                target="_blank"
+                rel="noreferrer"
+                data-aos="fade-up"
+                data-aos-delay={400}
+                data-aos-once="true"
+              >
+                <GithubIcon />
+                View on GitHub
+              </Button>
+              <Button
+                variant="secondary"
+                className="w-full border-transparent bg-transparent sm:w-auto"
+                href={
+                  teacherPageLink
+                    ? teacherPageLink.url.href
+                    : "https://www.christianbaun.de/"
+                }
+                target="_blank"
+                rel="noreferrer"
+                data-aos="fade-up"
+                data-aos-delay={600}
+                data-aos-once="true"
+              >
+                Course Page →
+              </Button>
             </div>
           </div>
         </div>
