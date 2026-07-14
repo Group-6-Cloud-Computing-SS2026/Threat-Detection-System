@@ -59,3 +59,5 @@ export type CardState = DetectionDetail & {
   detailLoaded: boolean;
   imageUrls: Record<string, string>;
 };
+
+export type AuthMode = "login" | "register";
