@@ -107,31 +107,39 @@ export default function OperationsPage() {
             </div>
             <div className="space-y-2">
               <h1 className="text-brand-alabaster-grey-100 text-3xl font-semibold md:text-4xl">
-                Backend data, laid out as operational panels
+                Backend operations
               </h1>
               <p className="text-brand-alabaster-grey-600 max-w-2xl text-sm md:text-base">
-                This page surfaces detections, logs, nodes, notifications,
-                infrastructure, cluster runs, auth profile, and raw metrics in
-                focused panels.
+                Review detections, logs, nodes, notifications, infrastructure,
+                cluster runs, your auth profile, and raw metrics in one place.
               </p>
             </div>
 
             <div className="flex flex-wrap gap-2">
-              <Button variant="secondary" href="/docs">
+              <Button
+                className="cursor-pointer transition-transform hover:-translate-y-px"
+                variant="secondary"
+                href="/docs"
+              >
                 <IconDocs className="h-4 w-4" />
-                API docs
+                Open API docs
               </Button>
               <Button
+                className="cursor-pointer transition-transform hover:-translate-y-px"
                 variant="secondary"
                 href={`${apiOrigin}/docs`}
                 target="_blank"
                 rel="noreferrer"
               >
                 <IconFileCode className="h-4 w-4" />
-                Swagger UI
+                Open Swagger UI
               </Button>
-              <Button variant="secondary" onClick={() => void refresh()}>
-                Refresh
+              <Button
+                className="cursor-pointer transition-transform hover:-translate-y-px"
+                variant="secondary"
+                onClick={() => void refresh()}
+              >
+                Refresh data
               </Button>
             </div>
           </div>
@@ -156,10 +164,10 @@ export default function OperationsPage() {
               key={item.id}
               type="button"
               onClick={() => setActiveSection(item.id)}
-              className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition ${
+              className={`cursor-pointer flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition hover:-translate-y-px ${
                 activeSection === item.id
-                  ? "border-brand-light-green-500/30 bg-brand-light-green-950/70 text-brand-light-green-300"
-                  : "border-brand-carbon-black-700 bg-brand-carbon-black-800 text-brand-alabaster-grey-500"
+                  ? "border-brand-light-green-500/30 bg-brand-light-green-950/70 text-brand-light-green-300 hover:border-brand-light-green-400/50 hover:bg-brand-light-green-950/90"
+                  : "border-brand-carbon-black-700 bg-brand-carbon-black-800 text-brand-alabaster-grey-500 hover:border-brand-carbon-black-500 hover:bg-brand-carbon-black-700 hover:text-brand-alabaster-grey-300"
               }`}
             >
               {item.icon}
