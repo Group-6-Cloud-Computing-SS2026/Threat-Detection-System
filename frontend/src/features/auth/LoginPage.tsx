@@ -88,10 +88,11 @@ export default function LoginPage() {
         detail?: string;
       } | null;
       if (!response.ok || !data?.access_token) {
-        throw new Error(
+        setError(
           data?.detail ??
             `Sign-in failed (${response.status}). Is the API reachable at "${apiBaseUrl}"?`,
         );
+        return;
       }
 
       login(data.access_token, username);
@@ -121,10 +122,11 @@ export default function LoginPage() {
         detail?: string;
       };
       if (!response.ok) {
-        throw new Error(
+        setError(
           data.detail ??
             `Registration failed (${response.status}). Is the API reachable at "${apiBaseUrl}"?`,
         );
+        return;
       }
 
       setSuccess("Account created! You can now sign in.");
@@ -150,7 +152,7 @@ export default function LoginPage() {
 
       <div
         className={`relative w-full overflow-hidden rounded-2xl border border-brand-carbon-black-700 bg-brand-carbon-black-900/95 shadow-[0_24px_80px_rgba(0,0,0,0.55)] backdrop-blur-xl transition-[max-width,height,box-shadow,transform] duration-500 ease-out ${
-          tab === "login" ? "max-w-[28rem]" : "max-w-[52rem]"
+          tab === "login" ? "max-w-md" : "max-w-208"
         }`}
         style={panelHeight ? { height: `${panelHeight}px` } : undefined}
       >
