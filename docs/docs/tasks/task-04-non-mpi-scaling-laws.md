@@ -249,6 +249,38 @@ making it ideal for demonstrating parallel computing laws.
 | 5   | s         | s             | s         | 0.000s     |
 | **AVG** | **0.000s** | **0.000s** | **0.000s** | **0.000s** |
 
+```
+pi@worker1:~$ ls /tmp
+pov16274  pov16686	  systemd-private-aff2169b8e5a468f809d349af9090f28-ModemManager.service-31fSVJ
+pov16525  pov16709	  systemd-private-aff2169b8e5a468f809d349af9090f28-bluetooth.service-cAnUhH
+pov16655  povraymessages  systemd-private-aff2169b8e5a468f809d349af9090f28-systemd-logind.service-rtsZrp
+pi@worker1:~$ ls -l /tmp
+total 464516
+-rw------- 1 pi   pi   614400024 Jul 13 01:18 pov16274
+-rw------- 1 pi   pi   614400024 Jul 13 01:54 pov16525
+-rw------- 1 pi   pi   614400024 Jul 13 01:54 pov16655
+-rw------- 1 pi   pi           0 Jul 13 01:54 pov16686
+-rw------- 1 pi   pi           0 Jul 13 01:54 pov16709
+-rw-r--r-- 1 pi   pi         331 Jul 13 01:54 povraymessages
+drwx------ 3 root root        60 Nov 19  2024 systemd-private-aff2169b8e5a468f809d349af9090f28-ModemManager.service-31fSVJ
+drwx------ 3 root root        60 Nov 19  2024 systemd-private-aff2169b8e5a468f809d349af9090f28-bluetooth.service-cAnUhH
+drwx------ 3 root root        60 Nov 19  2024 systemd-private-aff2169b8e5a468f809d349af9090f28-systemd-logind.service-rtsZrp
+pi@worker1:~$ 
+```
+
+More logs like this can be found in the [task-dist-results.txt](../task-dist-results.txt)  (note that those are not clean!)
+
+**2 Nodes — 6400x4800**
+
+| Run | Seq Part 1 | Parallel Part | Seq Part 2 | Total Time |
+|-----|------------|---------------|------------|------------|
+| 1   | 0.005s     | 123.347s      | 4.707s     | 128.059s   |
+| 2   | 0.004s     | 123.359s      | 4.313s     | 127.676s   |
+| 3   | 0.003s     | 124.349s      | 4.338s     | 128.690s   |
+| 4   | 0.003s     | 124.343s      | 4.498s     | 128.844s   |
+| 5   | 0.003s     | 124.752s      | 4.248s     | 129.003s   |
+| **AVG** | **0.003s** | **124.752s** | **4.420s** | **129.175s** |
+
 **4 Nodes — 6400x4800**
 
 | Run | Seq Part 1 | Parallel Part | Seq Part 2 | Total Time |
@@ -505,9 +537,6 @@ picture of parallel computing on real hardware.
 | `*pi*.png: No such file` | Master looking for wrong filename | Worker writes IP.png not hostname.png |
 | Workers write wrong name to lockfile | Script uses `hostname` | Change to `hostname -I \| awk '{print $1}'` |
 
-
-*Cloud Computing Course SS2026 — Frankfurt University of Applied Sciences*
-*Date: July 12, 2026*
 
 ## Issues and Fixes
 #### Memory issues
