@@ -1,7 +1,3 @@
----
-title: "Task 1 — Edge Computing Infrastructure"
-nav_order: 1
----
 
 # Task 1 — Infrastructure & Sensor Node Setup
 
@@ -57,6 +53,8 @@ All devices are connected to a single Gigabit switch on the private subnet `192.
 | Worker 7 | Raspberry Pi 3 (diskless) | `worker7` | `192.168.1.83` |
 | Worker 8 | Raspberry Pi 3 (diskless) | `worker8` | `192.168.1.133` |
 
+> **Note — provisioning the master and sensor node.** Unlike the workers, the Pi 5 master and the Pi 4 sensor node each keep their own SD card, so they were set up directly with **Raspberry Pi Imager**: the respective 64-bit Raspberry Pi OS was flashed straight to each board's SD card, with hostname, SSH, and user account pre-configured through the Imager's advanced options. No network boot or golden-image process was needed for these two — that machinery exists specifically to avoid maintaining eight separate cards for the workers, which doesn't apply to a single master or a single sensor node.
+
 ### Task 1 at a glance
 
 | Metric | Result |
@@ -86,6 +84,16 @@ The Raspberry Pi 3 bootloader is configured to boot from the network. On power-o
 3. **NFS root mount** — the kernel mounts its root filesystem over NFS from the master, read from the shared image.
 4. **Per-node overlay mount** — a startup script mounts each node's private writable directories.
 
+> **Note — enabling network boot on the Pi 3 Model B.** Unlike the Pi 3 Model B+, the plain Model B does not look for a network boot source by default; it only checks the SD card slot. Network boot has to be switched on once per board by setting the `boot_order`/USB-network-boot OTP bit while the board still has an SD card in it:
+> ```bash
+> echo program_usb_boot_mode=1 | sudo tee -a /boot/config.txt
+> sudo reboot
+> # verify the bit was actually written:
+> vcgencmd otp_dump | grep 17:
+> # expect: 17:3020000a
+> ```
+> After this one-time step, the SD card can be removed permanently — the board will look for a PXE/network boot source on every subsequent power-on.
+
 ```
 Power on Pi3 (no SD card)
    |
@@ -112,6 +120,27 @@ The central design decision is the split between **shared** and **per-node** sto
 This is the standard HPC pattern: one operating system, many machines, each with private configuration and state. Installing software once on the master's shared image makes it instantly available to all eight workers.
 
 > **Node identity.** Each Raspberry Pi 3 is identified by its hardware serial number (the last 8 hex digits, e.g. `a7b7e022`). The master keeps one directory per serial under `/nfs/nodes/` and one boot directory per serial under `/nfs/boot64/`, so each node receives its own hostname and private storage while sharing the same OS.
+
+### Building the golden image
+
+The shared image that all eight workers boot from was produced once, on the master, and reused for every node from then on. In outline:
+
+1. **Download** the official 64-bit Raspberry Pi OS Lite image (`.img.xz`) and decompress it.
+2. **Inspect** it with `fdisk -l` to find the boot and root partition offsets (start sector × 512).
+3. **Loop-mount** each partition and `rsync` its contents into place on the master:
+   ```bash
+   sudo mount -o loop,offset=<boot_offset> raspios.img /mnt
+   sudo rsync -axv /mnt/ /nfs/boot64/
+   sudo umount /mnt
+
+   sudo mount -o loop,offset=<root_offset> raspios.img /mnt
+   sudo rsync -axv /mnt/ /nfs/rootfs64/
+   sudo umount /mnt
+   ```
+4. **Adapt for network boot:** replace the local-disk `/etc/fstab` with the minimal network-friendly version (below), enable SSH, and generate SSH host keys directly into the image.
+5. **Seed the per-node directories** by copying the image's own `/etc` and `/var` into each worker's private folder under `/nfs/nodes/<serial>/`, so every node starts from the same known configuration before it acquires its own identity (hostname, machine-id, host keys).
+
+Once this golden image exists, no worker is ever imaged individually again — every future software install happens **once**, directly into `/nfs/rootfs64`, and is picked up by all eight workers on their next boot.
 
 ### Physical storage: SD card + SSD
 
@@ -201,7 +230,60 @@ The eight workers together provide the parallel compute fabric that Tasks 2, 3, 
 
 ---
 
-## 4. Time Synchronization
+## 4. Cluster Orchestration with Ansible
+
+Once eight nodes are running, administering them one SSH session at a time does not scale. We therefore installed **Ansible** on the master as the cluster's orchestration layer, so that a single command on the Pi 5 acts on every worker at once.
+
+```bash
+sudo apt install ansible sshpass -y
+```
+
+### Inventory
+
+The inventory file declares the cluster to Ansible — which hosts exist, and how to reach them:
+
+```ini
+[workers]
+worker1 ansible_host=192.168.1.58
+worker2 ansible_host=192.168.1.54
+worker3 ansible_host=192.168.1.104
+worker4 ansible_host=192.168.1.136
+worker5 ansible_host=192.168.1.86
+worker6 ansible_host=192.168.1.117
+worker7 ansible_host=192.168.1.83
+worker8 ansible_host=192.168.1.133
+
+[workers:vars]
+ansible_user=pi
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+```
+
+### Connectivity check
+
+A single command confirms every node is reachable and responding:
+
+```bash
+ansible workers -i hosts.ini -m ping
+```
+
+Each node replies `SUCCESS` (reachable) or `UNREACHABLE` — which doubles as a fast cluster health check, particularly useful given that individual Pi 3 boards can drop off the network unexpectedly.
+
+### Passwordless authentication
+
+Password-based SSH was replaced with key-based authentication, both for security and so that automated playbooks run without prompting:
+
+```bash
+ssh-keygen -t ed25519
+ssh-copy-id pi@<worker-ip>     # repeated for each worker
+```
+
+With keys in place, `ansible_ssh_pass` is removed from the inventory.
+
+> **Why this belongs to the infrastructure task.** Ansible is what turns eight individual machines into something a single operator can actually run. Combined with the shared OS image — where a package installed once on the master appears on all eight workers — the cluster is administered as *one system*, not as eight.
+
+---
+
+## 5. Time Synchronization
 
 Network booting is sensitive to clock errors: if the master's clock is in the past, freshly downloaded files can appear to have modification times "in the future," and logging and TLS misbehave. We therefore made reliable, automatic time synchronization part of the infrastructure.
 
@@ -223,7 +305,7 @@ The master's timezone is set to `Europe/Berlin`. On boot, each worker starts chr
 
 ---
 
-## 5. Sensor Node
+## 6. Sensor Node
 
 The sensor node is a Raspberry Pi 4 with a Raspberry Pi AI Camera built around the Sony IMX500 image sensor. The IMX500 runs a neural network **on the camera module itself**, so object detection happens at the edge without loading the Pi 4's CPU with inference.
 
@@ -268,7 +350,7 @@ The sensor logic runs as a **systemd service**, so it starts automatically when 
 
 ---
 
-## 6. End-to-End Data Flow
+## 7. End-to-End Data Flow
 
 Putting the pieces together, the complete Task 1 flow is:
 
@@ -289,7 +371,7 @@ The master is the hub: it boots and feeds the workers, sources and serves time, 
 
 ---
 
-## 7. Verification
+## 8. Verification
 
 The infrastructure can be checked at any time with the following commands.
 
@@ -358,7 +440,7 @@ done
 
 ---
 
-## 8. Outcome and Limitations
+## 9. Outcome and Limitations
 
 **What Task 1 delivers:**
 
