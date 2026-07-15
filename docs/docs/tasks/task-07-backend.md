@@ -1,6 +1,6 @@
 # Task 7 — Backend Architecture & Orchestration
 
-The backend layer of the Threat Detection System (TDS) is designed as a highly available, event-driven, distributed microservice stack. It orchestrates real-time edge AI telemetry ingestion, stores metadata and images, and manages automated cluster self-healing across the Pi 5 Master and 8x Pi 3 B+ worker nodes.
+The backend layer of the Threat Detection System (TDS) is designed as a highly available, event-driven, distributed microservice stack. It orchestrates real-time edge AI telemetry ingestion, stores metadata and images, and manages automated cluster self-healing across the Pi 5 Master and 8x Pi 3 B worker nodes.
 
 ---
 
