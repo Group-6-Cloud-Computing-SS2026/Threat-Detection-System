@@ -201,35 +201,6 @@ After compilation, the executable is generated inside the `bin` directory.
 
 ---
 
-# Step 7 – Execute the Benchmark
-
-The benchmark was executed using Microsoft MPI.
-
-Example command for a 2-node cluster:
-
-```powershell
-mpiexec -hosts 2 node1 1 node2 1 xhpl.exe
-```
-
-Example command for a 4-node cluster:
-
-```powershell
-mpiexec -hosts 4 node1 1 node2 1 node3 1 node4 1 xhpl.exe
-```
-
-Example command for a 7-node cluster:
-
-```powershell
-mpiexec -hosts 7 node1 1 node2 1 node3 1 node4 1 node5 1 node6 1 node7 1 xhpl.exe
-```
-
-Example command for an 8-node cluster:
-
-```powershell
-mpiexec -hosts 8 node1 1 node2 1 node3 1 node4 1 node5 1 node6 1 node7 1 node8 1 xhpl.exe
-```
-
----
 
 
 ## Final Commands
