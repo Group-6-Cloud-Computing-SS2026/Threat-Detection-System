@@ -9,8 +9,6 @@ from pydantic import AliasChoices, BaseModel, Field
 
 from app.utils.enums import EventType
 
-from app.utils.enums import EventType
-
 
 class DetectionEventCreate(BaseModel):
     """Payload for ingesting a detection event (REST fallback)."""
