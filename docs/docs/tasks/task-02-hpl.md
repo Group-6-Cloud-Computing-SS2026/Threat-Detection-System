@@ -74,10 +74,13 @@ done
 
 ### Performance Summary
 
-The benchmark results demonstrate that the cluster achieved progressively higher computational performance as additional compute nodes were utilized. The **2-node** configuration established the baseline performance, while the **4-node** and **7-node** configurations showed a significant improvement in GFLOPS due to the increased availability of processing resources and parallel execution.
+The benchmark showed that the master node alone achieved the highest performance of 12.073 GFLOPS because all computations were executed locally without any network communication overhead. When additional worker nodes were introduced, the total computational resources increased, but the distributed execution also introduced communication and synchronization overhead between nodes.
 
-An attempt was also made to execute the benchmark using **all 8 nodes** in the cluster. However, the benchmark could not be completed because one compute node became disconnected during execution. This interruption caused an MPI communication failure between the participating nodes, resulting in the termination of the benchmark before any valid performance measurements could be recorded.
+With 2 worker nodes (8 cores), the cluster achieved 1.7539 GFLOPS. Increasing the cluster to 4 worker nodes (16 cores) improved performance to 2.2047 GFLOPS, representing the best result among the distributed configurations. However, scaling further to 7 worker nodes (28 cores) reduced performance to 1.7563 GFLOPS, indicating that the communication overhead outweighed the benefits of the additional processing cores for the chosen problem size.
 
+An attempt was also made to execute the benchmark using 8 worker nodes (32 cores). Although the benchmark reached approximately 1.8604 GFLOPS, the execution failed because one of the nodes dropped out during computation. As a result, this run could not be considered a valid benchmark result.
+
+Overall, the benchmark demonstrates that the Raspberry Pi cluster is capable of running distributed HPL workloads successfully. However, the results also highlight that increasing the number of nodes does not always lead to higher performance. Beyond four worker nodes, network latency, MPI communication costs, and synchronization overhead became significant enough to limit scalability. For the tested configuration (N = 6000, NB = 128), the 4-worker (16-core) configuration provided the best balance between computational power and communication overhead, making it the most efficient distributed setup among the successful benchmark runs.
 Overall, the successful executions on the **2-node**, **4-node**, and **7-node** configurations confirm that the cluster infrastructure was able to execute distributed HPL workloads correctly. The unsuccessful **8-node** execution indicates that resolving node connectivity and communication issues is necessary before conducting full-scale performance evaluation across the entire cluster.
 
 
