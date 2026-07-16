@@ -330,23 +330,18 @@ ansible workers -i ~/pi-cluster/hosts.ini -m copy -a "src=~/gustafson_multi_benc
 ## 6. Analytical Observations & Verification Insights
 
 ### 1. Multi-Workload Resolution of Amdahl's Law
-Amdahl's model states that the speedup of a program is limited by its strictly sequential portions ($s$):
-
-$$S_A = \frac{1}{s + \frac{1-s}{P}}$$
+Amdahl's model states that the speedup of a program is limited by its strictly sequential portions.
 
 By cross-referencing Tables 1 through 5, we see a dramatic shift in behavior. At small problem sizes (10M), the fixed workload gets split so thinly at 32 cores that communication setup takes up more time than the actual calculations. This causes the cluster efficiency to bottom out at **26.8%**.
 
 However, when increasing the workload size **500×** up to **5 Billion integration steps**, the computing time grows large enough to completely drown out network fluctuations. This allows the 32-core configuration to run at a highly optimal **91.9% efficiency rate** and achieve a massive **29.40× speedup**, showing that Amdahl's limitation shifts dynamically based on data scale.
 
 ### 2. Multi-Workload Resolution of Gustafson's Law
-Gustafson's law approaches parallel efficiency from a capacity perspective, stating that scaled speedup is linear with core expansion if the workload scales with the architecture:
-
-$$S_G = P - s(P - 1)$$
+Gustafson's law approaches parallel efficiency from a capacity perspective, stating that scaled speedup is linear with core expansion if the workload scales with the architecture.
 
 Reviewing Tables 6 through 10 confirms that Gustafson's Law completely bypasses the fixed-workload efficiency drop. By keeping the computing load consistent *per core*, total execution times remain incredibly flat across all sweeps, shifting by only minor margins even as the overall system handles up to **6.4 Billion calculations simultaneously**.
 
 No matter how large the baseline footprint gets (ranging from 1M to 200M steps per core), the cluster node efficiency consistently holds within an exceptional **87.0% to 93.5%** corridor. This confirms near-perfect horizontal capacity scaling and validates that the 8-node cluster can handle massive problem spaces effortlessly when scaled outward.
-
 ## 7. Graphical Representation
 ![Chart](../assets/amdahl_task3.png) 
 ![Chart](../assets/gustafson_task3.png) 
