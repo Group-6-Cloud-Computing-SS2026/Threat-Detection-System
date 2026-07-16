@@ -4,7 +4,7 @@
 
 This document describes the design and deployment of the centralized monitoring infrastructure for the Raspberry Pi Kubernetes cluster. The objective is to continuously observe the health and performance of the cluster — including hardware resources, Kubernetes resources, and network services — through a single monitoring platform.
 
-The monitoring solution was deployed using the **kube-prometheus-stack** Helm chart, which provides a complete monitoring ecosystem including Prometheus, Alertmanager, Grafana, Node Exporter, kube-state-metrics, the Prometheus Operator, and Blackbox Exporter.
+The monitoring solution was deployed using the **kube-prometheus-stack** Helm chart, which provides a complete monitoring ecosystem including Prometheus, Alertmanager, Grafana, Node Exporter, kube-state-metrics, the Prometheus Operator, and Blackbox Exporter. The Raspberry Pi 4 edge camera also exposes Node Exporter metrics to Prometheus, enabling hardware and operating system monitoring even though it is not part of the Kubernetes cluster.
 
 The infrastructure was designed for the following cluster:
 
@@ -29,15 +29,13 @@ All resource-intensive monitoring components were deployed on the Raspberry Pi 5
 
 ---
 
-
-
 ## 1. Monitoring Architecture & Resource Optimization
 
 The Raspberry Pi 3 worker nodes have only **1 GB of RAM** and boot diskless over NFS. Running heavy monitoring services on every worker would degrade cluster performance and reduce resources available for application workloads.
 
 To address this, the monitoring system follows a **centralized architecture**: all resource-intensive services run exclusively on the Raspberry Pi 5 master node, while lightweight Node Exporter agents run on every Kubernetes cluster node.
 
-The Raspberry Pi 4 camera node is not part of the Kubernetes cluster. It is monitored as an external network service using Blackbox Exporter.
+The Raspberry Pi 4 camera node is not part of the Kubernetes cluster. It exposes Node Exporter metrics to Prometheus, allowing hardware and operating system metrics to be collected even though it is outside the cluster. In addition, Blackbox Exporter monitors the availability of its network services.
 
 ---
 
@@ -56,6 +54,16 @@ The Raspberry Pi 4 camera node is not part of the Kubernetes cluster. It is moni
                                   v
   kube-state-metrics  -------->  Prometheus  <-------- Blackbox Exporter
   (Kubernetes Objects)       (pi5-master)          (Network Probes)
+                                  ^
+                                  |
+                     +------------+------------+
+                     |                         |
+             Node Exporter Metrics     Blackbox Exporter Target
+                     |                         |
+                     +------------+------------+
+                                  |
+                          Pi4 Edge (pi4-edge)
+                      (External — not a K8s node)
                                   |
                          managed by Prometheus Operator
                                   |
@@ -101,7 +109,7 @@ Node Exporter collects:
 - System load
 - Operating system information
 
-The Raspberry Pi 4 camera node is outside the Kubernetes cluster and does not run Node Exporter. It is monitored by Blackbox Exporter instead, which checks whether its network services are reachable.
+The Raspberry Pi 4 camera node is outside the Kubernetes cluster but exposes Node Exporter metrics to Prometheus, enabling hardware and operating system monitoring. In addition, Blackbox Exporter monitors the availability of its network services.
 
 Because Node Exporter has a minimal resource footprint, it continuously monitors each cluster node without affecting NFS boot performance or available RAM.
 
@@ -119,7 +127,6 @@ nodeSelector:
 Without this constraint, Kubernetes could schedule monitoring services onto worker nodes, consuming their limited resources.
 
 ---
-
 
 ## 2. Monitoring Components
 
@@ -154,7 +161,7 @@ Whenever a Prometheus alert rule is triggered, Prometheus forwards the alert to 
 
 ### 2.4 Alertmanager
 
-Alertmanager receives alert events forwarded by Prometheus. It is responsible for grouping, managing, and routing alerts to the appropriate notification channels. Alertmanager is deployed as part of the monitoring stack through the kube-prometheus-stack Helm chart and runs on the master node alongside Prometheus. Detailed alert rules, notification policies, and integration configuration are documented separately in Task 9.
+Alertmanager receives alert events forwarded by Prometheus. It is responsible for grouping, managing, and routing alerts to the appropriate notification channels. Alertmanager is deployed as part of the monitoring stack through the kube-prometheus-stack Helm chart and runs on the master node alongside Prometheus.
 
 ---
 
@@ -176,6 +183,8 @@ A lightweight agent that reads hardware and OS metrics directly from the Linux k
 
 **Node Exporter monitors node hardware and operating system health.**
 
+The Raspberry Pi 4 edge camera also exposes Node Exporter metrics to Prometheus, allowing hardware and operating system metrics to be collected even though it is not part of the Kubernetes cluster.
+
 ---
 
 ### 2.8 kube-state-metrics
@@ -196,7 +205,7 @@ In this project, it monitors:
 - Kubernetes API (`192.168.1.50:6443`)
 - Pi4 Camera Node (`192.168.1.2:22`)
 
-Unlike Node Exporter, which monitors hardware and operating system metrics on Kubernetes cluster nodes, Blackbox Exporter monitors whether network services are reachable. Since the Raspberry Pi 4 camera is an external edge device and not part of the Kubernetes cluster, it is monitored through Blackbox Exporter rather than Node Exporter.
+Blackbox Exporter and Node Exporter serve complementary roles in monitoring the Raspberry Pi 4 edge camera: Node Exporter provides hardware and operating system metrics, while Blackbox Exporter monitors whether its network services are reachable. Together, they provide complete visibility into both the hardware health and service availability of the Pi4 edge camera.
 
 ---
 
@@ -268,7 +277,7 @@ The custom dashboard **"Raspberry Pi Cluster — Monitoring"** provides a unifie
 - **Network Services** — UP/DOWN status for SSH, MQTT, Kubernetes API, and Pi4 Camera via Blackbox Exporter.
 - **Cluster Health Summary** — Live counts for Nodes Online, Total Pods, and Services UP.
 
-A node-selection dropdown allows filtering all panels for individual Raspberry Pi nodes.
+A node-selection dropdown allows filtering all panels for individual Raspberry Pi nodes. Hardware metrics are available for both the Kubernetes nodes and the Raspberry Pi 4 edge camera because Prometheus collects Node Exporter metrics from all monitored devices.
 
 ![Grafana Monitoring Dashboard](task5-dashboard.jpeg)
 
@@ -280,9 +289,19 @@ Task 5 successfully implemented a centralized monitoring infrastructure for the 
 
 - **Centralized monitoring and alert management** — all services managed from a single master node.
 - **Resource optimization** — lightweight Node Exporter on workers, heavy components on the Pi5 Master.
-- **Hardware monitoring** — CPU, memory, disk, and network metrics across all nodes.
+- **Hardware monitoring** — CPU, memory, disk, and network metrics across all Kubernetes nodes and the Raspberry Pi 4 edge camera.
 - **Kubernetes resource monitoring** — pod counts, deployment status, and node health via kube-state-metrics.
 - **Network service monitoring** — real-time UP/DOWN status via Blackbox Exporter.
 - **Real-time observability** — unified Grafana dashboard with live metrics and node filtering.
 
 During implementation, a Helm release deadlock and a Grafana image corruption issue were encountered and resolved without data loss or cluster disruption. The monitoring infrastructure provides a stable, practical foundation for observing the operational status of the Raspberry Pi Kubernetes cluster throughout the project lifecycle.
+
+---
+
+## 7. Observations & Limitations
+
+During testing, the monitoring system successfully collected hardware, Kubernetes, and network service metrics, while Grafana dashboards updated correctly in real time.
+
+It was observed that Telegram notifications for certain alerts, particularly the **Node Down** alert, occasionally experienced slight delays before being delivered. Although the monitoring components operated correctly, the exact cause of this behaviour was not conclusively identified.
+
+Possible contributing factors include Raspberry Pi hardware resource limitations, network latency within the cluster, Prometheus scrape and evaluation intervals, or Alertmanager processing. Further performance analysis would be required to determine the precise cause.
