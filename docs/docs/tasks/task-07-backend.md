@@ -129,39 +129,27 @@ The recovery script solves this **automatically on boot** by implementing the fo
 
 ---
 
-## 7. Core Fixes & Troubleshooting History
-
-To establish stable operational service, the following structural fixes were implemented in the backend:
-
-1. **Unauthenticated Image Downloads**: Bypassed JWT auth checks on `/api/v1/images/{image_id}/download` inside [images.py](file:///Users/hanan/personal-projects/Threat-Detection-System/backend/app/api/v1/images.py). This allows standard HTML `<img>` elements in the browser dashboard to render captured threat photos without needing to inject request headers.
-2. **WebSocket CORS Restoration**: Configured the backend with the environment variable `BACKEND_CORS_ORIGINS` in [backend.yaml](file:///Users/hanan/personal-projects/Threat-Detection-System/k8s/backend.yaml) to whitelist `http://192.168.1.50/`. This resolves CORS checks on the live MJPEG camera stream WebSocket handshake (`/api/v1/stream/ws`).
-3. **Prometheus fastapi Middleware Crash**: Setting `PROMETHEUS_ENABLED="false"` resolved a routing crash loop (`AttributeError: '_IncludedRouter' object has no attribute 'path'`) caused by a package mismatch inside the metrics middleware.
-4. **Worker Registry Access**: Configured `/etc/rancher/k3s/registries.yaml` on all 8 worker nodes using Ansible to mirror `localhost:5000` pulls to the master registry at `http://192.168.1.50:5000`. This enables workers to pull backend API updates seamlessly.
-5. **Multi-replica Message Duplication (Shared Subscriptions)**: Implemented MQTT v5 Shared Subscriptions (`$share/api-group/...`) in [mqtt_service.py](file:///Users/hanan/personal-projects/Threat-Detection-System/backend/app/services/mqtt_service.py) for events and health metrics to ensure exactly one replica processes database writes and dispatches the Telegram bot notifications, while maintaining standard broadcast for video frames.
-
----
-
-## 8. K3s Kubernetes Cluster Configuration Details
+## 7. K3s Kubernetes Cluster Configuration Details
 
 To run a multi-node Kubernetes cluster distributed across network-booted, memory-constrained nodes, several low-level kernel, storage, and networking parameters were configured.
 
-### 8.1 — Enabling Cgroups Memory Management
-Raspberry Pi OS disables memory process limits by default. Running K3s without memory limit tracking triggers a immediate boot crash (`failed to find memory cgroup (v2)`).
+### 7.1 — Enabling Cgroups Memory Management
+ Raspberry Pi OS disables memory process limits by default. Running K3s without memory limit tracking triggers a immediate boot crash (`failed to find memory cgroup (v2)`).
 * **Fix**: Append kernel command-line variables to `/boot/firmware/cmdline.txt` on the Master and `/tftpboot/cmdline.txt` (or PXE configurations) for the workers:
   ```text
   cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1
   ```
 
-### 8.2 — Native Snapshotter & Kubelet Ingestion Timeout on NFS
-Because worker nodes mount `/` over NFS, K3s cannot use standard overlayfs for docker layer isolation. It falls back to the **`native` snapshotter**, which performs file-by-file deep copies of container image structures.
+### 7.2 — Native Snapshotter & Kubelet Ingestion Timeout on NFS
+ Because worker nodes mount `/` over NFS, K3s cannot use standard overlayfs for docker layer isolation. It falls back to the **`native` snapshotter**, which performs file-by-file deep copies of container image structures.
 * **The Blocker**: A deep copy of Python base images (~820MB, thousands of packages) over the 100Mbps Ethernet local switch takes 3 to 4 minutes, overloading the Pi 3 workers' CPU. The default Kubelet timeout (`runtime-request-timeout` = 2m) would abort the container creation midway, leaving orphaned containerd namespaces.
 * **Fix**: Modified the worker agent service `/lib/systemd/system/k3s-agent.service` on the shared rootfs, appending `runtime-request-timeout=15m` to the execution daemon:
   ```ini
   ExecStart=/usr/local/bin/k3s agent --snapshotter native --kubelet-arg=runtime-request-timeout=15m
   ```
 
-### 8.3 — Dual-Homed Network Masquerading & DNS Gateways
-The Pi 5 Master is connected to both **Wi-Fi** (`wlan0` - internet, `192.168.1.x`) and **Ethernet** (`eth0` - private switch for workers, `192.168.1.x`).
+### 7.3 — Dual-Homed Network Masquerading & DNS Gateways
+ The Pi 5 Master is connected to both **Wi-Fi** (`wlan0` - internet, `192.168.1.x`) and **Ethernet** (`eth0` - private switch for workers, `192.168.1.x`).
 * **The Blocker**: Local switch DNS calls defaults to the lower Ethernet routing metric (200), bypassing the Wi-Fi gateway (600) and locking out external requests.
 * **Fix**: Setup IP Masquerading (NAT) on the Master to share its Wi-Fi network interface with the private Ethernet switch interface, allowing workers to reach external registries:
   ```bash
@@ -170,21 +158,21 @@ The Pi 5 Master is connected to both **Wi-Fi** (`wlan0` - internet, `192.168.1.x
   sudo iptables -I FORWARD 1 -m state --state RELATED,ESTABLISHED -j ACCEPT
   ```
 
-### 8.4 — Resolving PXE Volatile RAM Overlay (`/etc/resolv.conf`)
+### 7.4 — Resolving PXE Volatile RAM Overlay (`/etc/resolv.conf`)
 * **The Blocker**: Network-booted worker nodes mount `/etc` as volatile RAM overlays (`tmpfs`). Editing the static base image on the master does not dynamically update active nodes' DNS, which still holds dead local gateways.
 * **Fix**: Injected public resolvers directly into active nodes' runtime memory using Ansible:
   ```bash
   ansible workers -i ~/pi-cluster/hosts.ini -m shell -a "printf 'nameserver 8.8.8.8\nnameserver 1.1.1.1\n' | sudo tee /etc/resolv.conf" --become
   ```
 
-### 8.5 — Containerd Sandbox Pause Image cache warming
+### 7.5 — Containerd Sandbox Pause Image cache warming
 * **The Blocker**: Workers booting under DNS lockouts failed to pull the K3s networking sandbox (`rancher/mirrored-pause:3.6`) and entered exponential retry back-off loops, stalling container creation indefinitely.
 * **Fix**: Used Ansible to manually force-pull the pause image into the K3s local runtime cache across all workers, waking up the pending scheduler threads instantly:
   ```bash
   ansible workers -i ~/pi-cluster/hosts.ini -m shell -a "sudo k3s crictl pull rancher/mirrored-pause:3.6" --become
   ```
 
-### 8.6 — Permanent Offline Image Baking (Bad-Boot Resiliency)
+### 7.6 — Permanent Offline Image Baking (Bad-Boot Resiliency)
 * **The Blocker**: In a "bad boot" scenario (sudden power cuts or unclean shutdowns), the volatile/overlay NFS filesystems on the workers can experience containerd database lock corruptions or Kubelet garbage collection prunes, deleting all cached images. Re-downloading and extracting images (like the 820MB `tds-api:latest`, `minio:latest`, or the CNI `pause` sandbox) over 100Mbps Ethernet takes 3–4 minutes per node, saturating the network switch.
   Additionally, because the worker's `/var/lib/rancher/` is mounted as a volatile `tmpfs` RAM disk on boot, placing the `.tar` files directly inside `/nfs/rootfs64/var/lib/rancher/k3s/agent/images/` results in them being **masked (hidden)** by the empty RAM disk mount.
 * **The Solution (Image Baking & Dynamic Symlinking)**:
@@ -217,6 +205,17 @@ The Pi 5 Master is connected to both **Wi-Fi** (`wlan0` - internet, `192.168.1.x
     Normal  Pulling    29s    kubelet  spec.containers{api}: Pulling image "localhost:5000/tds-api:latest"
     Normal  Pulled     26s    kubelet  spec.containers{api}: Successfully pulled image "localhost:5000/tds-api:latest" in 2.78s (2.78s including waiting)
     ```
+
+---
+## 8. Core Fixes & Troubleshooting History
+
+To establish stable operational service, the following structural fixes were implemented in the backend:
+
+1. **Unauthenticated Image Downloads**: Bypassed JWT auth checks on `/api/v1/images/{image_id}/download` inside [images.py](file:///Users/hanan/personal-projects/Threat-Detection-System/backend/app/api/v1/images.py). This allows standard HTML `<img>` elements in the browser dashboard to render captured threat photos without needing to inject request headers.
+2. **WebSocket CORS Restoration**: Configured the backend with the environment variable `BACKEND_CORS_ORIGINS` in [backend.yaml](file:///Users/hanan/personal-projects/Threat-Detection-System/k8s/backend.yaml) to whitelist `http://192.168.1.50/`. This resolves CORS checks on the live MJPEG camera stream WebSocket handshake (`/api/v1/stream/ws`).
+3. **Prometheus fastapi Middleware Crash**: Setting `PROMETHEUS_ENABLED="false"` resolved a routing crash loop (`AttributeError: '_IncludedRouter' object has no attribute 'path'`) caused by a package mismatch inside the metrics middleware.
+4. **Worker Registry Access**: Configured `/etc/rancher/k3s/registries.yaml` on all 8 worker nodes using Ansible to mirror `localhost:5000` pulls to the master registry at `http://192.168.1.50:5000`. This enables workers to pull backend API updates seamlessly.
+5. **Multi-replica Message Duplication (Shared Subscriptions)**: Implemented MQTT v5 Shared Subscriptions (`$share/api-group/...`) in [mqtt_service.py](file:///Users/hanan/personal-projects/Threat-Detection-System/backend/app/services/mqtt_service.py) for events and health metrics to ensure exactly one replica processes database writes and dispatches the Telegram bot notifications, while maintaining standard broadcast for video frames.
 
 ---
 
