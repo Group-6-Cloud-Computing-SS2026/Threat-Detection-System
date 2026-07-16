@@ -1,0 +1,4468 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for the edge-computing threat detection sensor network.">
+      
+      
+      
+      
+        <link rel="prev" href="../../guides/task_3/">
+      
+      
+        <link rel="next" href="../task-05-monitoring/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Task 4 — Non-MPI Scaling Laws - Threat Detection System</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#task-4-non-mpi-scaling-laws-task-distributor" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Threat Detection System" class="md-header__button md-logo" aria-label="Threat Detection System" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Threat Detection System
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Task 4 — Non-MPI Scaling Laws
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Group-6-Cloud-Computing-SS2026/Threat-Detection-System" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Threat-Detection-System
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/overview/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../guides/shutdown-and-cold-start/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../overall-status/" class="md-tabs__link">
+          
+  
+  
+  Tasks
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Threat Detection System" class="md-nav__button md-logo" aria-label="Threat Detection System" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Threat Detection System
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Group-6-Cloud-Computing-SS2026/Threat-Detection-System" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Threat-Detection-System
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/shutdown-and-cold-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ❗ (MUST FOLLOW!) Cluster Shutdown and Cold Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/backend-pi5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Local Development & Backend Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/minio-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MinIO S3 Object Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/mpi-cluster/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MPI Cluster Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/k3s-deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Distributed k3s Kubernetes Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/camera-test-stream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Edge Camera Test Stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/cluster-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cluster Setup (PXE & NFS)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/cluster-setup-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cluster Setup V2 (Setup & Verification)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/ansible/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ansible
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/hardware-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware Setup & Boot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/synthetic-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HPL Synthetic Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/task-distributor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task Distributor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tasks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tasks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overall-status/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overall Tasks Status
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task-01-edge-computing-infrastructure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 1 — Edge Computing Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task-02-hpl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 2 — HPL Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/task_3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 3 — MPI Cluster
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 4 — Non-MPI Scaling Laws
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 4 — Non-MPI Scaling Laws
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-1-amdahls-law-5-runs-6-workloads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiment 1: Amdahl's Law — 5 Runs × 6 Workloads
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Experiment 1: Amdahl&#39;s Law — 5 Runs × 6 Workloads">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#200-x-150-5-runs-per-node-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        200 x 150 — 5 Runs Per Node Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amdahls-law-summary-table-averages-of-5-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amdahl's Law — Summary Table (Averages of 5 Runs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amdahls-law-graphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amdahl's Law — Graphs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-2-gustafsons-law" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiment 2: Gustafson's Law
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Experiment 2: Gustafson&#39;s Law">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#theory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Theory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#single-run-results-empirical-measured-on-physical-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Single-Run Results (Empirical — Measured on Physical Cluster)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-2-gustafsons-law-5-runs-x-workfload-set-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiment 2: Gustafson's Law — 5 Runs x Workfload Set 1
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Experiment 2: Gustafson&#39;s Law — 5 Runs x Workfload Set 1">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1600x600-node-base-5-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1600x600 / node Base — 5 Runs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gustafsons-law-set-1-summary-table-averages-of-5-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gustafson's Law (Set 1) — Summary Table (Averages of 5 Runs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gustafsons-law-set-1-graphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gustafson's Law (Set 1) — Graphs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-2-gustafsons-law-5-runs-x-workfload-set-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiment 2: Gustafson's Law — 5 Runs x Workfload Set 2
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Experiment 2: Gustafson&#39;s Law — 5 Runs x Workfload Set 2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gustafsons-law-set-2-summary-table-averages-of-5-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gustafson's Law (Set 2) — Summary Table (Averages of 5 Runs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gustafsons-law-set-2-graphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gustafson's Law (Set 2) — Graphs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#issues-and-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issues and Fixes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Issues and Fixes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#memory-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unordered-composed-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unordered composed image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#failed-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failed runs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5400x2400-4-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5400x2400 / 4 nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6400x2400-4-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6400x2400 / 4 nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6400x2400-4-nodes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6400x2400 / 4 nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task-05-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 5 — Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task-06-model-training/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 6 — Model training & Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task-07-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 7 — Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task-08-frontend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 8 — Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task-09-telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 9 — Telegram Notifications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task-10-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 10 — Project Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-1-amdahls-law-5-runs-6-workloads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiment 1: Amdahl's Law — 5 Runs × 6 Workloads
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Experiment 1: Amdahl&#39;s Law — 5 Runs × 6 Workloads">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#200-x-150-5-runs-per-node-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        200 x 150 — 5 Runs Per Node Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amdahls-law-summary-table-averages-of-5-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amdahl's Law — Summary Table (Averages of 5 Runs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amdahls-law-graphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amdahl's Law — Graphs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-2-gustafsons-law" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiment 2: Gustafson's Law
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Experiment 2: Gustafson&#39;s Law">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#theory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Theory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#single-run-results-empirical-measured-on-physical-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Single-Run Results (Empirical — Measured on Physical Cluster)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-2-gustafsons-law-5-runs-x-workfload-set-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiment 2: Gustafson's Law — 5 Runs x Workfload Set 1
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Experiment 2: Gustafson&#39;s Law — 5 Runs x Workfload Set 1">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1600x600-node-base-5-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1600x600 / node Base — 5 Runs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gustafsons-law-set-1-summary-table-averages-of-5-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gustafson's Law (Set 1) — Summary Table (Averages of 5 Runs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gustafsons-law-set-1-graphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gustafson's Law (Set 1) — Graphs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-2-gustafsons-law-5-runs-x-workfload-set-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiment 2: Gustafson's Law — 5 Runs x Workfload Set 2
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Experiment 2: Gustafson&#39;s Law — 5 Runs x Workfload Set 2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gustafsons-law-set-2-summary-table-averages-of-5-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gustafson's Law (Set 2) — Summary Table (Averages of 5 Runs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gustafsons-law-set-2-graphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gustafson's Law (Set 2) — Graphs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#issues-and-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issues and Fixes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Issues and Fixes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#memory-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unordered-composed-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unordered composed image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#failed-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failed runs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5400x2400-4-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5400x2400 / 4 nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6400x2400-4-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6400x2400 / 4 nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6400x2400-4-nodes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6400x2400 / 4 nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="task-4-non-mpi-scaling-laws-task-distributor">Task 4: Non-MPI Scaling Laws (Task Distributor)</h1>
+<h2 id="overview">Overview</h2>
+<p>This document covers the results and findings of <a href="https://github.com/christianbaun/task-distributor">Task Distributor</a>
+experiments, which we used to demonstrate <strong>Amdahl's Law</strong> and <strong>Gustafson's Law</strong> on our Raspberry Pi cluster.</p>
+<p>Task Distributor is a bash-based parallel image rendering tool that splits a POV-Ray
+render job across multiple cluster nodes. The scene file used is <code>blob.pov</code> — a
+built-in POV-Ray mathematical 3D scene (a metaball/blob shape) that ships with the
+<code>povray-examples</code> package. No custom image is needed; POV-Ray generates the PNG from
+the scene description. Each worker renders a horizontal strip of the final image,
+making it ideal for demonstrating parallel computing laws.</p>
+<h2 id="experiment-1-amdahls-law-5-runs-6-workloads">Experiment 1: Amdahl's Law — 5 Runs × 6 Workloads</h2>
+<h3 id="200-x-150-5-runs-per-node-configuration">200 x 150 — 5 Runs Per Node Configuration</h3>
+<p><strong>1 Nodes — 200x150</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.012s</td>
+<td>4.019s</td>
+<td>0.012s</td>
+<td>4.043s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>2.012s</td>
+<td>0.006s</td>
+<td>2.021s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.004s</td>
+<td>3.020s</td>
+<td>0.007s</td>
+<td>3.031s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.004s</td>
+<td>3.013s</td>
+<td>0.007s</td>
+<td>3.024s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.004s</td>
+<td>3.015s</td>
+<td>0.005s</td>
+<td>3.024s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.005s</strong></td>
+<td><strong>3.015s</strong></td>
+<td><strong>0.007s</strong></td>
+<td><strong>3.027s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>2 Nodes — 200x150</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>3.018s</td>
+<td>0.023s</td>
+<td>3.044s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>2.014s</td>
+<td>0.024s</td>
+<td>2.041s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>2.013s</td>
+<td>0.022s</td>
+<td>2.038s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.003s</td>
+<td>2.013s</td>
+<td>0.021s</td>
+<td>2.037s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.003s</td>
+<td>2.019s</td>
+<td>0.023s</td>
+<td>2.045s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>2.215s</strong></td>
+<td><strong>0.022s</strong></td>
+<td><strong>2.240s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>4 Nodes — 200x150</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>2.026s</td>
+<td>0.023s</td>
+<td>2.052s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>2.030s</td>
+<td>0.023s</td>
+<td>2.056s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>2.026s</td>
+<td>0.024s</td>
+<td>2.053s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.003s</td>
+<td>2.026s</td>
+<td>0.031s</td>
+<td>2.060s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.005s</td>
+<td>2.033s</td>
+<td>0.031s</td>
+<td>2.069s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>2.028s</strong></td>
+<td><strong>0.026s</strong></td>
+<td><strong>2.057s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>8 Nodes — 200x150</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>2.045s</td>
+<td>0.024s</td>
+<td>2.072s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>2.058s</td>
+<td>0.041s</td>
+<td>2.102s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>2.050s</td>
+<td>0.025s</td>
+<td>2.078s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.003s</td>
+<td>2.049s</td>
+<td>0.025s</td>
+<td>2.077s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.003s</td>
+<td>2.052s</td>
+<td>0.035s</td>
+<td>2.090s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>2.050s</strong></td>
+<td><strong>0.030s</strong></td>
+<td><strong>2.083s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>1 Nodes — 400x300</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>2.009s</td>
+<td>0.004s</td>
+<td>2.016s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>2.009s</td>
+<td>0.004s</td>
+<td>2.016s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.004s</td>
+<td>3.013s</td>
+<td>0.005s</td>
+<td>3.022s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.003s</td>
+<td>2.009s</td>
+<td>0.004s</td>
+<td>2.016s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.003s</td>
+<td>2.009s</td>
+<td>0.006s</td>
+<td>2.018s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>2.209s</strong></td>
+<td><strong>0.004s</strong></td>
+<td><strong>2.216s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>2 Nodes — 400x300</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>3.020s</td>
+<td>0.047s</td>
+<td>3.070s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>3.017s</td>
+<td>0.052s</td>
+<td>3.072s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>2.014s</td>
+<td>0.045s</td>
+<td>2.062s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.003s</td>
+<td>3.017s</td>
+<td>0.048s</td>
+<td>3.068s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.003s</td>
+<td>3.016s</td>
+<td>0.067s</td>
+<td>3.086s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>2.816s</strong></td>
+<td><strong>0.051s</strong></td>
+<td><strong>2.870s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>4 Nodes — 400x300</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.004s</td>
+<td>2.025s</td>
+<td>0.044s</td>
+<td>2.073s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.002s</td>
+<td>2.025s</td>
+<td>0.045s</td>
+<td>2.072s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>2.036s</td>
+<td>0.062s</td>
+<td>2.101s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.004s</td>
+<td>2.025s</td>
+<td>0.047s</td>
+<td>2.076s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.003s</td>
+<td>3.029s</td>
+<td>0.068s</td>
+<td>3.100s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>2.228s</strong></td>
+<td><strong>0.053s</strong></td>
+<td><strong>2.284s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>8 Nodes — 400x300</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.004s</td>
+<td>2.043s</td>
+<td>0.046s</td>
+<td>2.093s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>2.042s</td>
+<td>0.067s</td>
+<td>2.112s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>2.047s</td>
+<td>0.052s</td>
+<td>2.102s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.003s</td>
+<td>2.044s</td>
+<td>0.049s</td>
+<td>2.096s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.003s</td>
+<td>2.052s</td>
+<td>0.064s</td>
+<td>2.119s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>2.045s</strong></td>
+<td><strong>0.055s</strong></td>
+<td><strong>2.103s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>1 Nodes — 800x600</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>4.016s</td>
+<td>0.007s</td>
+<td>4.026s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.004s</td>
+<td>4.015s</td>
+<td>0.004s</td>
+<td>4.023s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>4.015s</td>
+<td>0.006s</td>
+<td>4.024s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.004s</td>
+<td>4.014s</td>
+<td>0.005s</td>
+<td>4.023s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.003s</td>
+<td>4.014s</td>
+<td>0.007s</td>
+<td>4.024s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>4.014s</strong></td>
+<td><strong>0.005s</strong></td>
+<td><strong>4.022s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>2 Nodes — 800x600</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>4.018s</td>
+<td>0.158s</td>
+<td>4.179s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>4.017s</td>
+<td>0.122s</td>
+<td>4.142s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>4.018s</td>
+<td>0.121s</td>
+<td>4.142s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.003s</td>
+<td>3.018s</td>
+<td>0.156s</td>
+<td>3.177s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.003s</td>
+<td>3.020s</td>
+<td>0.122s</td>
+<td>3.145s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>3.618s</strong></td>
+<td><strong>0.135s</strong></td>
+<td><strong>3.756s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>4 Nodes — 800x600</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>3.027s</td>
+<td>0.126s</td>
+<td>3.156s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.004s</td>
+<td>3.029s</td>
+<td>0.153s</td>
+<td>3.186s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>3.030s</td>
+<td>0.127s</td>
+<td>3.160s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.003s</td>
+<td>3.027s</td>
+<td>0.148s</td>
+<td>3.178s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.003s</td>
+<td>3.031s</td>
+<td>0.133s</td>
+<td>3.167s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>3.028s</strong></td>
+<td><strong>0.137s</strong></td>
+<td><strong>3.168s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>8 Nodes — 800x600</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>3.058s</td>
+<td>0.167s</td>
+<td>3.228s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>3.052s</td>
+<td>0.132s</td>
+<td>3.187s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>3.056s</td>
+<td>0.149s</td>
+<td>3.208s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.003s</td>
+<td>3.058s</td>
+<td>0.132s</td>
+<td>3.193s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.004s</td>
+<td>3.059s</td>
+<td>0.152s</td>
+<td>3.215s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>3.056s</strong></td>
+<td><strong>0.146s</strong></td>
+<td><strong>3.205s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>1 Nodes — 1600x1200</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.004s</td>
+<td>11.032s</td>
+<td>0.005s</td>
+<td>11.041s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>10.030s</td>
+<td>0.005s</td>
+<td>10.038s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.005s</td>
+<td>9.027s</td>
+<td>0.005s</td>
+<td>9.037s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.003s</td>
+<td>10.029s</td>
+<td>0.005s</td>
+<td>10.037s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.003s</td>
+<td>10.032s</td>
+<td>0.005s</td>
+<td>10.040s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>10.030s</strong></td>
+<td><strong>0.005s</strong></td>
+<td><strong>10.038s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>2 Nodes — 1600x1200</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>10.038s</td>
+<td>0.403s</td>
+<td>10.444s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>8.030s</td>
+<td>0.355s</td>
+<td>8.388s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>8.030s</td>
+<td>0.356s</td>
+<td>8.389s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.003s</td>
+<td>8.032s</td>
+<td>0.372s</td>
+<td>8.407s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.007s</td>
+<td>8.037s</td>
+<td>0.389s</td>
+<td>8.433s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>8.433s</strong></td>
+<td><strong>0.375s</strong></td>
+<td><strong>8.811s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>4 Nodes — 1600x1200</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.004s</td>
+<td>6.039s</td>
+<td>0.442s</td>
+<td>6.485s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>6.037s</td>
+<td>0.453s</td>
+<td>6.493s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>6.033s</td>
+<td>0.500s</td>
+<td>6.536s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.003s</td>
+<td>6.037s</td>
+<td>0.479s</td>
+<td>6.519s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.003s</td>
+<td>6.037s</td>
+<td>0.451s</td>
+<td>6.491s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>6.036s</strong></td>
+<td><strong>0.465s</strong></td>
+<td><strong>6.504s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>8 Nodes — 1600x1200</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.004s</td>
+<td>5.061s</td>
+<td>0.447s</td>
+<td>5.512s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>5.057s</td>
+<td>0.466s</td>
+<td>5.526s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>5.055s</td>
+<td>0.496s</td>
+<td>5.554s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.004s</td>
+<td>5.054s</td>
+<td>0.473s</td>
+<td>5.531s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.004s</td>
+<td>5.060s</td>
+<td>0.481s</td>
+<td>5.545s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>5.057s</strong></td>
+<td><strong>0.472s</strong></td>
+<td><strong>5.532s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>1 Nodes — 3200x2400</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>45.117s</td>
+<td>0.006s</td>
+<td>45.126s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.004s</td>
+<td>51.140s</td>
+<td>0.010s</td>
+<td>51.154s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.004s</td>
+<td>52.158s</td>
+<td>0.009s</td>
+<td>52.171s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.004s</td>
+<td>54.139s</td>
+<td>0.006s</td>
+<td>54.149s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.004s</td>
+<td>53.154s</td>
+<td>0.012s</td>
+<td>53.170s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>51.141s</strong></td>
+<td><strong>0.008s</strong></td>
+<td><strong>51.152s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>2 Nodes — 3200x2400</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>31.092s</td>
+<td>1.223s</td>
+<td>32.318s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>28.080s</td>
+<td>1.280s</td>
+<td>29.363s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>27.085s</td>
+<td>1.324s</td>
+<td>28.412s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.003s</td>
+<td>29.086s</td>
+<td>1.143s</td>
+<td>30.232s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.003s</td>
+<td>27.076s</td>
+<td>1.152s</td>
+<td>28.231s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>28.483s</strong></td>
+<td><strong>1.224s</strong></td>
+<td><strong>29.710s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>4 Nodes — 3200x2400</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>18.063s</td>
+<td>1.340s</td>
+<td>19.406s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>20.073s</td>
+<td>1.281s</td>
+<td>21.357s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>18.063s</td>
+<td>1.303s</td>
+<td>19.369s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.003s</td>
+<td>18.068s</td>
+<td>1.268s</td>
+<td>19.339s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.003s</td>
+<td>18.066s</td>
+<td>1.326s</td>
+<td>19.395s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>18.466s</strong></td>
+<td><strong>1.303s</strong></td>
+<td><strong>19.772s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>8 Nodes — 3200x2400</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>14.075s</td>
+<td>1.602s</td>
+<td>15.680s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>13.083s</td>
+<td>1.875s</td>
+<td>14.961s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>13.080s</td>
+<td>1.619s</td>
+<td>14.702s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.003s</td>
+<td>14.077s</td>
+<td>1.579s</td>
+<td>15.659s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.003s</td>
+<td>13.078s</td>
+<td>1.599s</td>
+<td>14.680s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>13.478s</strong></td>
+<td><strong>1.654s</strong></td>
+<td><strong>15.135s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>1 Nodes — 6400x4800</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>s</td>
+<td>s</td>
+<td>s</td>
+<td>0.000s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>s</td>
+<td>s</td>
+<td>s</td>
+<td>0.000s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>s</td>
+<td>s</td>
+<td>s</td>
+<td>0.000s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>s</td>
+<td>s</td>
+<td>s</td>
+<td>0.000s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>s</td>
+<td>s</td>
+<td>s</td>
+<td>0.000s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.000s</strong></td>
+<td><strong>0.000s</strong></td>
+<td><strong>0.000s</strong></td>
+<td><strong>0.000s</strong></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pi@worker1:~$ ls /tmp
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pov16274  pov16686    systemd-private-aff2169b8e5a468f809d349af9090f28-ModemManager.service-31fSVJ
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>pov16525  pov16709    systemd-private-aff2169b8e5a468f809d349af9090f28-bluetooth.service-cAnUhH
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>pov16655  povraymessages  systemd-private-aff2169b8e5a468f809d349af9090f28-systemd-logind.service-rtsZrp
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pi@worker1:~$ ls -l /tmp
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>total 464516
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>-rw------- 1 pi   pi   614400024 Jul 13 01:18 pov16274
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>-rw------- 1 pi   pi   614400024 Jul 13 01:54 pov16525
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>-rw------- 1 pi   pi   614400024 Jul 13 01:54 pov16655
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>-rw------- 1 pi   pi           0 Jul 13 01:54 pov16686
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>-rw------- 1 pi   pi           0 Jul 13 01:54 pov16709
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>-rw-r--r-- 1 pi   pi         331 Jul 13 01:54 povraymessages
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>drwx------ 3 root root        60 Nov 19  2024 systemd-private-aff2169b8e5a468f809d349af9090f28-ModemManager.service-31fSVJ
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>drwx------ 3 root root        60 Nov 19  2024 systemd-private-aff2169b8e5a468f809d349af9090f28-bluetooth.service-cAnUhH
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>drwx------ 3 root root        60 Nov 19  2024 systemd-private-aff2169b8e5a468f809d349af9090f28-systemd-logind.service-rtsZrp
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>pi@worker1:~$ 
+</code></pre></div>
+<p>More logs like this can be found in the <a href="../../task-dist-results.txt">task-dist-results.txt</a>  (note that those are not clean!)</p>
+<p><strong>2 Nodes — 6400x4800</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.005s</td>
+<td>123.347s</td>
+<td>4.707s</td>
+<td>128.059s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.004s</td>
+<td>123.359s</td>
+<td>4.313s</td>
+<td>127.676s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>124.349s</td>
+<td>4.338s</td>
+<td>128.690s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.003s</td>
+<td>124.343s</td>
+<td>4.498s</td>
+<td>128.844s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.003s</td>
+<td>124.752s</td>
+<td>4.248s</td>
+<td>129.003s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>124.752s</strong></td>
+<td><strong>4.420s</strong></td>
+<td><strong>129.175s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>4 Nodes — 6400x4800</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>137.411s</td>
+<td>5.209s</td>
+<td>142.623s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>210.612s</td>
+<td>4.976s</td>
+<td>215.591s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>135.408s</td>
+<td>6.615s</td>
+<td>142.026s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.005s</td>
+<td>166.494s</td>
+<td>5.945s</td>
+<td>172.444s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.005s</td>
+<td>213.610s</td>
+<td>4.624s</td>
+<td>218.239s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>172.707s</strong></td>
+<td><strong>5.473s</strong></td>
+<td><strong>178.183s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>8 Nodes — 6400x4800</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>166.535s</td>
+<td>6.572s</td>
+<td>173.110s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>92.357s</td>
+<td>7.702s</td>
+<td>100.062s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.007s</td>
+<td>119.410s</td>
+<td>6.373s</td>
+<td>125.790s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.006s</td>
+<td>89.370s</td>
+<td>7.904s</td>
+<td>97.280s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.004s</td>
+<td>182.602s</td>
+<td>6.804s</td>
+<td>189.410s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.004s</strong></td>
+<td><strong>130.054s</strong></td>
+<td><strong>7.071s</strong></td>
+<td><strong>137.129s</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="amdahls-law-summary-table-averages-of-5-runs">Amdahl's Law — Summary Table (Averages of 5 Runs)</h3>
+<table>
+<thead>
+<tr>
+<th>Workload</th>
+<th>Nodes</th>
+<th>Avg Seq 1</th>
+<th>Avg Parallel</th>
+<th>Avg Seq 2</th>
+<th>Avg Total Time</th>
+<th>Std Dev</th>
+<th>Speedup</th>
+<th>Efficiency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200x150</td>
+<td>1</td>
+<td>0.005s</td>
+<td>3.015s</td>
+<td>0.007s</td>
+<td>3.027s</td>
+<td>±0.71s</td>
+<td>1.00x</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>200x150</td>
+<td>2</td>
+<td>0.003s</td>
+<td>2.215s</td>
+<td>0.022s</td>
+<td>2.240s</td>
+<td>±0.45s</td>
+<td><strong>1.35x</strong></td>
+<td>68%</td>
+</tr>
+<tr>
+<td>200x150</td>
+<td>4</td>
+<td>0.003s</td>
+<td>2.028s</td>
+<td>0.026s</td>
+<td>2.057s</td>
+<td>±0.01s</td>
+<td><strong>1.47x</strong></td>
+<td>37%</td>
+</tr>
+<tr>
+<td>200x150</td>
+<td>8</td>
+<td>0.003s</td>
+<td>2.050s</td>
+<td>0.030s</td>
+<td>2.083s</td>
+<td>±0.01s</td>
+<td><strong>1.45x</strong></td>
+<td>18%</td>
+</tr>
+<tr>
+<td>400x300</td>
+<td>1</td>
+<td>0.003s</td>
+<td>2.209s</td>
+<td>0.004s</td>
+<td>2.216s</td>
+<td>±0.45s</td>
+<td>1.00x</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>400x300</td>
+<td>2</td>
+<td>0.003s</td>
+<td>2.816s</td>
+<td>0.051s</td>
+<td>2.870s</td>
+<td>±0.45s</td>
+<td><strong>0.77x</strong></td>
+<td>39%</td>
+</tr>
+<tr>
+<td>400x300</td>
+<td>4</td>
+<td>0.003s</td>
+<td>2.228s</td>
+<td>0.053s</td>
+<td>2.284s</td>
+<td>±0.46s</td>
+<td><strong>0.97x</strong></td>
+<td>24%</td>
+</tr>
+<tr>
+<td>400x300</td>
+<td>8</td>
+<td>0.003s</td>
+<td>2.045s</td>
+<td>0.055s</td>
+<td>2.103s</td>
+<td>±0.01s</td>
+<td><strong>1.05x</strong></td>
+<td>13%</td>
+</tr>
+<tr>
+<td>800x600</td>
+<td>1</td>
+<td>0.003s</td>
+<td>4.014s</td>
+<td>0.005s</td>
+<td>4.022s</td>
+<td>±0.00s</td>
+<td>1.00x</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>800x600</td>
+<td>2</td>
+<td>0.003s</td>
+<td>3.618s</td>
+<td>0.135s</td>
+<td>3.756s</td>
+<td>±0.54s</td>
+<td><strong>1.07x</strong></td>
+<td>54%</td>
+</tr>
+<tr>
+<td>800x600</td>
+<td>4</td>
+<td>0.003s</td>
+<td>3.028s</td>
+<td>0.137s</td>
+<td>3.168s</td>
+<td>±0.01s</td>
+<td><strong>1.27x</strong></td>
+<td>32%</td>
+</tr>
+<tr>
+<td>800x600</td>
+<td>8</td>
+<td>0.003s</td>
+<td>3.056s</td>
+<td>0.146s</td>
+<td>3.205s</td>
+<td>±0.02s</td>
+<td><strong>1.26x</strong></td>
+<td>16%</td>
+</tr>
+<tr>
+<td>1600x1200</td>
+<td>1</td>
+<td>0.003s</td>
+<td>10.030s</td>
+<td>0.005s</td>
+<td>10.038s</td>
+<td>±0.71s</td>
+<td>1.00x</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>1600x1200</td>
+<td>2</td>
+<td>0.003s</td>
+<td>8.433s</td>
+<td>0.375s</td>
+<td>8.811s</td>
+<td>±0.91s</td>
+<td><strong>1.14x</strong></td>
+<td>57%</td>
+</tr>
+<tr>
+<td>1600x1200</td>
+<td>4</td>
+<td>0.003s</td>
+<td>6.036s</td>
+<td>0.465s</td>
+<td>6.504s</td>
+<td>±0.02s</td>
+<td><strong>1.54x</strong></td>
+<td>39%</td>
+</tr>
+<tr>
+<td>1600x1200</td>
+<td>8</td>
+<td>0.003s</td>
+<td>5.057s</td>
+<td>0.472s</td>
+<td>5.532s</td>
+<td>±0.02s</td>
+<td><strong>1.81x</strong></td>
+<td>23%</td>
+</tr>
+<tr>
+<td>2000x1504</td>
+<td>8</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>8.366s</td>
+<td>±0.54s</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>3200x2400</td>
+<td>1</td>
+<td>0.003s</td>
+<td>51.141s</td>
+<td>0.008s</td>
+<td>51.152s</td>
+<td>±3.55s</td>
+<td>1.00x</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>3200x2400</td>
+<td>2</td>
+<td>0.003s</td>
+<td>28.483s</td>
+<td>1.224s</td>
+<td>29.710s</td>
+<td>±1.66s</td>
+<td><strong>1.72x</strong></td>
+<td>86%</td>
+</tr>
+<tr>
+<td>3200x2400</td>
+<td>4</td>
+<td>0.003s</td>
+<td>18.466s</td>
+<td>1.303s</td>
+<td>19.772s</td>
+<td>±0.89s</td>
+<td><strong>2.59x</strong></td>
+<td>65%</td>
+</tr>
+<tr>
+<td>3200x2400</td>
+<td>8</td>
+<td>0.003s</td>
+<td>13.478s</td>
+<td>1.654s</td>
+<td>15.135s</td>
+<td>±0.50s</td>
+<td><strong>3.38x</strong></td>
+<td>42%</td>
+</tr>
+<tr>
+<td>6400x4800</td>
+<td>1</td>
+<td>0.000s</td>
+<td>0.000s</td>
+<td>0.000s</td>
+<td>0.000s</td>
+<td>±0.00s</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>6400x4800</td>
+<td>4</td>
+<td>0.003s</td>
+<td>172.707s</td>
+<td>5.473s</td>
+<td>178.183s</td>
+<td>±37.45s</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>6400x4800</td>
+<td>8</td>
+<td>0.004s</td>
+<td>130.054s</td>
+<td>7.071s</td>
+<td>137.129s</td>
+<td>±42.19s</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key insight:</strong> With smaller image size adding more nodes give diminishing or worse performance returns (e.g. 200x150 - [2, 4, 8]) probably because of the NFS overhead.</p>
+<h3 id="amdahls-law-graphs">Amdahl's Law — Graphs</h3>
+<p><img alt="Time Bar Chart" src="../../assets/amdahl_stacked_runtimes.png" /> 
+<img alt="Speedup Bar Chart" src="../../assets/amdahl_speedups.png" /> 
+<img alt="Standard deviation Graph" src="../../assets/amdahl_std_deviation.png" /> </p>
+<hr />
+<h2 id="experiment-2-gustafsons-law">Experiment 2: Gustafson's Law</h2>
+<h3 id="theory">Theory</h3>
+<p>Gustafson's Law addresses Amdahl's pessimism by noting that in practice, larger
+problems benefit more from parallelism:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Scaled Speedup(N) = N - S × (N - 1)
+</code></pre></div>
+<p><strong>Approach:</strong> Scale the image size proportionally with the number of nodes, keeping
+the work per node constant (each node always renders 120 rows).</p>
+<table>
+<thead>
+<tr>
+<th>Nodes</th>
+<th>Image Size</th>
+<th>Rows per Node</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>160×120</td>
+<td>120 rows</td>
+</tr>
+<tr>
+<td>2</td>
+<td>160×240</td>
+<td>120 rows each</td>
+</tr>
+<tr>
+<td>4</td>
+<td>160×480</td>
+<td>120 rows each</td>
+</tr>
+<tr>
+<td>8</td>
+<td>160×960</td>
+<td>120 rows each</td>
+</tr>
+</tbody>
+</table>
+<h3 id="single-run-results-empirical-measured-on-physical-cluster">Single-Run Results (Empirical — Measured on Physical Cluster)</h3>
+<table>
+<thead>
+<tr>
+<th>Nodes</th>
+<th>Image Size</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>160×120</td>
+<td>0.004s</td>
+<td>3.014s</td>
+<td>0.006s</td>
+<td>3.024s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>160×240</td>
+<td>0.004s</td>
+<td>3.019s</td>
+<td>0.034s</td>
+<td>3.057s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>160×480</td>
+<td>0.004s</td>
+<td>3.030s</td>
+<td>0.044s</td>
+<td>3.078s</td>
+</tr>
+<tr>
+<td>8</td>
+<td>160×960</td>
+<td>0.004s</td>
+<td>4.063s</td>
+<td>0.088s</td>
+<td>4.155s</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="experiment-2-gustafsons-law-5-runs-x-workfload-set-1">Experiment 2: Gustafson's Law — 5 Runs x Workfload Set 1</h2>
+<h3 id="1600x600-node-base-5-runs">1600x600 / node Base — 5 Runs</h3>
+<p><strong>1 Nodes — 1600x600</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.006s</td>
+<td>7.025s</td>
+<td>0.010s</td>
+<td>7.041s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.004s</td>
+<td>6.021s</td>
+<td>0.006s</td>
+<td>6.031s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.004s</td>
+<td>5.018s</td>
+<td>0.006s</td>
+<td>5.028s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.004s</td>
+<td>5.018s</td>
+<td>0.005s</td>
+<td>5.027s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.003s</td>
+<td>5.019s</td>
+<td>0.006s</td>
+<td>5.028s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.004s</strong></td>
+<td><strong>5.620s</strong></td>
+<td><strong>0.006s</strong></td>
+<td><strong>5.630s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>2 Nodes — 1600x1200</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>10.038s</td>
+<td>0.403s</td>
+<td>10.444s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>8.028s</td>
+<td>0.359s</td>
+<td>8.390s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>8.029s</td>
+<td>0.392s</td>
+<td>8.424s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.003s</td>
+<td>8.042s</td>
+<td>0.431s</td>
+<td>8.476s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.003s</td>
+<td>7.030s</td>
+<td>0.354s</td>
+<td>7.387s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>8.233s</strong></td>
+<td><strong>0.387s</strong></td>
+<td><strong>8.623s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>4 Nodes — 3200x1200</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>11.051s</td>
+<td>0.729s</td>
+<td>11.783s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>9.048s</td>
+<td>0.787s</td>
+<td>9.838s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>9.050s</td>
+<td>0.830s</td>
+<td>9.883s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.003s</td>
+<td>9.046s</td>
+<td>0.775s</td>
+<td>9.824s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.005s</td>
+<td>9.050s</td>
+<td>0.740s</td>
+<td>9.795s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>9.449s</strong></td>
+<td><strong>0.772s</strong></td>
+<td><strong>10.224s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>8 Nodes — 3200x2400</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.004s</td>
+<td>16.087s</td>
+<td>1.692s</td>
+<td>17.783s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.004s</td>
+<td>15.090s</td>
+<td>1.600s</td>
+<td>16.694s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.007s</td>
+<td>16.110s</td>
+<td>1.605s</td>
+<td>17.722s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.003s</td>
+<td>14.079s</td>
+<td>1.701s</td>
+<td>15.783s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.003s</td>
+<td>13.082s</td>
+<td>1.644s</td>
+<td>14.729s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.004s</strong></td>
+<td><strong>14.889s</strong></td>
+<td><strong>1.648s</strong></td>
+<td><strong>16.541s</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="gustafsons-law-set-1-summary-table-averages-of-5-runs">Gustafson's Law (Set 1) — Summary Table (Averages of 5 Runs)</h3>
+<table>
+<thead>
+<tr>
+<th>Size</th>
+<th>Nodes</th>
+<th>Avg Seq 1</th>
+<th>Avg Parallel</th>
+<th>Avg Seq 2</th>
+<th>Avg Total Time</th>
+<th>Std Dev</th>
+<th>Scaled Speedup</th>
+<th>Efficiency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1600x600</td>
+<td>1</td>
+<td>0.004s</td>
+<td>5.620s</td>
+<td>0.006s</td>
+<td>5.630s</td>
+<td>±0.90s</td>
+<td>1.00x</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>1600x1200</td>
+<td>2</td>
+<td>0.003s</td>
+<td>8.233s</td>
+<td>0.387s</td>
+<td>8.623s</td>
+<td>±1.11s</td>
+<td><strong>1.95x</strong></td>
+<td>98%</td>
+</tr>
+<tr>
+<td>3200x1200</td>
+<td>4</td>
+<td>0.003s</td>
+<td>9.449s</td>
+<td>0.772s</td>
+<td>10.224s</td>
+<td>±0.87s</td>
+<td><strong>3.77x</strong></td>
+<td>94%</td>
+</tr>
+<tr>
+<td>3200x2400</td>
+<td>8</td>
+<td>0.004s</td>
+<td>14.889s</td>
+<td>1.648s</td>
+<td>16.541s</td>
+<td>±1.31s</td>
+<td><strong>7.30x</strong></td>
+<td>91%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gustafsons-law-set-1-graphs">Gustafson's Law (Set 1) — Graphs</h3>
+<p><img alt="Time Bar Chart" src="../../assets/gustafson_stacked_runtimes_1.png" /> 
+<img alt="Speedup Bar Chart" src="../../assets/gustafson_speedups_1.png" /> 
+<img alt="Standard deviation Graph" src="../../assets/gustafson_std_deviation_1.png" /></p>
+<h2 id="experiment-2-gustafsons-law-5-runs-x-workfload-set-2">Experiment 2: Gustafson's Law — 5 Runs x Workfload Set 2</h2>
+<p><strong>1 Nodes — 3200x1200</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.005s</td>
+<td>15.042s</td>
+<td>0.006s</td>
+<td>15.053s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.004s</td>
+<td>15.041s</td>
+<td>0.004s</td>
+<td>15.049s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>14.041s</td>
+<td>0.007s</td>
+<td>14.051s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.004s</td>
+<td>14.043s</td>
+<td>0.004s</td>
+<td>14.051s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.004s</td>
+<td>14.041s</td>
+<td>0.004s</td>
+<td>14.049s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.004s</strong></td>
+<td><strong>14.441s</strong></td>
+<td><strong>0.005s</strong></td>
+<td><strong>14.450s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>2 Nodes — 3200x2400</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>27.088s</td>
+<td>1.204s</td>
+<td>28.295s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>30.085s</td>
+<td>1.143s</td>
+<td>31.231s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.003s</td>
+<td>27.075s</td>
+<td>1.127s</td>
+<td>28.205s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.003s</td>
+<td>27.078s</td>
+<td>1.162s</td>
+<td>28.243s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.003s</td>
+<td>27.085s</td>
+<td>1.180s</td>
+<td>28.268s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.003s</strong></td>
+<td><strong>27.682s</strong></td>
+<td><strong>1.163s</strong></td>
+<td><strong>28.848s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>4 Nodes — 4800x2400</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>29.099s</td>
+<td>1.631s</td>
+<td>30.733s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.002s</td>
+<td>27.090s</td>
+<td>1.630s</td>
+<td>28.722s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.002s</td>
+<td>27.096s</td>
+<td>1.654s</td>
+<td>28.752s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.002s</td>
+<td>27.088s</td>
+<td>1.700s</td>
+<td>28.790s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.003s</td>
+<td>27.091s</td>
+<td>1.661s</td>
+<td>28.755s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.002s</strong></td>
+<td><strong>27.492s</strong></td>
+<td><strong>1.655s</strong></td>
+<td><strong>29.149s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>8 Nodes — 6400x4800</strong></p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seq Part 1</th>
+<th>Parallel Part</th>
+<th>Seq Part 2</th>
+<th>Total Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.003s</td>
+<td>166.535s</td>
+<td>6.572s</td>
+<td>173.110s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.003s</td>
+<td>92.357s</td>
+<td>7.702s</td>
+<td>100.062s</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.007s</td>
+<td>119.410s</td>
+<td>6.373s</td>
+<td>125.790s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.006s</td>
+<td>89.370s</td>
+<td>7.904s</td>
+<td>97.280s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.004s</td>
+<td>182.602s</td>
+<td>6.804s</td>
+<td>189.410s</td>
+</tr>
+<tr>
+<td><strong>AVG</strong></td>
+<td><strong>0.004s</strong></td>
+<td><strong>130.054s</strong></td>
+<td><strong>7.071s</strong></td>
+<td><strong>137.129s</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="gustafsons-law-set-2-summary-table-averages-of-5-runs">Gustafson's Law (Set 2) — Summary Table (Averages of 5 Runs)</h3>
+<table>
+<thead>
+<tr>
+<th>Size</th>
+<th>Nodes</th>
+<th>Avg Seq 1</th>
+<th>Avg Parallel</th>
+<th>Avg Seq 2</th>
+<th>Avg Total Time</th>
+<th>Std Dev</th>
+<th>Scaled Speedup</th>
+<th>Efficiency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3200x1200</td>
+<td>1</td>
+<td>0.004s</td>
+<td>14.441s</td>
+<td>0.005s</td>
+<td>14.450s</td>
+<td>±0.55s</td>
+<td>1.00x</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>3200x2400</td>
+<td>2</td>
+<td>0.003s</td>
+<td>27.682s</td>
+<td>1.163s</td>
+<td>28.848s</td>
+<td>±1.33s</td>
+<td><strong>1.96x</strong></td>
+<td>98%</td>
+</tr>
+<tr>
+<td>4800x2400</td>
+<td>4</td>
+<td>0.002s</td>
+<td>27.492s</td>
+<td>1.655s</td>
+<td>29.149s</td>
+<td>±0.89s</td>
+<td><strong>3.83x</strong></td>
+<td>96%</td>
+</tr>
+<tr>
+<td>6400x4800</td>
+<td>8</td>
+<td>0.004s</td>
+<td>130.054s</td>
+<td>7.071s</td>
+<td>137.129s</td>
+<td>±42.19s</td>
+<td><strong>7.64x</strong></td>
+<td>95%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gustafsons-law-set-2-graphs">Gustafson's Law (Set 2) — Graphs</h3>
+<p><img alt="Time Bar Chart" src="../../assets/gustafson_stacked_runtimes_2.png" /> 
+<img alt="Speedup Bar Chart" src="../../assets/gustafson_speedups_2.png" /> 
+<img alt="Standard deviation Graph" src="../../assets/gustafson_std_deviation_2.png" /> </p>
+<p><strong>Key insight:</strong> Gustafson's Law is confirmed — as workload scales with node
+count, each node processes the same amount of data in approximately the same
+time, while total throughput scales nearly linearly with node count.</p>
+<hr />
+<p><strong>Combined conclusion:</strong> For small fixed tasks, parallelism overhead dominates
+(Amdahl). For large scalable tasks, distributed computing delivers near-linear
+throughput scaling (Gustafson). Both perspectives together give a complete
+picture of parallel computing on real hardware.</p>
+<hr />
+<h2 id="troubleshooting-reference">Troubleshooting Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ssh: No route to host</code></td>
+<td>Workers not booted</td>
+<td>Follow golden boot sequence</td>
+</tr>
+<tr>
+<td><code>Could not resolve hostname pi110</code></td>
+<td>Hardcoded hostnames in script</td>
+<td>Update <code>HOSTS_ARRAY</code> in master script</td>
+</tr>
+<tr>
+<td><code>lockfile already exists</code></td>
+<td>Previous run failed</td>
+<td><code>rm -f workspace_*/lockfile</code></td>
+</tr>
+<tr>
+<td><code>Permission denied on workspace</code></td>
+<td>Workers (pi user) can't write to cc123 folder</td>
+<td><code>sudo chmod -R 777 /mnt/ssd/nfs/hpl-results/task-distributor/</code></td>
+</tr>
+<tr>
+<td><code>convert: command not found</code></td>
+<td>Wrong ImageMagick binary name</td>
+<td>Use <code>convert-im6.q16</code> on workers, <code>convert-im7.q16</code> on master</td>
+</tr>
+<tr>
+<td><code>Error opening terminal: unknown</code></td>
+<td>POV-Ray needs TTY</td>
+<td>Add <code>TERM=dumb</code> before povray command</td>
+</tr>
+<tr>
+<td><code>No such file or directory: blob.png</code></td>
+<td>POV-Ray not rendering</td>
+<td>Check <code>TERM=dumb</code> and correct <code>+I</code> path</td>
+</tr>
+<tr>
+<td><code>*pi*.png: No such file</code></td>
+<td>Master looking for wrong filename</td>
+<td>Worker writes IP.png not hostname.png</td>
+</tr>
+<tr>
+<td>Workers write wrong name to lockfile</td>
+<td>Script uses <code>hostname</code></td>
+<td>Change to <code>hostname -I \| awk '{print $1}'</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="issues-and-fixes">Issues and Fixes</h2>
+<h4 id="memory-issues">Memory issues</h4>
+<p>These occur for larger image sizes 6400 x 4800 especially if the number of nodes are less. We added a storage space for workers for support via changes to <a href="../../../benchmark/task-distributor-worker.sh">task-distributor-worker</a>. The script uses a storage space for each worker if the size exceeds 3200 x 2400. All the 6400 x H results were obtained after this updated.</p>
+<h4 id="unordered-composed-image">Unordered composed image</h4>
+<p>Added a fix where the image composed of image cuts generated by worker hosts produce an unordered image </p>
+<p><img alt="Before" src="../../assets/output_400x300_8_nodes_2026_07_12_06%3A23%3A07.png" />
+<img alt="After" src="../../assets/output_400x300_8_nodes_2026_07_12_07%3A21%3A14.png" /></p>
+<h4 id="failed-runs">Failed runs</h4>
+<h4 id="5400x2400-4-nodes">5400x2400 / 4 nodes</h4>
+<p><img alt="5400x2400_4_nodes" src="../../assets/output_5400x2400_4_nodes_2026_07_13_10%3A29%3A10.png" /></p>
+<h4 id="6400x2400-4-nodes">6400x2400 / 4 nodes</h4>
+<p><img alt="6400x2400_4_nodes" src="../../assets/output_6400x2400_4_nodes_2026_07_13_09%3A27%3A03.png" /></p>
+<h4 id="6400x2400-4-nodes_1">6400x2400 / 4 nodes</h4>
+<p><img alt="6400x2400_4_nodes" src="../../assets/output_6400x2400_4_nodes_2026_07_13_09%3A41%3A18.png" /></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2619 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for the edge-computing threat detection sensor network.">
+      
+      
+      
+      
+        <link rel="prev" href="../overall-status/">
+      
+      
+        <link rel="next" href="../task-02-hpl/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Task 1 — Edge Computing Infrastructure - Threat Detection System</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#task-1-infrastructure-sensor-node-setup" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Threat Detection System" class="md-header__button md-logo" aria-label="Threat Detection System" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Threat Detection System
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Task 1 — Edge Computing Infrastructure
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Group-6-Cloud-Computing-SS2026/Threat-Detection-System" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Threat-Detection-System
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/overview/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../guides/shutdown-and-cold-start/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../overall-status/" class="md-tabs__link">
+          
+  
+  
+  Tasks
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Threat Detection System" class="md-nav__button md-logo" aria-label="Threat Detection System" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Threat Detection System
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Group-6-Cloud-Computing-SS2026/Threat-Detection-System" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Threat-Detection-System
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/shutdown-and-cold-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ❗ (MUST FOLLOW!) Cluster Shutdown and Cold Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/backend-pi5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Local Development & Backend Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/minio-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MinIO S3 Object Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/mpi-cluster/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MPI Cluster Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/k3s-deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Distributed k3s Kubernetes Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/camera-test-stream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Edge Camera Test Stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/cluster-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cluster Setup (PXE & NFS)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/cluster-setup-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cluster Setup V2 (Setup & Verification)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/ansible/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ansible
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/hardware-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware Setup & Boot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/synthetic-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HPL Synthetic Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/task-distributor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task Distributor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tasks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tasks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overall-status/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overall Tasks Status
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 1 — Edge Computing Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 1 — Edge Computing Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#device-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Device inventory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-1-at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1 at a glance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-diskless-network-boot-pxe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Diskless Network Boot (PXE)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Diskless Network Boot (PXE)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-a-worker-boots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How a worker boots
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shared-root-per-node-overlays" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shared root + per-node overlays
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#building-the-golden-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building the golden image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#physical-storage-sd-card-ssd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physical storage: SD card + SSD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#directory-layout-on-the-master" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory layout on the master
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#boot-reliability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boot reliability
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-network-services-on-the-master" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Network Services on the Master
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Network Services on the Master">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dhcp-and-boot-configuration-dnsmasq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DHCP and boot configuration (dnsmasq)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nfs-exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NFS exports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compute-available-to-later-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compute available to later tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-cluster-orchestration-with-ansible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Cluster Orchestration with Ansible
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Cluster Orchestration with Ansible">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inventory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connectivity-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connectivity check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#passwordless-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passwordless authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-time-synchronization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Time Synchronization
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-sensor-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Sensor Node
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Sensor Node">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detection-and-event-publishing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detection and event publishing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-mqtt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why MQTT
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reliability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reliability
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-end-to-end-data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. End-to-End Data Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-outcome-and-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Outcome and Limitations
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task-02-hpl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 2 — HPL Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/task_3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 3 — MPI Cluster
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task-04-non-mpi-scaling-laws/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 4 — Non-MPI Scaling Laws
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task-05-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 5 — Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task-06-model-training/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 6 — Model training & Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task-07-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 7 — Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task-08-frontend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 8 — Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task-09-telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 9 — Telegram Notifications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task-10-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 10 — Project Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#device-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Device inventory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-1-at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1 at a glance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-diskless-network-boot-pxe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Diskless Network Boot (PXE)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Diskless Network Boot (PXE)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-a-worker-boots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How a worker boots
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shared-root-per-node-overlays" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shared root + per-node overlays
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#building-the-golden-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building the golden image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#physical-storage-sd-card-ssd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physical storage: SD card + SSD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#directory-layout-on-the-master" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory layout on the master
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#boot-reliability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boot reliability
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-network-services-on-the-master" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Network Services on the Master
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Network Services on the Master">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dhcp-and-boot-configuration-dnsmasq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DHCP and boot configuration (dnsmasq)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nfs-exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NFS exports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compute-available-to-later-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compute available to later tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-cluster-orchestration-with-ansible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Cluster Orchestration with Ansible
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Cluster Orchestration with Ansible">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inventory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connectivity-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connectivity check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#passwordless-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passwordless authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-time-synchronization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Time Synchronization
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-sensor-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Sensor Node
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Sensor Node">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detection-and-event-publishing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detection and event publishing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-mqtt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why MQTT
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reliability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reliability
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-end-to-end-data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. End-to-End Data Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-outcome-and-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Outcome and Limitations
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="task-1-infrastructure-sensor-node-setup">Task 1 — Infrastructure &amp; Sensor Node Setup</h1>
+<p>This page documents the foundational infrastructure of our edge computing monitoring solution: a diskless Raspberry Pi cluster with network boot, a shared operating system image, automatic time synchronization, and a sensor node that performs on-camera object detection and streams detection events to the cluster.</p>
+<p>The goal of Task 1 was to design and build a reproducible hardware and software platform on which all later tasks (benchmarking, MPI, monitoring, model training, backend, frontend, and notifications) are deployed.</p>
+<hr />
+<h2 id="1-overview">1. Overview</h2>
+<p>The infrastructure consists of three logical parts:</p>
+<ol>
+<li><strong>Master node</strong> — a Raspberry Pi 5 that provides network services (DHCP, TFTP, NFS), acts as the cluster's NTP time source, and hosts the MQTT broker.</li>
+<li><strong>Worker nodes</strong> — eight Raspberry Pi 3 boards that boot entirely over the network (no SD cards) from a single shared 64-bit operating system image served by the master.</li>
+<li><strong>Sensor node</strong> — a Raspberry Pi 4 with a Raspberry Pi AI Camera (Sony IMX500) that runs object detection on the camera module itself and publishes detection events to the cluster over MQTT.</li>
+</ol>
+<p>All devices are connected to a single Gigabit switch on the private subnet <code>192.168.1.0/24</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>                 Edge-Computing Infrastructure (SS2026)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  User / Administrator
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>         |
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>         |  (management, SSH)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>         v
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  +---------------------------------------------------------------+
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  |                          Cluster                              |
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  |                                                               |
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  |   Sensor Node                 Master Node      Worker Nodes   |
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  |   +-------------+             +-----------+    +------------+  |
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  |   | Pi 4 +      |   MQTT      |  Pi 5     |    | Pi3 #1     |  |
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  |   | AI Camera   |-----------&gt; |  Master   |---&gt;| Pi3 #2     |  |
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  |   | (IMX500)    |  events     | SD + SSD  |    | ...        |  |
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  |   +-------------+             +-----------+    | Pi3 #8     |  |
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  |                                               +------------+  |
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  +---------------------------------------------------------------+
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>                    all connected via one Gigabit switch
+</code></pre></div>
+<h3 id="device-inventory">Device inventory</h3>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Device</th>
+<th>Hostname</th>
+<th>IP address</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Master</td>
+<td>Raspberry Pi 5 (SD + SSD)</td>
+<td><code>pi5-master</code></td>
+<td><code>192.168.1.50</code></td>
+</tr>
+<tr>
+<td>Sensor</td>
+<td>Raspberry Pi 4 + AI Camera</td>
+<td><code>pi4-edge</code></td>
+<td><code>192.168.1.2</code></td>
+</tr>
+<tr>
+<td>Worker 1</td>
+<td>Raspberry Pi 3 (diskless)</td>
+<td><code>worker1</code></td>
+<td><code>192.168.1.58</code></td>
+</tr>
+<tr>
+<td>Worker 2</td>
+<td>Raspberry Pi 3 (diskless)</td>
+<td><code>worker2</code></td>
+<td><code>192.168.1.54</code></td>
+</tr>
+<tr>
+<td>Worker 3</td>
+<td>Raspberry Pi 3 (diskless)</td>
+<td><code>worker3</code></td>
+<td><code>192.168.1.104</code></td>
+</tr>
+<tr>
+<td>Worker 4</td>
+<td>Raspberry Pi 3 (diskless)</td>
+<td><code>worker4</code></td>
+<td><code>192.168.1.136</code></td>
+</tr>
+<tr>
+<td>Worker 5</td>
+<td>Raspberry Pi 3 (diskless)</td>
+<td><code>worker5</code></td>
+<td><code>192.168.1.86</code></td>
+</tr>
+<tr>
+<td>Worker 6</td>
+<td>Raspberry Pi 3 (diskless)</td>
+<td><code>worker6</code></td>
+<td><code>192.168.1.117</code></td>
+</tr>
+<tr>
+<td>Worker 7</td>
+<td>Raspberry Pi 3 (diskless)</td>
+<td><code>worker7</code></td>
+<td><code>192.168.1.83</code></td>
+</tr>
+<tr>
+<td>Worker 8</td>
+<td>Raspberry Pi 3 (diskless)</td>
+<td><code>worker8</code></td>
+<td><code>192.168.1.133</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note — provisioning the master and sensor node.</strong> Unlike the workers, the Pi 5 master and the Pi 4 sensor node each keep their own SD card, so they were set up directly with <strong>Raspberry Pi Imager</strong>: the respective 64-bit Raspberry Pi OS was flashed straight to each board's SD card, with hostname, SSH, and user account pre-configured through the Imager's advanced options. No network boot or golden-image process was needed for these two — that machinery exists specifically to avoid maintaining eight separate cards for the workers, which doesn't apply to a single master or a single sensor node.</p>
+</blockquote>
+<h3 id="task-1-at-a-glance">Task 1 at a glance</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SD cards on worker nodes</td>
+<td><strong>0</strong> (down from 8)</td>
+</tr>
+<tr>
+<td>OS images to maintain</td>
+<td><strong>1</strong> shared (down from 8)</td>
+</tr>
+<tr>
+<td>Architecture</td>
+<td><strong>64-bit</strong> (<code>aarch64</code>) on all nodes</td>
+</tr>
+<tr>
+<td>Worker compute available</td>
+<td><strong>32 cores</strong>, 8 GB RAM total</td>
+</tr>
+<tr>
+<td>Cold boot, all 8 workers together</td>
+<td><strong>~2 minutes</strong> (from ~5, after tuning)</td>
+</tr>
+<tr>
+<td>Time sync offset to master</td>
+<td><strong>microsecond-level</strong></td>
+</tr>
+<tr>
+<td>Software rollout</td>
+<td>install <strong>once</strong> → live on all 8 workers</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-diskless-network-boot-pxe">2. Diskless Network Boot (PXE)</h2>
+<p>Rather than maintaining eight separate SD cards, the worker nodes boot over the network from a single operating system image hosted on the master. This is the consolidation approach the task asked us to investigate: it simplifies administration (one image to patch and update) and demonstrates a realistic HPC-style provisioning model.</p>
+<p><img alt="Administration effort for 8 nodes: one shared image replaces eight SD cards" src="../task1-consolidation.png" /></p>
+<h3 id="how-a-worker-boots">How a worker boots</h3>
+<p>The Raspberry Pi 3 bootloader is configured to boot from the network. On power-on, each node performs the following sequence, all served by the master:</p>
+<ol>
+<li><strong>DHCP</strong> — the node requests an IP address. The master (running <code>dnsmasq</code>) replies with a fixed address based on the node's MAC, the gateway, and the location of the TFTP server.</li>
+<li><strong>TFTP</strong> — the node downloads its bootloader (<code>bootcode.bin</code>), the 64-bit kernel (<code>kernel8.img</code>), the device tree, and a per-node <code>cmdline.txt</code>.</li>
+<li><strong>NFS root mount</strong> — the kernel mounts its root filesystem over NFS from the master, read from the shared image.</li>
+<li><strong>Per-node overlay mount</strong> — a startup script mounts each node's private writable directories.</li>
+</ol>
+<blockquote>
+<p><strong>Note — enabling network boot on the Pi 3 Model B.</strong> Unlike the Pi 3 Model B+, the plain Model B does not look for a network boot source by default; it only checks the SD card slot. Network boot has to be switched on once per board by setting the <code>boot_order</code>/USB-network-boot OTP bit while the board still has an SD card in it:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">program_usb_boot_mode</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/boot/config.txt
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sudo<span class="w"> </span>reboot
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># verify the bit was actually written:</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>vcgencmd<span class="w"> </span>otp_dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">17</span>:
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># expect: 17:3020000a</span>
+</code></pre></div>
+After this one-time step, the SD card can be removed permanently — the board will look for a PXE/network boot source on every subsequent power-on.</p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Power on Pi3 (no SD card)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>   |
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>   |-- DHCP request --------------&gt; dnsmasq replies (IP, gateway, TFTP server)
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>   |-- TFTP download -------------&gt; bootcode.bin, kernel8.img, dtb, cmdline.txt
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>   |-- NFS mount / --------------&gt; /nfs/rootfs64  (shared OS image)
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>   |-- mount /etc /var /home -----&gt; /nfs/nodes/&lt;serial&gt;/  (per-node, writable)
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>   v
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Worker is up, SSH reachable
+</code></pre></div>
+<h3 id="shared-root-per-node-overlays">Shared root + per-node overlays</h3>
+<p>The central design decision is the split between <strong>shared</strong> and <strong>per-node</strong> storage. All nodes share a single OS image, but each node has its own writable system directories so they don't conflict.</p>
+<table>
+<thead>
+<tr>
+<th>Mount point</th>
+<th>Source on master</th>
+<th>Mode</th>
+<th>Shared?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/</code> (root)</td>
+<td><code>/nfs/rootfs64</code></td>
+<td>read-write</td>
+<td>Shared by all nodes</td>
+</tr>
+<tr>
+<td><code>/etc</code></td>
+<td><code>/nfs/nodes/&lt;serial&gt;/etc</code></td>
+<td>read-write</td>
+<td>Per-node</td>
+</tr>
+<tr>
+<td><code>/var</code></td>
+<td><code>/nfs/nodes/&lt;serial&gt;/var</code></td>
+<td>read-write</td>
+<td>Per-node</td>
+</tr>
+<tr>
+<td><code>/home</code></td>
+<td><code>/nfs/nodes/&lt;serial&gt;/home</code></td>
+<td>read-write</td>
+<td>Per-node</td>
+</tr>
+<tr>
+<td><code>/tmp</code></td>
+<td><code>tmpfs</code> (RAM)</td>
+<td>read-write</td>
+<td>Per-node, volatile</td>
+</tr>
+</tbody>
+</table>
+<p>This is the standard HPC pattern: one operating system, many machines, each with private configuration and state. Installing software once on the master's shared image makes it instantly available to all eight workers.</p>
+<blockquote>
+<p><strong>Node identity.</strong> Each Raspberry Pi 3 is identified by its hardware serial number (the last 8 hex digits, e.g. <code>a7b7e022</code>). The master keeps one directory per serial under <code>/nfs/nodes/</code> and one boot directory per serial under <code>/nfs/boot64/</code>, so each node receives its own hostname and private storage while sharing the same OS.</p>
+</blockquote>
+<h3 id="building-the-golden-image">Building the golden image</h3>
+<p>The shared image that all eight workers boot from was produced once, on the master, and reused for every node from then on. In outline:</p>
+<ol>
+<li><strong>Download</strong> the official 64-bit Raspberry Pi OS Lite image (<code>.img.xz</code>) and decompress it.</li>
+<li><strong>Inspect</strong> it with <code>fdisk -l</code> to find the boot and root partition offsets (start sector × 512).</li>
+<li><strong>Loop-mount</strong> each partition and <code>rsync</code> its contents into place on the master:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>sudo<span class="w"> </span>mount<span class="w"> </span>-o<span class="w"> </span>loop,offset<span class="o">=</span>&lt;boot_offset&gt;<span class="w"> </span>raspios.img<span class="w"> </span>/mnt
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sudo<span class="w"> </span>rsync<span class="w"> </span>-axv<span class="w"> </span>/mnt/<span class="w"> </span>/nfs/boot64/
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>sudo<span class="w"> </span>umount<span class="w"> </span>/mnt
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>sudo<span class="w"> </span>mount<span class="w"> </span>-o<span class="w"> </span>loop,offset<span class="o">=</span>&lt;root_offset&gt;<span class="w"> </span>raspios.img<span class="w"> </span>/mnt
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>sudo<span class="w"> </span>rsync<span class="w"> </span>-axv<span class="w"> </span>/mnt/<span class="w"> </span>/nfs/rootfs64/
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>sudo<span class="w"> </span>umount<span class="w"> </span>/mnt
+</code></pre></div></li>
+<li><strong>Adapt for network boot:</strong> replace the local-disk <code>/etc/fstab</code> with the minimal network-friendly version (below), enable SSH, and generate SSH host keys directly into the image.</li>
+<li><strong>Seed the per-node directories</strong> by copying the image's own <code>/etc</code> and <code>/var</code> into each worker's private folder under <code>/nfs/nodes/&lt;serial&gt;/</code>, so every node starts from the same known configuration before it acquires its own identity (hostname, machine-id, host keys).</li>
+</ol>
+<p>Once this golden image exists, no worker is ever imaged individually again — every future software install happens <strong>once</strong>, directly into <code>/nfs/rootfs64</code>, and is picked up by all eight workers on their next boot.</p>
+<h3 id="physical-storage-sd-card-ssd">Physical storage: SD card + SSD</h3>
+<p>The master's storage is split across two physical devices:</p>
+<table>
+<thead>
+<tr>
+<th>Device</th>
+<th>Holds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SD card</strong> (master)</td>
+<td>The master's own OS, plus the shared worker image <code>/nfs/rootfs64</code> and the boot files <code>/nfs/boot64</code></td>
+</tr>
+<tr>
+<td><strong>SSD</strong> (master)</td>
+<td>The per-node private storage <code>/nfs/nodes/&lt;serial&gt;/</code> — every worker's <code>/etc</code>, <code>/var</code> and <code>/home</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why the per-node directories live on the SSD.</strong> The shared image is mostly read; the per-node directories are where all eight workers <em>write</em> continuously — logs, service state, temporary files, caches. Concentrating eight nodes' worth of small random writes on an SD card would be both slow and hard on the card's limited write endurance. Moving that write-heavy traffic to an SSD gives markedly better random-write performance and endurance, and keeps the wear off the card that holds the operating system image.</p>
+<h3 id="directory-layout-on-the-master">Directory layout on the master</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>SD card
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>└── /nfs/
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    ├── rootfs64/            Shared 64-bit OS image (mounted as / by all workers)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    └── boot64/              Network boot files
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        ├── bootcode.bin     First-stage bootloader
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>        ├── kernel8.img      64-bit kernel
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        ├── cmdline.txt      Default kernel command line
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>        └── &lt;serial&gt;/        Per-node boot directory
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>            └── cmdline.txt  Per-node kernel command line (sets hostname)
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>SSD
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>└── /nfs/nodes/
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    └── &lt;serial&gt;/            Per-node private, writable storage
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>        ├── etc/             Node&#39;s /etc
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>        ├── var/             Node&#39;s /var
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>        └── home/            Node&#39;s /home
+</code></pre></div>
+<h3 id="boot-reliability">Boot reliability</h3>
+<p>Powering on all eight workers at the same time initially failed intermittently: the concurrent burst of TFTP requests and NFS mounts overwhelmed the master, and some nodes gave up before completing the transfer. This was resolved by moving TFTP to a dedicated server, raising the NFS thread count, and enlarging the kernel network buffers on the master.</p>
+<p><img alt="Cold boot time for all 8 workers, before and after tuning" src="../task1-boottime.png" /></p>
+<p>The full cluster now cold-boots <strong>reliably in roughly two minutes</strong>.</p>
+<hr />
+<h2 id="3-network-services-on-the-master">3. Network Services on the Master</h2>
+<p>A single <code>dnsmasq</code> instance on the master provides both DHCP and the boot information the nodes need. NFS exports the shared image and the per-node directories. A separate TFTP daemon serves the boot files.</p>
+<h3 id="dhcp-and-boot-configuration-dnsmasq">DHCP and boot configuration (<code>dnsmasq</code>)</h3>
+<p>Key points of the configuration:</p>
+<ul>
+<li>DNS is disabled (<code>port=0</code>) — <code>dnsmasq</code> is used only for DHCP and PXE.</li>
+<li>Each worker is pinned to a fixed IP by MAC address, so addresses are predictable and stable across reboots.</li>
+<li>DHCP option 66 and the boot filename direct each node to the master's TFTP service.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="na">port</span><span class="o">=</span><span class="s">0</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="na">interface</span><span class="o">=</span><span class="s">eth0</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="na">bind-dynamic</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="na">dhcp-range</span><span class="o">=</span><span class="s">192.168.1.50,192.168.1.150,255.255.255.0,12h</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="na">dhcp-option</span><span class="o">=</span><span class="s">3,192.168.1.50</span><span class="w">          </span><span class="c1"># gateway</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="na">dhcp-option</span><span class="o">=</span><span class="s">66,192.168.1.50</span><span class="w">         </span><span class="c1"># TFTP server address</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="na">dhcp-boot</span><span class="o">=</span><span class="s">bootcode.bin,pxeserver,192.168.1.50</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Fixed address per worker (MAC -&gt; IP -&gt; hostname)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="na">dhcp-host</span><span class="o">=</span><span class="s">b8:27:eb:b7:e0:22,192.168.1.58,worker1</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="na">dhcp-host</span><span class="o">=</span><span class="s">b8:27:eb:90:0a:eb,192.168.1.54,worker2</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># ... one line per worker</span>
+</code></pre></div>
+<h3 id="nfs-exports">NFS exports</h3>
+<p>The shared root and each per-node directory are exported to the cluster subnet.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>/nfs/rootfs64        192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash)
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/nfs/boot64          192.168.1.0/24(ro,sync,no_subtree_check,no_root_squash)
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>/nfs/nodes/&lt;serial&gt;  192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash)
+</code></pre></div>
+<h3 id="compute-available-to-later-tasks">Compute available to later tasks</h3>
+<p>The eight workers together provide the parallel compute fabric that Tasks 2, 3, 4 and 7 run on.</p>
+<p><img alt="Cluster compute footprint: 32 worker cores" src="../task1-compute.png" /></p>
+<hr />
+<h2 id="4-cluster-orchestration-with-ansible">4. Cluster Orchestration with Ansible</h2>
+<p>Once eight nodes are running, administering them one SSH session at a time does not scale. We therefore installed <strong>Ansible</strong> on the master as the cluster's orchestration layer, so that a single command on the Pi 5 acts on every worker at once.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>ansible<span class="w"> </span>sshpass<span class="w"> </span>-y
+</code></pre></div>
+<h3 id="inventory">Inventory</h3>
+<p>The inventory file declares the cluster to Ansible — which hosts exist, and how to reach them:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">[workers]</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="na">worker1 ansible_host</span><span class="o">=</span><span class="s">192.168.1.58</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="na">worker2 ansible_host</span><span class="o">=</span><span class="s">192.168.1.54</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="na">worker3 ansible_host</span><span class="o">=</span><span class="s">192.168.1.104</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="na">worker4 ansible_host</span><span class="o">=</span><span class="s">192.168.1.136</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="na">worker5 ansible_host</span><span class="o">=</span><span class="s">192.168.1.86</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="na">worker6 ansible_host</span><span class="o">=</span><span class="s">192.168.1.117</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="na">worker7 ansible_host</span><span class="o">=</span><span class="s">192.168.1.83</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="na">worker8 ansible_host</span><span class="o">=</span><span class="s">192.168.1.133</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="k">[workers:vars]</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="na">ansible_user</span><span class="o">=</span><span class="s">pi</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="na">ansible_ssh_common_args</span><span class="o">=</span><span class="s">&#39;-o StrictHostKeyChecking=no&#39;</span>
+</code></pre></div>
+<h3 id="connectivity-check">Connectivity check</h3>
+<p>A single command confirms every node is reachable and responding:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ansible<span class="w"> </span>workers<span class="w"> </span>-i<span class="w"> </span>hosts.ini<span class="w"> </span>-m<span class="w"> </span>ping
+</code></pre></div>
+<p>Each node replies <code>SUCCESS</code> (reachable) or <code>UNREACHABLE</code> — which doubles as a fast cluster health check, particularly useful given that individual Pi 3 boards can drop off the network unexpectedly.</p>
+<h3 id="passwordless-authentication">Passwordless authentication</h3>
+<p>Password-based SSH was replaced with key-based authentication, both for security and so that automated playbooks run without prompting:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ssh-copy-id<span class="w"> </span>pi@&lt;worker-ip&gt;<span class="w">     </span><span class="c1"># repeated for each worker</span>
+</code></pre></div>
+<p>With keys in place, <code>ansible_ssh_pass</code> is removed from the inventory.</p>
+<blockquote>
+<p><strong>Why this belongs to the infrastructure task.</strong> Ansible is what turns eight individual machines into something a single operator can actually run. Combined with the shared OS image — where a package installed once on the master appears on all eight workers — the cluster is administered as <em>one system</em>, not as eight.</p>
+</blockquote>
+<hr />
+<h2 id="5-time-synchronization">5. Time Synchronization</h2>
+<p>Network booting is sensitive to clock errors: if the master's clock is in the past, freshly downloaded files can appear to have modification times "in the future," and logging and TLS misbehave. We therefore made reliable, automatic time synchronization part of the infrastructure.</p>
+<p>We use <strong>chrony</strong> in a two-tier arrangement:</p>
+<ul>
+<li>The <strong>master</strong> synchronizes its clock from public internet NTP servers (when online) and serves time to the cluster subnet. It is configured to serve time even before it has reached the internet, so the cluster always has a reference.</li>
+<li>Each <strong>worker</strong> synchronizes from the master rather than the internet. This keeps all nodes consistent with each other even when the cluster has no external connectivity, which is the normal state for an edge deployment.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Internet NTP pool
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>       |
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>       v
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>   Pi 5 master  (chrony server, time source for the cluster)
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>       |
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>       +--&gt; worker1 ... worker8   (chrony clients, sync from master)
+</code></pre></div>
+<p>The master's timezone is set to <code>Europe/Berlin</code>. On boot, each worker starts chrony and performs an immediate step correction, so its clock is correct before any time-sensitive service starts. Measured offset between a worker and the master is at the <strong>microsecond level</strong>.</p>
+<hr />
+<h2 id="6-sensor-node">6. Sensor Node</h2>
+<p>The sensor node is a Raspberry Pi 4 with a Raspberry Pi AI Camera built around the Sony IMX500 image sensor. The IMX500 runs a neural network <strong>on the camera module itself</strong>, so object detection happens at the edge without loading the Pi 4's CPU with inference.</p>
+<h3 id="connection">Connection</h3>
+<p>The sensor node is wired to the same switch as the rest of the cluster and sits on the private subnet at <code>192.168.1.2</code>. Keeping the sensor on the local network — rather than connecting it remotely over the internet — is the essence of edge computing: detection happens close to the data source, and only compact event messages travel across the network.</p>
+<h3 id="detection-and-event-publishing">Detection and event publishing</h3>
+<p>A service on the Pi 4 runs the camera with an on-sensor object detection model and filters the camera's output so that only meaningful detections are published. For every frame in which one or more objects are detected, the node publishes a small structured JSON message to the cluster's MQTT broker.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Raspberry Pi AI Camera (IMX500)
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>   |  on-sensor object detection
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>   v
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Pi 4 sensor service
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>   |  filters out empty frames and camera debug output
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>   |  builds a JSON event with node, timestamp, object count
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>   v
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>MQTT publish  -&gt;  topic: cluster/camera/events  -&gt;  broker on Pi 5 (port 1883)
+</code></pre></div>
+<p>A published event looks like this:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nt">&quot;node&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pi4-edge&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-07T15:39:41Z&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="nt">&quot;objects&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="why-mqtt">Why MQTT</h3>
+<p>MQTT was chosen for sensor-to-cluster communication because it is a lightweight publish/subscribe protocol designed for exactly this kind of frequent, small-message telemetry. The sensor node simply publishes events; any number of consumers on the cluster (the event store, the alerting service, the frontend) can subscribe to the same topic independently. This decouples the sensor from whatever processes its data and makes it straightforward to add more sensor nodes later — each one publishes to the same topic.</p>
+<p>The MQTT broker (Mosquitto) runs on the master, listens on the standard port <code>1883</code>, and accepts connections from the cluster subnet.</p>
+<h3 id="reliability">Reliability</h3>
+<p>The sensor logic runs as a <strong>systemd service</strong>, so it starts automatically when the Pi 4 boots and restarts automatically if it fails. This makes the sensor node true unattended infrastructure rather than something an operator has to launch by hand — it was verified to resume publishing automatically after a power cycle.</p>
+<hr />
+<h2 id="7-end-to-end-data-flow">7. End-to-End Data Flow</h2>
+<p>Putting the pieces together, the complete Task 1 flow is:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>  AI Camera (IMX500, on-sensor detection)
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>        |
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>        v
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  Pi 4 sensor node  --- MQTT: cluster/camera/events ---&gt;  Pi 5 master (broker)
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>                                                                |
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>                                                                |  (consumed by later tasks:
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>                                                                |   backend storage, Telegram
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>                                                                |   alerts, frontend map/log)
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>                                                                v
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>  Pi 5 master  --- DHCP / TFTP / NFS / NTP ---&gt;  8x Pi 3 workers (diskless, 64-bit)
+</code></pre></div>
+<p>The master is the hub: it boots and feeds the workers, sources and serves time, and receives detection events from the sensor. The workers form the compute fabric for later tasks (benchmarking, MPI, containerized backend/frontend). The sensor produces the event stream the whole system exists to act on.</p>
+<hr />
+<h2 id="8-verification">8. Verification</h2>
+<p>The infrastructure can be checked at any time with the following commands.</p>
+<p><strong>Connect to the machines:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ssh<span class="w"> </span>cc123@192.168.1.50<span class="w">     </span><span class="c1"># master (Pi 5)</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>ssh<span class="w"> </span>pi@192.168.1.58<span class="w">        </span><span class="c1"># a worker (Pi 3)</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>ssh<span class="w"> </span>cc123@192.168.1.2<span class="w">      </span><span class="c1"># sensor node (Pi 4)</span>
+</code></pre></div>
+<p><strong>All eight workers are reachable:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">for</span><span class="w"> </span>IP<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">192</span>.168.1.58<span class="w"> </span><span class="m">192</span>.168.1.54<span class="w"> </span><span class="m">192</span>.168.1.104<span class="w"> </span><span class="m">192</span>.168.1.136<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">          </span><span class="m">192</span>.168.1.86<span class="w"> </span><span class="m">192</span>.168.1.117<span class="w"> </span><span class="m">192</span>.168.1.83<span class="w"> </span><span class="m">192</span>.168.1.133<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span>ping<span class="w"> </span>-c1<span class="w"> </span>-W2<span class="w"> </span><span class="nv">$IP</span><span class="w"> </span>&gt;/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$IP</span><span class="s2"> UP&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$IP</span><span class="s2"> DOWN&quot;</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="k">done</span>
+</code></pre></div>
+<p><strong>All workers are running 64-bit:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">for</span><span class="w"> </span>IP<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">192</span>.168.1.58<span class="w"> </span><span class="m">192</span>.168.1.54<span class="w"> </span><span class="m">192</span>.168.1.104<span class="w"> </span><span class="m">192</span>.168.1.136<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">          </span><span class="m">192</span>.168.1.86<span class="w"> </span><span class="m">192</span>.168.1.117<span class="w"> </span><span class="m">192</span>.168.1.83<span class="w"> </span><span class="m">192</span>.168.1.133<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span>ssh<span class="w"> </span>pi@<span class="nv">$IP</span><span class="w"> </span><span class="s2">&quot;hostname &amp;&amp; uname -m&quot;</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="k">done</span>
+</code></pre></div>
+<p>Each node should report its hostname and <code>aarch64</code> (64-bit ARM).</p>
+<p><strong>Shared storage is mounted by the nodes</strong> (run on the master):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>sudo<span class="w"> </span>showmount<span class="w"> </span>-a<span class="w">        </span><span class="c1"># lists nodes currently mounting the NFS exports</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>sudo<span class="w"> </span>exportfs<span class="w"> </span>-v<span class="w">         </span><span class="c1"># shows the active exports and their options</span>
+</code></pre></div>
+<p><strong>Time is synchronized across the cluster:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># On the master:</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>chronyc<span class="w"> </span>tracking<span class="w">         </span><span class="c1"># confirms the master is synced to an NTP source</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>chronyc<span class="w"> </span>clients<span class="w">          </span><span class="c1"># lists the workers syncing from it</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="c1"># On a worker:</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>chronyc<span class="w"> </span>tracking<span class="w">         </span><span class="c1"># Reference ID should be the master (192.168.1.50)</span>
+</code></pre></div>
+<p><strong>Sensor events are flowing</strong> (run on the master):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>mosquitto_sub<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-t<span class="w"> </span><span class="s1">&#39;cluster/camera/events&#39;</span><span class="w"> </span>-v
+</code></pre></div>
+<p>With an object in view of the camera, structured JSON events appear on this subscription.</p>
+<p><strong>Run any command across all workers:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">for</span><span class="w"> </span>IP<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">192</span>.168.1.58<span class="w"> </span><span class="m">192</span>.168.1.54<span class="w"> </span><span class="m">192</span>.168.1.104<span class="w"> </span><span class="m">192</span>.168.1.136<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">          </span><span class="m">192</span>.168.1.86<span class="w"> </span><span class="m">192</span>.168.1.117<span class="w"> </span><span class="m">192</span>.168.1.83<span class="w"> </span><span class="m">192</span>.168.1.133<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span>ssh<span class="w"> </span>pi@<span class="nv">$IP</span><span class="w"> </span><span class="s2">&quot;uptime&quot;</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="k">done</span>
+</code></pre></div>
+<hr />
+<h2 id="9-outcome-and-limitations">9. Outcome and Limitations</h2>
+<p><strong>What Task 1 delivers:</strong></p>
+<ul>
+<li>Eight diskless Raspberry Pi 3 workers booting a single shared 64-bit OS image over the network, each with private writable system directories — <strong>zero SD cards</strong> on the workers, <strong>one image</strong> to maintain instead of eight.</li>
+<li>Storage split across the master's SD card (shared image, read-mostly) and an SSD (per-node writable state, write-heavy).</li>
+<li>A master node providing DHCP, TFTP, NFS, NTP and MQTT for the whole cluster.</li>
+<li>Automatic, internet-independent time synchronization across all nodes.</li>
+<li>A sensor node performing on-camera object detection and publishing structured detection events to the cluster, running unattended as a service.</li>
+<li>Reliable cold boot of the whole cluster in roughly two minutes.</li>
+</ul>
+<p><strong>Known limitations carried into later tasks:</strong></p>
+<ul>
+<li>The current detection events report an <strong>object count</strong> but not the object <strong>class</strong>. Recognizing specific threat categories (e.g. a person, fire, an abandoned object) requires richer detection output and is addressed alongside the custom model work.</li>
+<li>The sensor currently uses a <strong>pre-trained</strong> detection model supplied with the camera. The project requirement to train and deploy our <strong>own</strong> model is a separate task; the infrastructure here is model-agnostic and will accept the custom model once it is converted to the camera's format.</li>
+<li>Continuous detections are published per qualifying frame. A debouncing / rate-limiting step is planned for the backend and alerting tasks to avoid flooding consumers with duplicate events.</li>
+<li>Storage here is <strong>master-served</strong> shared storage, which is the right fit for diskless boot. Genuinely <strong>distributed</strong> storage (MinIO, erasure-coded across nodes) is introduced later, in the backend task.</li>
+</ul>
+<p>These limitations are deliberately scoped out of Task 1, which concerns the infrastructure itself; they are taken up by the model-training, backend, and notification tasks.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>

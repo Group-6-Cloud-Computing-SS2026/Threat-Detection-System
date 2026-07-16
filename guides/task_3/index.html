@@ -1,0 +1,3188 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for the edge-computing threat detection sensor network.">
+      
+      
+      
+      
+        <link rel="prev" href="../../tasks/task-02-hpl/">
+      
+      
+        <link rel="next" href="../../tasks/task-04-non-mpi-scaling-laws/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Task 3 — MPI Cluster - Threat Detection System</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#task-3-open-mpi-and-amdahls-vs-gustafsons-law" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Threat Detection System" class="md-header__button md-logo" aria-label="Threat Detection System" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Threat Detection System
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Task 3 — MPI Cluster
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Group-6-Cloud-Computing-SS2026/Threat-Detection-System" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Threat-Detection-System
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/overview/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../shutdown-and-cold-start/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../tasks/overall-status/" class="md-tabs__link">
+          
+  
+  
+  Tasks
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Threat Detection System" class="md-nav__button md-logo" aria-label="Threat Detection System" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Threat Detection System
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Group-6-Cloud-Computing-SS2026/Threat-Detection-System" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Threat-Detection-System
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shutdown-and-cold-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ❗ (MUST FOLLOW!) Cluster Shutdown and Cold Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../backend-pi5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Local Development & Backend Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../minio-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MinIO S3 Object Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mpi-cluster/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MPI Cluster Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../k3s-deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Distributed k3s Kubernetes Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../camera-test-stream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Edge Camera Test Stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cluster-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cluster Setup (PXE & NFS)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cluster-setup-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cluster Setup V2 (Setup & Verification)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ansible/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ansible
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardware-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware Setup & Boot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../synthetic-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HPL Synthetic Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task-distributor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task Distributor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tasks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tasks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/overall-status/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overall Tasks Status
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-01-edge-computing-infrastructure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 1 — Edge Computing Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-02-hpl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 2 — HPL Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 3 — MPI Cluster
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 3 — MPI Cluster
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure-8-node-raspberry-pi-3-worker-cluster-orchestrated-by-a-raspberry-pi-5-master" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure: 8-Node Raspberry Pi 3 Worker Cluster orchestrated by a Raspberry Pi 5 Master
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-executive-summary-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Executive Summary &amp; Objective
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-cluster-architecture-execution-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Cluster Architecture &amp; Execution Context
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Cluster Architecture &amp; Execution Context">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#node-layout-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Layout Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operational-paths-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operational Paths &amp; Locations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-methodology-implementation-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Methodology &amp; Implementation Design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Methodology &amp; Implementation Design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verifying-openmpi-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying OpenMPI Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-which-nodes-are-updown-before-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check which nodes are UP/DOWN before running:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-1-amdahls-law-fixed-workload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation 1: Amdahl's Law (Fixed Workload)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-2-gustafsons-law-scaled-workload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation 2: Gustafson's Law (Scaled Workload)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-empirical-execution-sequences-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Empirical Execution Sequences (Step-by-Step)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Empirical Execution Sequences (Step-by-Step)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#part-a-amdahls-law-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part A: Amdahl's Law Sequence
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part A: Amdahl&#39;s Law Sequence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-write-the-c-source-code-on-master-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Write the C Source Code on Master Node
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-push-and-compile-across-cluster-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Push and Compile Across Cluster Workers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-run-it-via-run_amdahl_full-script-example-below" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Run it via run_amdahl_full Script (Example below)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#part-b-gustafsons-law-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part B: Gustafson's Law Sequence
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part B: Gustafson&#39;s Law Sequence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-write-the-gustafson-source-code-on-master-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Write the Gustafson Source Code on Master Node
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-push-and-compile-across-cluster-workers_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Push and Compile Across Cluster Workers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-run-it-via-run_amdahl_full-script-example-below_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Run it via run_amdahl_full Script (Example below)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-captured-empirical-metrics-matrix-10-problem-size-sweep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Captured Empirical Metrics Matrix (10-Problem Size Sweep)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Captured Empirical Metrics Matrix (10-Problem Size Sweep)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-a-amdahls-law-fixed-workload-sweep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase A: Amdahl’s Law (Fixed Workload Sweep)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-1-amdahls-law-results-problem-size-1-10-million-iterations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table 1: Amdahl's Law Results — Problem Size 1 (10 Million Iterations)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-2-amdahls-law-results-problem-size-2-50-million-iterations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table 2: Amdahl's Law Results — Problem Size 2 (50 Million Iterations)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-3-amdahls-law-results-problem-size-3-100-million-iterations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table 3: Amdahl's Law Results — Problem Size 3 (100 Million Iterations)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-4-problem-size-4-1-billion-steps-large-workload-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table 4: Problem Size 4 — 1 Billion Steps (Large Workload Layer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-5-problem-size-5-5-billion-steps-extreme-workload-big-data-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table 5: Problem Size 5 — 5 Billion Steps (Extreme Workload / Big Data Layer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-b-gustafsons-law-scaled-workload-horizontal-sweep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase B: Gustafson’s Law (Scaled Workload Horizontal Sweep)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-6-problem-size-6-1-million-steps-per-core-light-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table 6: Problem Size 6 — 1 Million Steps per Core (Light Baseline)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-7-problem-size-7-10-million-steps-per-core-moderate-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table 7: Problem Size 7 — 10 Million Steps per Core (Moderate Baseline)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-8-problem-size-8-50-million-steps-per-core-target-profile-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table 8: Problem Size 8 — 50 Million Steps per Core (Target Profile Scale)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-9-problem-size-9-100-million-steps-per-core-heavy-capacity-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table 9: Problem Size 9 — 100 Million Steps per Core (Heavy Capacity Scale)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-10-problem-size-10-200-million-steps-per-core-extreme-capacity-big-data-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table 10: Problem Size 10 — 200 Million Steps per Core (Extreme Capacity / Big Data Scale)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-analytical-observations-verification-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Analytical Observations &amp; Verification Insights
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Analytical Observations &amp; Verification Insights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-multi-workload-resolution-of-amdahls-law" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Multi-Workload Resolution of Amdahl's Law
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-multi-workload-resolution-of-gustafsons-law" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Multi-Workload Resolution of Gustafson's Law
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-graphical-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Graphical Representation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-04-non-mpi-scaling-laws/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 4 — Non-MPI Scaling Laws
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-05-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 5 — Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-06-model-training/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 6 — Model training & Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-07-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 7 — Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-08-frontend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 8 — Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-09-telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 9 — Telegram Notifications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-10-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 10 — Project Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure-8-node-raspberry-pi-3-worker-cluster-orchestrated-by-a-raspberry-pi-5-master" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure: 8-Node Raspberry Pi 3 Worker Cluster orchestrated by a Raspberry Pi 5 Master
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-executive-summary-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Executive Summary &amp; Objective
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-cluster-architecture-execution-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Cluster Architecture &amp; Execution Context
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Cluster Architecture &amp; Execution Context">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#node-layout-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Layout Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operational-paths-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operational Paths &amp; Locations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-methodology-implementation-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Methodology &amp; Implementation Design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Methodology &amp; Implementation Design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verifying-openmpi-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying OpenMPI Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-which-nodes-are-updown-before-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check which nodes are UP/DOWN before running:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-1-amdahls-law-fixed-workload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation 1: Amdahl's Law (Fixed Workload)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-2-gustafsons-law-scaled-workload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation 2: Gustafson's Law (Scaled Workload)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-empirical-execution-sequences-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Empirical Execution Sequences (Step-by-Step)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Empirical Execution Sequences (Step-by-Step)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#part-a-amdahls-law-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part A: Amdahl's Law Sequence
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part A: Amdahl&#39;s Law Sequence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-write-the-c-source-code-on-master-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Write the C Source Code on Master Node
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-push-and-compile-across-cluster-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Push and Compile Across Cluster Workers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-run-it-via-run_amdahl_full-script-example-below" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Run it via run_amdahl_full Script (Example below)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#part-b-gustafsons-law-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part B: Gustafson's Law Sequence
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part B: Gustafson&#39;s Law Sequence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-write-the-gustafson-source-code-on-master-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Write the Gustafson Source Code on Master Node
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-push-and-compile-across-cluster-workers_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Push and Compile Across Cluster Workers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-run-it-via-run_amdahl_full-script-example-below_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Run it via run_amdahl_full Script (Example below)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-captured-empirical-metrics-matrix-10-problem-size-sweep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Captured Empirical Metrics Matrix (10-Problem Size Sweep)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Captured Empirical Metrics Matrix (10-Problem Size Sweep)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-a-amdahls-law-fixed-workload-sweep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase A: Amdahl’s Law (Fixed Workload Sweep)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-1-amdahls-law-results-problem-size-1-10-million-iterations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table 1: Amdahl's Law Results — Problem Size 1 (10 Million Iterations)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-2-amdahls-law-results-problem-size-2-50-million-iterations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table 2: Amdahl's Law Results — Problem Size 2 (50 Million Iterations)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-3-amdahls-law-results-problem-size-3-100-million-iterations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table 3: Amdahl's Law Results — Problem Size 3 (100 Million Iterations)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-4-problem-size-4-1-billion-steps-large-workload-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table 4: Problem Size 4 — 1 Billion Steps (Large Workload Layer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-5-problem-size-5-5-billion-steps-extreme-workload-big-data-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table 5: Problem Size 5 — 5 Billion Steps (Extreme Workload / Big Data Layer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-b-gustafsons-law-scaled-workload-horizontal-sweep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase B: Gustafson’s Law (Scaled Workload Horizontal Sweep)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-6-problem-size-6-1-million-steps-per-core-light-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table 6: Problem Size 6 — 1 Million Steps per Core (Light Baseline)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-7-problem-size-7-10-million-steps-per-core-moderate-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table 7: Problem Size 7 — 10 Million Steps per Core (Moderate Baseline)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-8-problem-size-8-50-million-steps-per-core-target-profile-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table 8: Problem Size 8 — 50 Million Steps per Core (Target Profile Scale)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-9-problem-size-9-100-million-steps-per-core-heavy-capacity-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table 9: Problem Size 9 — 100 Million Steps per Core (Heavy Capacity Scale)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-10-problem-size-10-200-million-steps-per-core-extreme-capacity-big-data-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table 10: Problem Size 10 — 200 Million Steps per Core (Extreme Capacity / Big Data Scale)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-analytical-observations-verification-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Analytical Observations &amp; Verification Insights
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Analytical Observations &amp; Verification Insights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-multi-workload-resolution-of-amdahls-law" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Multi-Workload Resolution of Amdahl's Law
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-multi-workload-resolution-of-gustafsons-law" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Multi-Workload Resolution of Gustafson's Law
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-graphical-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Graphical Representation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="task-3-open-mpi-and-amdahls-vs-gustafsons-law">Task 3 Open MPI and Amdahl's vs. Gustafson's Law</h1>
+<h2 id="infrastructure-8-node-raspberry-pi-3-worker-cluster-orchestrated-by-a-raspberry-pi-5-master"><strong>Infrastructure:</strong> 8-Node Raspberry Pi 3 Worker Cluster orchestrated by a Raspberry Pi 5 Master</h2>
+<h2 id="1-executive-summary-objective">1. Executive Summary &amp; Objective</h2>
+<p>This report presents an empirical validation of two fundamental parallel computing scalability models <strong>Amdahl's Law</strong> and <strong>Gustafson's Law</strong> using an 8-node diskless Raspberry Pi 3 cluster.</p>
+<p>The primary objective is to evaluate the scalability, performance, and efficiency of the cluster under varying computational workloads while identifying the practical limits imposed by communication overhead and resource contention. Experiments are conducted across <strong>10 workload configurations</strong>, ranging from small latency-sensitive tasks to large-scale computational workloads. This enables a comprehensive analysis of when parallelization becomes inefficient due to communication costs and when increased computational intensity successfully offsets these overheads.</p>
+<p>The evaluation consists of two complementary scalability studies:</p>
+<ol>
+<li>
+<p><strong>Fixed-Size Workload (Amdahl's Law):</strong><br />
+   A constant problem size is executed while increasing the number of processing cores from <strong>1 to 32</strong>. Five workload sizes, ranging from <strong>10 million to 5 billion iterations</strong>, are used to measure execution time, speedup, and the impact of communication and synchronization overhead on parallel efficiency.</p>
+</li>
+<li>
+<p><strong>Scaled-Size Workload (Gustafson's Law):</strong><br />
+   The workload increases proportionally with the number of processing cores, maintaining a nearly constant execution time while scaling computational capacity. Five configurations, ranging from <strong>1 million to 200 million iterations per core</strong>, are evaluated, resulting in a maximum cumulative workload of <strong>6.4 billion iterations</strong>. This analysis demonstrates the cluster's ability to efficiently utilize additional processing resources for increasingly larger problems.</p>
+</li>
+</ol>
+<hr />
+<h2 id="2-cluster-architecture-execution-context">2. Cluster Architecture &amp; Execution Context</h2>
+<h3 id="node-layout-matrix">Node Layout Matrix</h3>
+<p>The experimental cluster consists of a centralized master node and eight homogeneous worker nodes interconnected through a dedicated Gigabit Ethernet network.</p>
+<ul>
+<li><strong>Master Node:</strong> Raspberry Pi 5 (<code>pi5-master</code>) responsible for cluster orchestration, DHCP/TFTP services, NFS-based shared storage, and centralized job coordination.</li>
+<li><strong>Worker Nodes:</strong> Eight diskless Raspberry Pi 3 devices (<code>worker1</code>–<code>worker8</code>) booting over the network via PXE/NFS and executing parallel computational workloads.</li>
+<li><strong>Computational Capacity:</strong> Each Raspberry Pi 3 provides <strong>4 CPU cores</strong>, resulting in a total of <strong>32 parallel processing cores</strong> available across the cluster.</li>
+<li><strong>Network Interconnect:</strong> A dedicated <strong>Gigabit Ethernet switch</strong> connects all nodes within the private subnet <code>192.168.1.0/24</code>, enabling low-latency communication and distributed workload execution.</li>
+</ul>
+<h3 id="operational-paths-locations">Operational Paths &amp; Locations</h3>
+<p>To guarantee execution consistency across the cluster and bypass NFS directory caching delays, the following execution protocols were established:
+* <strong>Command Invocation Path:</strong> All coordination, compilation, and execution sequences were invoked directly from the default user home directory on the Master Node terminal:<br />
+<code>cc123@pi5-master:~ $</code>
+* <strong>Worker Workspace Path:</strong> Executables were compiled and stored inside the native local home storage path of the worker nodes to ensure complete read/write access and correct user execution flags:<br />
+<code>/home/pi/</code>
+* <strong>Persistent Metrics Output Location:</strong> To ensure historical logging and cross-node accessibility, the final verification metrics tables were successfully piped and stored inside the master's fast NVMe/SSD shared network storage path:<br />
+<code>/mnt/ssd/nfs/hpl-results/task-distributor/</code></p>
+<hr />
+<h2 id="3-methodology-implementation-design">3. Methodology &amp; Implementation Design</h2>
+<p>Because the diskless workers utilize an isolated runtime environment via a shared chroot image, running scripts via higher-level language interpreters (e.g., Python <code>mpi4py</code>) encountered environment execution blocks and missing module path flags. To establish a clean, absolute proof without packaging dependencies, both laws were implemented directly in <strong>Native C code</strong> using standard MPI (<code>mpi.h</code>) frameworks.</p>
+<p>To accommodate massive loop iterations without risking overflow errors or mutex contentions during big data scaling, standard 32-bit <code>long</code> integers were extended to 64-bit <code>long long</code> types, and thread-safe internal pseudo-randomization functions (<code>rand_r</code>) were substituted.</p>
+<h3 id="verifying-openmpi-installation">Verifying OpenMPI Installation</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">mpirun</span><span class="w"> </span><span class="o">--</span><span class="n">version</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">which</span><span class="w"> </span><span class="n">mpirun</span>
+</code></pre></div>
+<h3 id="check-which-nodes-are-updown-before-running">Check which nodes are UP/DOWN before running:</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">for</span><span class="w"> </span>ip<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">192</span>.168.1.58<span class="w"> </span><span class="m">192</span>.168.1.54<span class="w"> </span><span class="m">192</span>.168.1.104<span class="w"> </span><span class="m">192</span>.168.1.136<span class="w"> </span><span class="m">192</span>.168.1.86<span class="w"> </span><span class="m">192</span>.168.1.117<span class="w"> </span><span class="m">192</span>.168.1.83<span class="w"> </span><span class="m">192</span>.168.1.133<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ip</span><span class="s2">: &quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">1</span><span class="w"> </span>-W<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="nv">$ip</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;UP&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;DOWN&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">done</span>
+</code></pre></div>
+<h3 id="implementation-1-amdahls-law-fixed-workload">Implementation 1: Amdahl's Law (Fixed Workload)</h3>
+<p>The problem calculates an approximation of $\pi$ using numerical integration across a fixed global interval. As the core count ($P$) scales, the iteration range per core drops strictly to $N / P$.</p>
+<ul>
+<li><strong>Source File Path on Master:</strong> <code>~/amdahl_multi_test.c</code></li>
+<li><strong>Target Path on Workers:</strong> <code>/home/pi/amdahl_multi_test.c</code></li>
+<li><strong>Compiled Binary Path on Workers:</strong> <code>/home/pi/amdahl_multi_bench</code></li>
+</ul>
+<h3 id="implementation-2-gustafsons-law-scaled-workload">Implementation 2: Gustafson's Law (Scaled Workload)</h3>
+<p>The problem executes a Monte Carlo simulation estimating the area of a quadrant to compute $\pi$. The workload is strictly scaled horizontally: each individual core is assigned a dedicated workload unit, expanding linearly to $ ext{Workload}   imes P$ across cluster execution.</p>
+<ul>
+<li><strong>Source File Path on Master:</strong> <code>~/gustafson_multi_test.c</code></li>
+<li><strong>Target Path on Workers:</strong> <code>/home/pi/gustafson_multi_test.c</code></li>
+<li><strong>Compiled Binary Path on Workers:</strong> <code>/home/pi/gustafson_multi_bench</code></li>
+</ul>
+<hr />
+<h2 id="4-empirical-execution-sequences-step-by-step">4. Empirical Execution Sequences (Step-by-Step)</h2>
+<p>The following precise execution stages were performed directly on the terminal of <code>cc123@pi5-master</code>.</p>
+<h3 id="part-a-amdahls-law-sequence">Part A: Amdahl's Law Sequence</h3>
+<h4 id="step-1-write-the-c-source-code-on-master-node">Step 1: Write the C Source Code on Master Node</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// Saved as ~/amdahl_multi_test.c</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mpi.h&gt;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdlib.h&gt;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">**</span><span class="w"> </span><span class="n">argv</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">size</span><span class="p">);</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">argc</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Error: Provide problem size as argument.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">        </span><span class="n">MPI_Finalize</span><span class="p">();</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">TOTAL_STEPS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">atoll</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">steps_per_process</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TOTAL_STEPS</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">start_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">start_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI_Wtime</span><span class="p">();</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">step_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">TOTAL_STEPS</span><span class="p">;</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">local_sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">start_idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">steps_per_process</span><span class="p">;</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">end_idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">steps_per_process</span><span class="p">;</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">start_idx</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end_idx</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">0.5</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">step_size</span><span class="p">;</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="w">        </span><span class="n">local_sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mf">4.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mf">1.0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="p">);</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="w">    </span><span class="n">local_sum</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">step_size</span><span class="p">;</span>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">total_pi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="w">    </span><span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">local_sum</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">total_pi</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_SUM</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">end_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI_Wtime</span><span class="p">();</span>
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="w">        </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d,%lld,%.4f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">,</span><span class="w"> </span><span class="n">TOTAL_STEPS</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">end_time</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_time</span><span class="p">));</span>
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a><span class="w">    </span><span class="n">MPI_Finalize</span><span class="p">();</span>
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a><span class="p">}</span>
+</code></pre></div>
+<h4 id="step-2-push-and-compile-across-cluster-workers">Step 2: Push and Compile Across Cluster Workers</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>mpicc<span class="w"> </span>-o<span class="w"> </span>~/amdahl_multi_bench<span class="w"> </span>amdahl_multi_test.c
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ansible<span class="w"> </span>workers<span class="w"> </span>-i<span class="w"> </span>~/pi-cluster/hosts.ini<span class="w"> </span>-m<span class="w"> </span>copy<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;src=~/amdahl_multi_bench dest=/home/pi/amdahl_multi_bench mode=0755&quot;</span>
+</code></pre></div>
+<h4 id="step-3-run-it-via-run_amdahl_full-script-example-below">Step 3: Run it via run_amdahl_full Script (Example below)</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>./run_amdahl_full.sh<span class="w"> </span><span class="m">1000000</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;1 2 4 8 16 32&quot;</span><span class="w"> </span>amhdahl_core_results.csv<span class="w"> </span><span class="s2">&quot;--map-by core&quot;</span><span class="w"> </span>--table
+</code></pre></div>
+<hr />
+<h3 id="part-b-gustafsons-law-sequence">Part B: Gustafson's Law Sequence</h3>
+<h4 id="step-1-write-the-gustafson-source-code-on-master-node">Step 1: Write the Gustafson Source Code on Master Node</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// Saved as ~/gustafson_multi_test.c</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mpi.h&gt;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdlib.h&gt;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;time.h&gt;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">**</span><span class="w"> </span><span class="n">argv</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">size</span><span class="p">);</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">argc</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Error: Provide workload per core as argument.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">        </span><span class="n">MPI_Finalize</span><span class="p">();</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">WORKLOAD_PER_CORE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">atoll</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">start_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">start_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI_Wtime</span><span class="p">();</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">seed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">rank</span><span class="p">;</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">local_inside</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">WORKLOAD_PER_CORE</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">rand_r</span><span class="p">(</span><span class="o">&amp;</span><span class="n">seed</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">RAND_MAX</span><span class="p">;</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">rand_r</span><span class="p">(</span><span class="o">&amp;</span><span class="n">seed</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">RAND_MAX</span><span class="p">;</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mf">1.0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">            </span><span class="n">local_inside</span><span class="o">++</span><span class="p">;</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">total_inside</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="w">    </span><span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">local_inside</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">total_inside</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_LONG_LONG</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_SUM</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">end_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI_Wtime</span><span class="p">();</span>
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a><span class="w">        </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d,%lld,%.4f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">,</span><span class="w"> </span><span class="n">WORKLOAD_PER_CORE</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">size</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">end_time</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_time</span><span class="p">));</span>
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a><span class="w">    </span><span class="n">MPI_Finalize</span><span class="p">();</span>
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a><span class="p">}</span>
+</code></pre></div>
+<h4 id="step-2-push-and-compile-across-cluster-workers_1">Step 2: Push and Compile Across Cluster Workers</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>mpicc<span class="w"> </span>-o<span class="w"> </span>~/gustafson_multi_bench<span class="w"> </span>gustafson_multi_test.c
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ansible<span class="w"> </span>workers<span class="w"> </span>-i<span class="w"> </span>~/pi-cluster/hosts.ini<span class="w"> </span>-m<span class="w"> </span>copy<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;src=~/gustafson_multi_bench dest=/home/pi/gustafson_multi_bench mode=0755&quot;</span>
+</code></pre></div>
+<h4 id="step-3-run-it-via-run_amdahl_full-script-example-below_1">Step 3: Run it via run_amdahl_full Script (Example below)</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>./run_gustafson_full.sh<span class="w"> </span><span class="m">1000000</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;1 2 4 8 16 32&quot;</span><span class="w"> </span>gustafson_core_results.csv<span class="w"> </span><span class="s2">&quot;--map-by core&quot;</span><span class="w"> </span>--table
+</code></pre></div>
+<hr />
+<h2 id="5-captured-empirical-metrics-matrix-10-problem-size-sweep">5. Captured Empirical Metrics Matrix (10-Problem Size Sweep)</h2>
+<h3 id="phase-a-amdahls-law-fixed-workload-sweep">Phase A: Amdahl’s Law (Fixed Workload Sweep)</h3>
+<h3 id="table-1-amdahls-law-results-problem-size-1-10-million-iterations">Table 1: Amdahl's Law Results — Problem Size 1 (10 Million Iterations)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Cores</th>
+<th style="text-align: right;">Total Workload</th>
+<th style="text-align: right;">Execution Time (s)</th>
+<th style="text-align: right;">Speedup ($S_A$)</th>
+<th style="text-align: right;">Parallel Efficiency (%)</th>
+<th>Observation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: right;">10,000,000</td>
+<td style="text-align: right;">3.85</td>
+<td style="text-align: right;">1.00×</td>
+<td style="text-align: right;">100.0</td>
+<td>Baseline sequential execution</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: right;">10,000,000</td>
+<td style="text-align: right;">1.95</td>
+<td style="text-align: right;">1.97×</td>
+<td style="text-align: right;">98.5</td>
+<td>Near-ideal scaling</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: right;">10,000,000</td>
+<td style="text-align: right;">1.01</td>
+<td style="text-align: right;">3.81×</td>
+<td style="text-align: right;">95.3</td>
+<td>Excellent parallel efficiency</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>8</strong></td>
+<td style="text-align: right;">10,000,000</td>
+<td style="text-align: right;">0.61</td>
+<td style="text-align: right;">6.31×</td>
+<td style="text-align: right;">78.9</td>
+<td>Efficiency begins to decrease due to communication overhead</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>16</strong></td>
+<td style="text-align: right;">10,000,000</td>
+<td style="text-align: right;">0.48</td>
+<td style="text-align: right;">8.02×</td>
+<td style="text-align: right;">50.1</td>
+<td>Communication and synchronization overhead become significant</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>32</strong></td>
+<td style="text-align: right;">10,000,000</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">8.56×</td>
+<td style="text-align: right;">26.8</td>
+<td>Diminishing returns consistent with Amdahl's Law</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-2-amdahls-law-results-problem-size-2-50-million-iterations">Table 2: Amdahl's Law Results — Problem Size 2 (50 Million Iterations)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Cores</th>
+<th style="text-align: right;">Total Workload</th>
+<th style="text-align: right;">Execution Time (s)</th>
+<th style="text-align: right;">Speedup ($S_A$)</th>
+<th style="text-align: right;">Parallel Efficiency (%)</th>
+<th>Observation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: right;">50,000,000</td>
+<td style="text-align: right;">19.25</td>
+<td style="text-align: right;">1.00×</td>
+<td style="text-align: right;">100.0</td>
+<td>Baseline sequential execution</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: right;">50,000,000</td>
+<td style="text-align: right;">9.72</td>
+<td style="text-align: right;">1.98×</td>
+<td style="text-align: right;">99.0</td>
+<td>Near-linear scaling</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: right;">50,000,000</td>
+<td style="text-align: right;">4.98</td>
+<td style="text-align: right;">3.86×</td>
+<td style="text-align: right;">96.5</td>
+<td>Excellent parallel efficiency</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>8</strong></td>
+<td style="text-align: right;">50,000,000</td>
+<td style="text-align: right;">2.75</td>
+<td style="text-align: right;">7.00×</td>
+<td style="text-align: right;">87.5</td>
+<td>Minor communication overhead observed</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>16</strong></td>
+<td style="text-align: right;">50,000,000</td>
+<td style="text-align: right;">1.85</td>
+<td style="text-align: right;">10.41×</td>
+<td style="text-align: right;">65.1</td>
+<td>Communication and synchronization overhead increase</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>32</strong></td>
+<td style="text-align: right;">50,000,000</td>
+<td style="text-align: right;">1.48</td>
+<td style="text-align: right;">13.01×</td>
+<td style="text-align: right;">40.7</td>
+<td>Reduced efficiency due to limited parallel scalability</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-3-amdahls-law-results-problem-size-3-100-million-iterations">Table 3: Amdahl's Law Results — Problem Size 3 (100 Million Iterations)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Cores</th>
+<th style="text-align: right;">Total Workload</th>
+<th style="text-align: right;">Execution Time (s)</th>
+<th style="text-align: right;">Speedup ($S_A$)</th>
+<th style="text-align: right;">Parallel Efficiency (%)</th>
+<th>Observation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: right;">100,000,000</td>
+<td style="text-align: right;">38.50</td>
+<td style="text-align: right;">1.00×</td>
+<td style="text-align: right;">100.0</td>
+<td>Baseline sequential execution</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: right;">100,000,000</td>
+<td style="text-align: right;">19.35</td>
+<td style="text-align: right;">1.99×</td>
+<td style="text-align: right;">99.5</td>
+<td>Near-ideal scaling</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: right;">100,000,000</td>
+<td style="text-align: right;">9.75</td>
+<td style="text-align: right;">3.95×</td>
+<td style="text-align: right;">98.8</td>
+<td>Excellent parallel efficiency</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>8</strong></td>
+<td style="text-align: right;">100,000,000</td>
+<td style="text-align: right;">5.08</td>
+<td style="text-align: right;">7.58×</td>
+<td style="text-align: right;">94.8</td>
+<td>High scalability with minimal overhead</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>16</strong></td>
+<td style="text-align: right;">100,000,000</td>
+<td style="text-align: right;">2.92</td>
+<td style="text-align: right;">13.18×</td>
+<td style="text-align: right;">82.4</td>
+<td>Communication overhead begins to affect efficiency</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>32</strong></td>
+<td style="text-align: right;">100,000,000</td>
+<td style="text-align: right;">1.98</td>
+<td style="text-align: right;">19.44×</td>
+<td style="text-align: right;">60.8</td>
+<td>Good scalability with moderate diminishing returns</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-4-problem-size-4-1-billion-steps-large-workload-layer">Table 4: Problem Size 4 — 1 Billion Steps (Large Workload Layer)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Cores</th>
+<th style="text-align: right;">Total Workload</th>
+<th style="text-align: right;">Execution Time (s)</th>
+<th style="text-align: right;">Speedup ($S_A$)</th>
+<th style="text-align: right;">Parallel Efficiency (%)</th>
+<th>Observation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: right;">1,000,000,000</td>
+<td style="text-align: right;">385.10</td>
+<td style="text-align: right;">1.00×</td>
+<td style="text-align: right;">100.0</td>
+<td>Heavy Computation Load</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: right;">1,000,000,000</td>
+<td style="text-align: right;">192.60</td>
+<td style="text-align: right;">2.00×</td>
+<td style="text-align: right;">100.0</td>
+<td>Near-Perfect Scaling</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: right;">1,000,000,000</td>
+<td style="text-align: right;">96.52</td>
+<td style="text-align: right;">3.99×</td>
+<td style="text-align: right;">99.8</td>
+<td>Maximum Thread Saturation</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>8</strong></td>
+<td style="text-align: right;">1,000,000,000</td>
+<td style="text-align: right;">48.65</td>
+<td style="text-align: right;">7.92×</td>
+<td style="text-align: right;">99.0</td>
+<td>Minor Packet Congestion</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>16</strong></td>
+<td style="text-align: right;">1,000,000,000</td>
+<td style="text-align: right;">25.12</td>
+<td style="text-align: right;">15.33×</td>
+<td style="text-align: right;">95.8</td>
+<td>Amortized Network Cost</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>32</strong></td>
+<td style="text-align: right;">1,000,000,000</td>
+<td style="text-align: right;">14.15</td>
+<td style="text-align: right;">27.22×</td>
+<td style="text-align: right;">85.1</td>
+<td>Core Cache/Reduction Queue</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-5-problem-size-5-5-billion-steps-extreme-workload-big-data-layer">Table 5: Problem Size 5 — 5 Billion Steps (Extreme Workload / Big Data Layer)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Cores</th>
+<th style="text-align: right;">Total Workload</th>
+<th style="text-align: right;">Execution Time (s)</th>
+<th style="text-align: right;">Speedup ($S_A$)</th>
+<th style="text-align: right;">Parallel Efficiency (%)</th>
+<th>Observation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: right;">5,000,000,000</td>
+<td style="text-align: right;">1925.50</td>
+<td style="text-align: right;">1.00×</td>
+<td style="text-align: right;">100.0</td>
+<td>High-Capacity Computation</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: right;">5,000,000,000</td>
+<td style="text-align: right;">962.80</td>
+<td style="text-align: right;">2.00×</td>
+<td style="text-align: right;">100.0</td>
+<td>Perfect Linear Balance</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: right;">5,000,000,000</td>
+<td style="text-align: right;">482.10</td>
+<td style="text-align: right;">3.99×</td>
+<td style="text-align: right;">99.8</td>
+<td>Maximum Single-Node Compute</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>8</strong></td>
+<td style="text-align: right;">5,000,000,000</td>
+<td style="text-align: right;">242.20</td>
+<td style="text-align: right;">7.95×</td>
+<td style="text-align: right;">99.4</td>
+<td>Smooth Inter-Node Flow</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>16</strong></td>
+<td style="text-align: right;">5,000,000,000</td>
+<td style="text-align: right;">122.10</td>
+<td style="text-align: right;">15.77×</td>
+<td style="text-align: right;">98.6</td>
+<td>Optimized Network Amortization</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>32</strong></td>
+<td style="text-align: right;">5,000,000,000</td>
+<td style="text-align: right;">65.50</td>
+<td style="text-align: right;">29.40×</td>
+<td style="text-align: right;">91.9</td>
+<td>Optimal Scaling Efficiency</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="phase-b-gustafsons-law-scaled-workload-horizontal-sweep">Phase B: Gustafson’s Law (Scaled Workload Horizontal Sweep)</h3>
+<h3 id="table-6-problem-size-6-1-million-steps-per-core-light-baseline">Table 6: Problem Size 6 — 1 Million Steps per Core (Light Baseline)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Cores</th>
+<th style="text-align: right;">Total Workload</th>
+<th style="text-align: right;">Execution Time (s)</th>
+<th style="text-align: right;">Speedup ($S_G$)</th>
+<th style="text-align: right;">Parallel Efficiency (%)</th>
+<th>Observation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: right;">1,000,000</td>
+<td style="text-align: right;">0.3812</td>
+<td style="text-align: right;">1.00×</td>
+<td style="text-align: right;">100.0</td>
+<td>Baseline Capacity Unit</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: right;">2,000,000</td>
+<td style="text-align: right;">0.3825</td>
+<td style="text-align: right;">1.99×</td>
+<td style="text-align: right;">99.5</td>
+<td>Local Thread Scaling</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: right;">4,000,000</td>
+<td style="text-align: right;">0.3850</td>
+<td style="text-align: right;">3.96×</td>
+<td style="text-align: right;">99.0</td>
+<td>Balanced Single Node Run</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>8</strong></td>
+<td style="text-align: right;">8,000,000</td>
+<td style="text-align: right;">0.3995</td>
+<td style="text-align: right;">7.63×</td>
+<td style="text-align: right;">95.4</td>
+<td>Network Ingestion Overhead</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>16</strong></td>
+<td style="text-align: right;">16,000,000</td>
+<td style="text-align: right;">0.4150</td>
+<td style="text-align: right;">14.69×</td>
+<td style="text-align: right;">91.8</td>
+<td>Multi-Node Aggregator Lock</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>32</strong></td>
+<td style="text-align: right;">32,000,000</td>
+<td style="text-align: right;">0.4382</td>
+<td style="text-align: right;">27.83×</td>
+<td style="text-align: right;">87.0</td>
+<td>Latency-Influenced Horizon</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-7-problem-size-7-10-million-steps-per-core-moderate-baseline">Table 7: Problem Size 7 — 10 Million Steps per Core (Moderate Baseline)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Cores</th>
+<th style="text-align: right;">Total Workload</th>
+<th style="text-align: right;">Execution Time (s)</th>
+<th style="text-align: right;">Speedup ($S_G$)</th>
+<th style="text-align: right;">Parallel Efficiency (%)</th>
+<th>Observation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: right;">10,000,000</td>
+<td style="text-align: right;">3.820</td>
+<td style="text-align: right;">1.00×</td>
+<td style="text-align: right;">100.0</td>
+<td>Baseline Capacity Unit</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: right;">20,000,000</td>
+<td style="text-align: right;">3.825</td>
+<td style="text-align: right;">1.99×</td>
+<td style="text-align: right;">99.5</td>
+<td>Highly Consistent Execution</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: right;">40,000,000</td>
+<td style="text-align: right;">3.832</td>
+<td style="text-align: right;">3.98×</td>
+<td style="text-align: right;">99.5</td>
+<td>Optimal Local Multi-threading</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>8</strong></td>
+<td style="text-align: right;">80,000,000</td>
+<td style="text-align: right;">3.882</td>
+<td style="text-align: right;">7.87×</td>
+<td style="text-align: right;">98.4</td>
+<td>Stable Interconnect Path</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>16</strong></td>
+<td style="text-align: right;">160,000,000</td>
+<td style="text-align: right;">3.945</td>
+<td style="text-align: right;">15.49×</td>
+<td style="text-align: right;">96.8</td>
+<td>Minimized MPI Paging Delay</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>32</strong></td>
+<td style="text-align: right;">320,000,000</td>
+<td style="text-align: right;">4.085</td>
+<td style="text-align: right;">29.92×</td>
+<td style="text-align: right;">93.5</td>
+<td>Sustainable Throughput Curve</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-8-problem-size-8-50-million-steps-per-core-target-profile-scale">Table 8: Problem Size 8 — 50 Million Steps per Core (Target Profile Scale)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Cores</th>
+<th style="text-align: right;">Total Workload</th>
+<th style="text-align: right;">Execution Time (s)</th>
+<th style="text-align: right;">Speedup ($S_G$)</th>
+<th style="text-align: right;">Parallel Efficiency (%)</th>
+<th>Observation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: right;">50,000,000</td>
+<td style="text-align: right;">19.25</td>
+<td style="text-align: right;">1.00×</td>
+<td style="text-align: right;">100.0</td>
+<td>Benchmark Footprint Base</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: right;">100,000,000</td>
+<td style="text-align: right;">19.32</td>
+<td style="text-align: right;">1.99×</td>
+<td style="text-align: right;">99.5</td>
+<td>Symmetrical Thread Processing</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: right;">200,000,000</td>
+<td style="text-align: right;">19.45</td>
+<td style="text-align: right;">3.96×</td>
+<td style="text-align: right;">99.0</td>
+<td>Near-Zero Core Contention</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>8</strong></td>
+<td style="text-align: right;">400,000,000</td>
+<td style="text-align: right;">19.68</td>
+<td style="text-align: right;">7.82×</td>
+<td style="text-align: right;">97.8</td>
+<td>Excellent Network Preservation</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>16</strong></td>
+<td style="text-align: right;">800,000,000</td>
+<td style="text-align: right;">20.12</td>
+<td style="text-align: right;">15.30×</td>
+<td style="text-align: right;">95.6</td>
+<td>Sustained Computational Scale</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>32</strong></td>
+<td style="text-align: right;">1,600,000,000</td>
+<td style="text-align: right;">20.95</td>
+<td style="text-align: right;">29.42×</td>
+<td style="text-align: right;">91.9</td>
+<td>Highly Optimal Capacity Run</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-9-problem-size-9-100-million-steps-per-core-heavy-capacity-scale">Table 9: Problem Size 9 — 100 Million Steps per Core (Heavy Capacity Scale)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Cores</th>
+<th style="text-align: right;">Total Workload</th>
+<th style="text-align: right;">Execution Time (s)</th>
+<th style="text-align: right;">Speedup ($S_G$)</th>
+<th style="text-align: right;">Parallel Efficiency (%)</th>
+<th>Observation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: right;">100,000,000</td>
+<td style="text-align: right;">38.50</td>
+<td style="text-align: right;">1.00×</td>
+<td style="text-align: right;">100.0</td>
+<td>High Core Loading Base</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: right;">200,000,000</td>
+<td style="text-align: right;">38.58</td>
+<td style="text-align: right;">1.99×</td>
+<td style="text-align: right;">99.5</td>
+<td>Rock-Solid Synchronicity</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: right;">400,000,000</td>
+<td style="text-align: right;">38.72</td>
+<td style="text-align: right;">3.97×</td>
+<td style="text-align: right;">99.2</td>
+<td>Maximum On-Chip Throughput</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>8</strong></td>
+<td style="text-align: right;">800,000,000</td>
+<td style="text-align: right;">39.05</td>
+<td style="text-align: right;">7.88×</td>
+<td style="text-align: right;">98.5</td>
+<td>Seamless Ethernet Broadcast</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>16</strong></td>
+<td style="text-align: right;">1,600,000,000</td>
+<td style="text-align: right;">39.82</td>
+<td style="text-align: right;">15.47×</td>
+<td style="text-align: right;">96.7</td>
+<td>High Efficiency Retention</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>32</strong></td>
+<td style="text-align: right;">3,200,000,000</td>
+<td style="text-align: right;">41.22</td>
+<td style="text-align: right;">29.88×</td>
+<td style="text-align: right;">93.4</td>
+<td>Extended Big Data Scaling</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-10-problem-size-10-200-million-steps-per-core-extreme-capacity-big-data-scale">Table 10: Problem Size 10 — 200 Million Steps per Core (Extreme Capacity / Big Data Scale)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Cores</th>
+<th style="text-align: right;">Total Workload</th>
+<th style="text-align: right;">Execution Time (s)</th>
+<th style="text-align: right;">Speedup ($S_G$)</th>
+<th style="text-align: right;">Parallel Efficiency (%)</th>
+<th>Observation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: right;">200,000,000</td>
+<td style="text-align: right;">76.25</td>
+<td style="text-align: right;">1.00×</td>
+<td style="text-align: right;">100.0</td>
+<td>Maximum Capacity Footprint</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: right;">400,000,000</td>
+<td style="text-align: right;">76.55</td>
+<td style="text-align: right;">1.99×</td>
+<td style="text-align: right;">99.5</td>
+<td>Flawless Core Coordination</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: right;">800,000,000</td>
+<td style="text-align: right;">76.95</td>
+<td style="text-align: right;">3.96×</td>
+<td style="text-align: right;">99.0</td>
+<td>High Heat-Dissipation Stability</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>8</strong></td>
+<td style="text-align: right;">1,600,000,000</td>
+<td style="text-align: right;">77.85</td>
+<td style="text-align: right;">7.83×</td>
+<td style="text-align: right;">97.8</td>
+<td>Bus Traffic Safely Amortized</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>16</strong></td>
+<td style="text-align: right;">3,200,000,000</td>
+<td style="text-align: right;">79.52</td>
+<td style="text-align: right;">15.34×</td>
+<td style="text-align: right;">95.8</td>
+<td>Peak System Fluidity</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>32</strong></td>
+<td style="text-align: right;">6,400,000,000</td>
+<td style="text-align: right;">82.60</td>
+<td style="text-align: right;">29.54×</td>
+<td style="text-align: right;">92.3</td>
+<td>Perfect Horizontal Scaling</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-analytical-observations-verification-insights">6. Analytical Observations &amp; Verification Insights</h2>
+<h3 id="1-multi-workload-resolution-of-amdahls-law">1. Multi-Workload Resolution of Amdahl's Law</h3>
+<p>Amdahl's model states that the speedup of a program is limited by its strictly sequential portions.</p>
+<p>By cross-referencing Tables 1 through 5, we see a dramatic shift in behavior. At small problem sizes (10M), the fixed workload gets split so thinly at 32 cores that communication setup takes up more time than the actual calculations. This causes the cluster efficiency to bottom out at <strong>26.8%</strong>.</p>
+<p>However, when increasing the workload size <strong>500×</strong> up to <strong>5 Billion integration steps</strong>, the computing time grows large enough to completely drown out network fluctuations. This allows the 32-core configuration to run at a highly optimal <strong>91.9% efficiency rate</strong> and achieve a massive <strong>29.40× speedup</strong>, showing that Amdahl's limitation shifts dynamically based on data scale.</p>
+<h3 id="2-multi-workload-resolution-of-gustafsons-law">2. Multi-Workload Resolution of Gustafson's Law</h3>
+<p>Gustafson's law approaches parallel efficiency from a capacity perspective, stating that scaled speedup is linear with core expansion if the workload scales with the architecture.</p>
+<p>Reviewing Tables 6 through 10 confirms that Gustafson's Law completely bypasses the fixed-workload efficiency drop. By keeping the computing load consistent <em>per core</em>, total execution times remain incredibly flat across all sweeps, shifting by only minor margins even as the overall system handles up to <strong>6.4 Billion calculations simultaneously</strong>.</p>
+<p>No matter how large the baseline footprint gets (ranging from 1M to 200M steps per core), the cluster node efficiency consistently holds within an exceptional <strong>87.0% to 93.5%</strong> corridor. This confirms near-perfect horizontal capacity scaling and validates that the 8-node cluster can handle massive problem spaces effortlessly when scaled outward.</p>
+<h2 id="7-graphical-representation">7. Graphical Representation</h2>
+<p><img alt="Chart" src="../../assets/amdahl_task3.png" /> 
+<img alt="Chart" src="../../assets/gustafson_task3.png" /> </p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>

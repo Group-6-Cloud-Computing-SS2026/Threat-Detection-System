@@ -1,0 +1,2259 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for the edge-computing threat detection sensor network.">
+      
+      
+      
+      
+        <link rel="prev" href="../../getting-started/installation/">
+      
+      
+        <link rel="next" href="../backend-pi5/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>❗ (MUST FOLLOW!) Cluster Shutdown and Cold Start - Threat Detection System</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#cluster-shutdown-and-cold-start-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Threat Detection System" class="md-header__button md-logo" aria-label="Threat Detection System" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Threat Detection System
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ❗ (MUST FOLLOW!) Cluster Shutdown and Cold Start
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Group-6-Cloud-Computing-SS2026/Threat-Detection-System" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Threat-Detection-System
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/overview/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tasks/overall-status/" class="md-tabs__link">
+          
+  
+  
+  Tasks
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Threat Detection System" class="md-nav__button md-logo" aria-label="Threat Detection System" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Threat Detection System
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Group-6-Cloud-Computing-SS2026/Threat-Detection-System" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Threat-Detection-System
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ❗ (MUST FOLLOW!) Cluster Shutdown and Cold Start
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ❗ (MUST FOLLOW!) Cluster Shutdown and Cold Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-system-architecture-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. System Architecture Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-golden-boot-sequence-recover-in-3-mins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. ⏱️ The Golden Boot Sequence (Recover in 3 Mins)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. ⏱️ The Golden Boot Sequence (Recover in 3 Mins)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#precondition-ensure-master-pi-5-has-wifi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Precondition: Ensure Master (PI-5) has WIFI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-complete-power-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Complete Power Isolation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-boot-the-master-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Boot the Master First
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-wait-for-the-ssd-activity-light-to-settle-15-to-2-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Wait for the SSD Activity Light to Settle (~1.5 to 2 Minutes)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Wait for the SSD Activity Light to Settle (~1.5 to 2 Minutes)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verification-via-ssh-highly-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔍 Verification via SSH (Highly Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-power-the-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Power the Workers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-post-boot-check-pod-redistribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. ⚖️ Post-Boot Check &amp; Pod Redistribution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. ⚖️ Post-Boot Check &amp; Pod Redistribution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-monitor-cluster-and-pod-status-live-watch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Monitor Cluster and Pod Status (Live Watch)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-trigger-pod-redistribution-if-unevenly-distributed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Trigger Pod Redistribution (If unevenly distributed)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-the-self-healing-boot-automation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 🛡️ The Self-Healing Boot Automation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-hardware-diagnostic-led-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 🔍 Hardware Diagnostic Led Guide
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-emergency-manual-troubleshooting-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 🛠️ Emergency Manual Troubleshooting Commands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. 🛠️ Emergency Manual Troubleshooting Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-run-a-manual-cluster-wide-sync-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A. Run a Manual Cluster-Wide Sync &amp; Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-manually-synchronize-worker-clocks-ansible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B. Manually Synchronize Worker Clocks (Ansible)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-recover-a-deadlocked-worker-node-sysrq-hardware-reset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C. Recover a Deadlocked Worker Node (SysRq Hardware Reset)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-preventing-parallel-api-migration-deadlocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D. Preventing Parallel API Migration Deadlocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-clean-shutdown-power-off-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 🔌 Clean Shutdown &amp; Power-Off Sequence
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. 🔌 Clean Shutdown &amp; Power-Off Sequence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-shut-down-all-workers-cleanly-ansible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Shut down all Workers cleanly (Ansible)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-stop-the-k3s-control-plane-and-databases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Stop the K3s Control Plane and Databases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-shut-down-the-master-pi-5-cleanly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Shut down the Master Pi 5 cleanly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-physical-power-cut" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Physical Power Cut
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../backend-pi5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Local Development & Backend Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../minio-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MinIO S3 Object Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mpi-cluster/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MPI Cluster Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../k3s-deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Distributed k3s Kubernetes Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../camera-test-stream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Edge Camera Test Stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cluster-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cluster Setup (PXE & NFS)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cluster-setup-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cluster Setup V2 (Setup & Verification)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ansible/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ansible
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardware-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware Setup & Boot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../synthetic-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HPL Synthetic Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task-distributor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task Distributor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tasks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tasks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/overall-status/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overall Tasks Status
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-01-edge-computing-infrastructure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 1 — Edge Computing Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-02-hpl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 2 — HPL Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task_3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 3 — MPI Cluster
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-04-non-mpi-scaling-laws/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 4 — Non-MPI Scaling Laws
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-05-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 5 — Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-06-model-training/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 6 — Model training & Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-07-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 7 — Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-08-frontend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 8 — Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-09-telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 9 — Telegram Notifications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-10-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 10 — Project Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-system-architecture-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. System Architecture Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-golden-boot-sequence-recover-in-3-mins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. ⏱️ The Golden Boot Sequence (Recover in 3 Mins)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. ⏱️ The Golden Boot Sequence (Recover in 3 Mins)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#precondition-ensure-master-pi-5-has-wifi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Precondition: Ensure Master (PI-5) has WIFI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-complete-power-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Complete Power Isolation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-boot-the-master-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Boot the Master First
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-wait-for-the-ssd-activity-light-to-settle-15-to-2-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Wait for the SSD Activity Light to Settle (~1.5 to 2 Minutes)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Wait for the SSD Activity Light to Settle (~1.5 to 2 Minutes)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verification-via-ssh-highly-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔍 Verification via SSH (Highly Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-power-the-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Power the Workers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-post-boot-check-pod-redistribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. ⚖️ Post-Boot Check &amp; Pod Redistribution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. ⚖️ Post-Boot Check &amp; Pod Redistribution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-monitor-cluster-and-pod-status-live-watch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Monitor Cluster and Pod Status (Live Watch)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-trigger-pod-redistribution-if-unevenly-distributed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Trigger Pod Redistribution (If unevenly distributed)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-the-self-healing-boot-automation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 🛡️ The Self-Healing Boot Automation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-hardware-diagnostic-led-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 🔍 Hardware Diagnostic Led Guide
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-emergency-manual-troubleshooting-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 🛠️ Emergency Manual Troubleshooting Commands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. 🛠️ Emergency Manual Troubleshooting Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-run-a-manual-cluster-wide-sync-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A. Run a Manual Cluster-Wide Sync &amp; Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-manually-synchronize-worker-clocks-ansible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B. Manually Synchronize Worker Clocks (Ansible)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-recover-a-deadlocked-worker-node-sysrq-hardware-reset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C. Recover a Deadlocked Worker Node (SysRq Hardware Reset)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-preventing-parallel-api-migration-deadlocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D. Preventing Parallel API Migration Deadlocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-clean-shutdown-power-off-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 🔌 Clean Shutdown &amp; Power-Off Sequence
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. 🔌 Clean Shutdown &amp; Power-Off Sequence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-shut-down-all-workers-cleanly-ansible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Shut down all Workers cleanly (Ansible)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-stop-the-k3s-control-plane-and-databases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Stop the K3s Control Plane and Databases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-shut-down-the-master-pi-5-cleanly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Shut down the Master Pi 5 cleanly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-physical-power-cut" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Physical Power Cut
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="cluster-shutdown-and-cold-start-guide">🔌 Cluster Shutdown and Cold Start Guide</h1>
+<p>This guide outlines the <strong>Golden Boot Sequence</strong>, <strong>Clean Shutdown Sequence</strong>, and troubleshooting procedures for managing the Raspberry Pi Threat Detection System (TDS) cluster during power cycles, blackout recovery, or system maintenance.</p>
+<hr />
+<h2 id="1-system-architecture-context">1. System Architecture Context</h2>
+<p>The TDS cluster consists of:
+* <strong>1x Raspberry Pi 5 Master (<code>pi5-master</code>):</strong> Runs the K3s Control Plane, a persistent PostgreSQL database, and a Mosquitto MQTT broker. Crucially, it hosts an <strong>external 500GB SSD</strong> and acts as the <strong>TFTP/NFS Network Boot Server</strong> for all workers.
+* <strong>8x Raspberry Pi 3 B+ Workers (<code>worker1</code> to <code>worker8</code>):</strong> <strong>Diskless/SD-card-less nodes</strong>. They contain no local storage and must network-boot (PXE) their operating systems directly from the Master Pi 5's SSD over a private ethernet switch.</p>
+<p>Because the workers are entirely dependent on the Master to boot, <strong>they must never be powered on before the Master's storage and network boot services are fully operational.</strong></p>
+<hr />
+<h2 id="2-the-golden-boot-sequence-recover-in-3-mins">2. ⏱️ The Golden Boot Sequence (Recover in 3 Mins)</h2>
+<p>To ensure the cluster bootstraps successfully on the first try without any manual SSH commands, follow this sequence:</p>
+<pre class="mermaid"><code>graph TD
+    A[1. Unplug Master &amp; Workers] --&gt; B[2. Plug in Master Pi 5 ONLY]
+    B --&gt; C["3. Wait for Master (SSD settle or SSH verify)"]
+    C --&gt; D[4. Plug in all Pi 3 Workers]
+    D --&gt; E[5. Auto-Recovery Service Restores Cluster]</code></pre>
+<h3 id="precondition-ensure-master-pi-5-has-wifi">Precondition: Ensure Master (PI-5) has WIFI</h3>
+<p>Make sure the <code>pi5-master</code> has access to internet. You can use the following command;</p>
+<p>It is recommended to use the wlan reciever (wlan1) - the white wifi device. Note that wlan1 is auto assigned; it may be that it is wlan2 or something else.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>sudo<span class="w"> </span>nmcli<span class="w"> </span>--ask<span class="w"> </span>device<span class="w"> </span>wifi<span class="w"> </span>connect<span class="w"> </span><span class="s2">&quot;YOUR WIFI&quot;</span><span class="w"> </span>ifname<span class="w"> </span>wlan1
+</code></pre></div></p>
+<p>If the wlan reciever (wlan1) is not available you may use the internal rpi5 wlan reciever
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo<span class="w"> </span>nmcli<span class="w"> </span>--ask<span class="w"> </span>device<span class="w"> </span>wifi<span class="w"> </span>connect<span class="w"> </span><span class="s2">&quot;YOUR WIFI&quot;</span>
+</code></pre></div>
+Enter password and it should be good. You might need to reboot the master after this. Use this for a reboot;</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>reboot
+</code></pre></div>
+<h3 id="step-1-complete-power-isolation">Step 1: Complete Power Isolation</h3>
+<p>Unplug the power sources for both the <code>pi5-master</code> and the private network switch / multi-port power supply feeding the <code>Pi 3 Workers</code>.</p>
+<h3 id="step-2-boot-the-master-first">Step 2: Boot the Master First</h3>
+<p>Plug in the <strong>Pi 5 Master ONLY</strong>.</p>
+<h3 id="step-3-wait-for-the-ssd-activity-light-to-settle-15-to-2-minutes">Step 3: Wait for the SSD Activity Light to Settle (~1.5 to 2 Minutes)</h3>
+<p>Watch the activity LED on the external SSD connected to the Pi 5 Master:
+* <strong>Rapid Flashing:</strong> The Master is currently booting its own operating system and launching the K3s control plane.
+* <strong>Ready State (Steady Pulse or Faint/Off):</strong> The Master has finished booting. Its system clock has synced, the NFS storage bind-mounts are active, and the network boot server is warm.</p>
+<h4 id="verification-via-ssh-highly-recommended">🔍 Verification via SSH (Highly Recommended)</h4>
+<p>To be absolutely sure the Master is ready to boot the workers, SSH into the Master and verify that the TFTP and NFS services are active and the recovery script is waiting:</p>
+<ol>
+<li>
+<p><strong>SSH into the Pi 5 Master:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>cc123@pi5-master
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># OR use the IP address (e.g., 192.168.1.50 or the Wi-Fi DHCP IP)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ssh<span class="w"> </span>cc123@192.168.1.50
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Verify that the DHCP, TFTP, and NFS boot services are active:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>dnsmasq<span class="w"> </span>nfs-kernel-server
+</code></pre></div>
+   <em>Expected output:</em>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>active
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>active
+</code></pre></div>
+   If any of the services reports "activating" or "deactivating", you can try to reboot the master;
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>reboot
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Check the boot recovery service logs:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>cluster-recovery<span class="w"> </span>-n<span class="w"> </span><span class="m">25</span><span class="w"> </span>--no-pager
+</code></pre></div>
+   <em>Expected output: Look for the initial waiting message or the recurring connection attempt lines:</em>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>[INFO] YYYY-MM-DD HH:MM:SS - Waiting for workers to boot and open SSH (Port 22)...
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a># OR
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>[INFO] YYYY-MM-DD HH:MM:SS - Waiting for worker SSH connectivity... Attempt X/30
+</code></pre></div></p>
+</li>
+</ol>
+<p>Once these checks pass, proceed to Step 4.</p>
+<h3 id="step-4-power-the-workers">Step 4: Power the Workers</h3>
+<p>Plug in the power source for the <strong>8x Pi 3 Workers</strong> all at once. 
+* Since the network boot server is already warm and waiting, all 8 nodes will boot cleanly in parallel off the SSD and register in K8s.</p>
+<hr />
+<h2 id="3-post-boot-check-pod-redistribution">3. ⚖️ Post-Boot Check &amp; Pod Redistribution</h2>
+<p>Because the Master Pi 5 boots significantly faster than the network-booted Pi 3 workers, the Kubernetes scheduler may temporarily schedule all API replicas on the Master node because the workers are still in <code>NotReady</code> status during boot. </p>
+<p>Once all nodes are online, you should verify the cluster health and redistribute the API pods/replicas evenly across the workers.</p>
+<h3 id="step-1-monitor-cluster-and-pod-status-live-watch">Step 1: Monitor Cluster and Pod Status (Live Watch)</h3>
+<p>To monitor the status and node placement of all system pods in real-time as they boot, use the <code>watch</code> command:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="s2">&quot;sudo kubectl get pods -l &#39;app in (tds-api, tds-postgres, tds-minio, tds-mqtt)&#39; -o wide&quot;</span>
+</code></pre></div>
+Or to watch all pods across all namespaces:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="s2">&quot;sudo kubectl get pods -A -o wide&quot;</span>
+</code></pre></div>
+<em>Verify that all pods eventually transition to <code>1/1 Running</code> and get assigned IPs. Under normal operation, the system is fully functional once 1 API pod, 3 MinIO pods, 1 Postgres pod, and 1 MQTT pod are healthy.</em></p>
+<h3 id="step-2-trigger-pod-redistribution-if-unevenly-distributed">Step 2: Trigger Pod Redistribution (If unevenly distributed)</h3>
+<p>If you notice that most <code>tds-api</code> pods are running on <code>pi5-master</code> instead of being balanced across the workers (i.e., they are unevenly distributed), trigger a rolling restart to force the scheduler to redistribute them:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>sudo<span class="w"> </span>kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>tds-api
+</code></pre></div>
+<em>This will safely terminate the pods one by one and reschedule them across the newly active worker nodes in accordance with pod anti-affinity rules.</em></p>
+<p>To watch the rolling restart and redistribution happen live, you can run:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;sudo kubectl get pods -l app=tds-api -o wide&quot;</span>
+</code></pre></div></p>
+<hr />
+<h2 id="4-the-self-healing-boot-automation">4. 🛡️ The Self-Healing Boot Automation</h2>
+<p>Upon Master boot, a dedicated, persistent systemd unit (<code>cluster-recovery.service</code>) automatically executes <code>/usr/local/bin/cluster-boot-recovery.sh</code> to handle the entire cluster synchronization hands-free.</p>
+<p>The automation performs the following steps in sequence:
+1. <strong>NFS Bind-Mount Verification:</strong> Ensures <code>/mnt/ssd/nfs</code> is successfully bound to <code>/nfs</code> to prepare the workers' filesystems.
+2. <strong>IP Forwarding &amp; NAT Masquerading:</strong> Configures the Master as a gateway so workers have internet access through the Master's Wi-Fi card.
+3. <strong>NTP Clock Synchronization:</strong> Holds back K3s and worker boot checks until the Master synchronizes its system clock with the internet via NTP.
+4. <strong>Boot Services Restart:</strong> Restarts <code>dnsmasq</code> (DHCP/TFTP) and <code>nfs-kernel-server</code> <strong>after</strong> the clock sync, avoiding DHCP lease database corruption.
+5. <strong>Worker Time Sync Push:</strong> Waits for the workers' SSH ports to open, then automatically syncs their clocks to the Master to prevent TLS certificate validation failures.
+6. <strong>Worker Agent Reload:</strong> Restarts the <code>k3s-agent</code> on all workers to clear containerd locks.
+7. <strong>Ghost Pod Pruning:</strong> Scans all namespaces and force-deletes any pods stuck in <code>Unknown</code> or <code>CreateContainerError</code> states.</p>
+<hr />
+<h2 id="5-hardware-diagnostic-led-guide">5. 🔍 Hardware Diagnostic Led Guide</h2>
+<p>Use these physical indicators on the boards to diagnose boot stages:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Component</th>
+<th style="text-align: left;">LED Behavior</th>
+<th style="text-align: left;">System Meaning</th>
+<th style="text-align: left;">Action Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Pi 3 Worker Board</strong></td>
+<td style="text-align: left;">🔴 Solid Red ONLY</td>
+<td style="text-align: left;">Board has power, but the bootloader failed to load the kernel and is now <strong>hung</strong>.</td>
+<td style="text-align: left;">Unplug the worker power supply, wait 3 seconds, and plug back in.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pi 3 Worker Board</strong></td>
+<td style="text-align: left;">🟢 Flashing Green</td>
+<td style="text-align: left;">The CPU is actively booting the Linux OS off the network SSD.</td>
+<td style="text-align: left;">None. Node is successfully starting up.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Worker Ethernet Port</strong></td>
+<td style="text-align: left;">🟠 Solid Orange</td>
+<td style="text-align: left;">100Mbps physical network carrier link is active.</td>
+<td style="text-align: left;">None. Physical connection is healthy.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Worker Ethernet Port</strong></td>
+<td style="text-align: left;">🟢 Blinking Green</td>
+<td style="text-align: left;">Node is actively transmitting/receiving data packets (e.g., requesting DHCP).</td>
+<td style="text-align: left;">None.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>External SSD</strong></td>
+<td style="text-align: left;">🔵 Blinking/Flashing</td>
+<td style="text-align: left;">Active read/write operations (e.g., workers are booting or pods are running).</td>
+<td style="text-align: left;">None.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>External SSD</strong></td>
+<td style="text-align: left;">🌑 Completely Dark</td>
+<td style="text-align: left;">The SSD is idle. No network file operations are happening.</td>
+<td style="text-align: left;">If workers are stuck in Solid Red, they booted too early and aren't hitting the SSD. Power-cycle the workers.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-emergency-manual-troubleshooting-commands">6. 🛠️ Emergency Manual Troubleshooting Commands</h2>
+<p>If the boot sequence is messed up, log into <code>pi5-master</code> via SSH and run these commands to restore health:</p>
+<h3 id="a-run-a-manual-cluster-wide-sync-cleanup">A. Run a Manual Cluster-Wide Sync &amp; Cleanup</h3>
+<p>If the nodes booted out of order or some nodes have drifted clocks, you can trigger our full recovery script manually to heal the entire cluster:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>sudo<span class="w"> </span>/usr/local/bin/cluster-boot-recovery.sh
+</code></pre></div></p>
+<h3 id="b-manually-synchronize-worker-clocks-ansible">B. Manually Synchronize Worker Clocks (Ansible)</h3>
+<p>If the workers have drifted clocks causing <code>Unknown</code> pods due to TLS validation failures:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># 1. Sync time to all workers</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>sudo<span class="w"> </span>-u<span class="w"> </span>cc123<span class="w"> </span>ansible<span class="w"> </span>workers<span class="w"> </span>-i<span class="w"> </span>~/pi-cluster/hosts.ini<span class="w"> </span>-m<span class="w"> </span>shell<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;date -s &#39;</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>+%FT%TZ<span class="k">)</span><span class="s2">&#39;&quot;</span><span class="w"> </span>--become
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># 2. Restart K3s agents to flush sandbox cache</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>sudo<span class="w"> </span>-u<span class="w"> </span>cc123<span class="w"> </span>ansible<span class="w"> </span>workers<span class="w"> </span>-i<span class="w"> </span>~/pi-cluster/hosts.ini<span class="w"> </span>-m<span class="w"> </span>shell<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;systemctl restart k3s-agent&quot;</span><span class="w"> </span>--become
+</code></pre></div></p>
+<h3 id="c-recover-a-deadlocked-worker-node-sysrq-hardware-reset">C. Recover a Deadlocked Worker Node (SysRq Hardware Reset)</h3>
+<p>If a worker node's <code>systemd</code> deadlocks (<code>timed out waiting for service 'org.freedesktop.systemd1'</code>) due to network locks during a power cut, it will ignore standard reboot commands. Force a hardware reset immediately over SSH:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>sudo<span class="w"> </span>-u<span class="w"> </span>cc123<span class="w"> </span>ansible<span class="w"> </span>worker7<span class="w"> </span>-i<span class="w"> </span>~/pi-cluster/hosts.ini<span class="w"> </span>-m<span class="w"> </span>shell<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;echo 1 &gt; /proc/sys/kernel/sysrq &amp;&amp; echo b &gt; /proc/sysrq-trigger&quot;</span><span class="w"> </span>--become
+</code></pre></div></p>
+<h3 id="d-preventing-parallel-api-migration-deadlocks">D. Preventing Parallel API Migration Deadlocks</h3>
+<p>If <code>tds-api</code> is configured with multiple replicas (e.g., 9 replicas) during a cold boot, all replicas will start in parallel and run database migrations simultaneously. This can cause DDL lock contentions and deadlocks in PostgreSQL, putting the pods in a <code>CrashLoopBackOff</code> loop.</p>
+<p>To prevent this:
+1. Scale the deployment down to <strong>1 replica</strong> before bootstrapping or when restarting the cluster:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>sudo<span class="w"> </span>kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>tds-api<span class="w"> </span>--replicas<span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+2. Wait for the single pod to become <code>Running</code> (which applies the schema migrations cleanly).
+3. Scale it back up to your desired count (e.g., 9 replicas):
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>sudo<span class="w"> </span>kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>tds-api<span class="w"> </span>--replicas<span class="o">=</span><span class="m">9</span>
+</code></pre></div></p>
+<hr />
+<h2 id="7-clean-shutdown-power-off-sequence">7. 🔌 Clean Shutdown &amp; Power-Off Sequence</h2>
+<p>To prevent database corruption on the external SSD or dirty NFS filesystem locks, <strong>never abruptly cut power while the cluster is active.</strong> Always execute this clean shutdown sequence:</p>
+<h3 id="step-1-shut-down-all-workers-cleanly-ansible">Step 1: Shut down all Workers cleanly (Ansible)</h3>
+<p>Flush all memory caches and safely shut down all 8 network-booted Pi 3 nodes:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>sudo<span class="w"> </span>-u<span class="w"> </span>cc123<span class="w"> </span>ansible<span class="w"> </span>workers<span class="w"> </span>-i<span class="w"> </span>~/pi-cluster/hosts.ini<span class="w"> </span>-m<span class="w"> </span>shell<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;shutdown -h now&quot;</span><span class="w"> </span>--become
+</code></pre></div></p>
+<h3 id="step-2-stop-the-k3s-control-plane-and-databases">Step 2: Stop the K3s Control Plane and Databases</h3>
+<p>Stop the K3s engine on the Master to flush all database buffers (PostgreSQL, MQTT, and Kine transaction databases) to the SSD:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>k3s
+</code></pre></div></p>
+<h3 id="step-3-shut-down-the-master-pi-5-cleanly">Step 3: Shut down the Master Pi 5 cleanly</h3>
+<p>Shut down the Master's operating system:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>sudo<span class="w"> </span>shutdown<span class="w"> </span>-h<span class="w"> </span>now
+</code></pre></div></p>
+<h3 id="step-4-physical-power-cut">Step 4: Physical Power Cut</h3>
+<ol>
+<li>Wait 10–15 seconds for the Pi 5's green activity light to stop blinking and turn off completely.</li>
+<li>Once only the red power LED remains lit on the Master, it is <strong>100% safe to unplug all power cables</strong> from the wall.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>

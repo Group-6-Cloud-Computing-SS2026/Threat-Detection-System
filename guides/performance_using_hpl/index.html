@@ -1,0 +1,2668 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for the edge-computing threat detection sensor network.">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Task 2: HPL Benchmark Results - Threat Detection System</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#task-2-hpl-benchmark-results" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Threat Detection System" class="md-header__button md-logo" aria-label="Threat Detection System" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Threat Detection System
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Task 2: HPL Benchmark Results
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Group-6-Cloud-Computing-SS2026/Threat-Detection-System" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Threat-Detection-System
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/overview/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../shutdown-and-cold-start/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tasks/overall-status/" class="md-tabs__link">
+          
+  
+  
+  Tasks
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Threat Detection System" class="md-nav__button md-logo" aria-label="Threat Detection System" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Threat Detection System
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Group-6-Cloud-Computing-SS2026/Threat-Detection-System" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Threat-Detection-System
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shutdown-and-cold-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ❗ (MUST FOLLOW!) Cluster Shutdown and Cold Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../backend-pi5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Local Development & Backend Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../minio-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MinIO S3 Object Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mpi-cluster/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MPI Cluster Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../k3s-deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Distributed k3s Kubernetes Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../camera-test-stream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Edge Camera Test Stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cluster-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cluster Setup (PXE & NFS)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cluster-setup-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cluster Setup V2 (Setup & Verification)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ansible/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ansible
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardware-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware Setup & Boot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../synthetic-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HPL Synthetic Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task-distributor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task Distributor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tasks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tasks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/overall-status/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overall Tasks Status
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-01-edge-computing-infrastructure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 1 — Edge Computing Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-02-hpl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 2 — HPL Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task_3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 3 — MPI Cluster
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-04-non-mpi-scaling-laws/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 4 — Non-MPI Scaling Laws
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-05-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 5 — Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-06-model-training/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 6 — Model training & Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-07-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 7 — Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-08-frontend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 8 — Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-09-telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 9 — Telegram Notifications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-10-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 10 — Project Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#final-benchmark-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Final Benchmark Results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-stability-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚠️ Node Stability Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚠️ Node Stability Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-which-nodes-are-updown-before-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check which nodes are UP/DOWN before running:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-observations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Observations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#final-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final Commands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Final Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-workers-8-cores-p2-q4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔵 2 Workers (8 cores, P=2 Q=4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-workers-16-cores-p2-q8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🟡 4 Workers (16 cores, P=2 Q=8)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-workers-32-cores-p4-q8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🟠 8 Workers (32 cores, P=4 Q=8)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#full-journey-all-attempts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Journey — All Attempts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Full Journey — All Attempts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-initial-setup-june-14-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: Initial Setup (June 14, 2026)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 1: Initial Setup (June 14, 2026)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-ssh-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Step 1: SSH Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-install-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Step 2: Install Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-build-hpl-on-master" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Step 3: Build HPL on Master
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-master-only-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Step 4: Master-Only Benchmark
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-cross-node-mpi-attempts-all-failed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Cross-Node MPI Attempts (All Failed)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-teammates-method-breakthrough-june-15-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3: Teammate's Method — Breakthrough! (June 15, 2026)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 3: Teammate&#39;s Method — Breakthrough! (June 15, 2026)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#issue-workers-kept-reading-old-hpldat-n35" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Issue: Workers kept reading old HPL.dat (N=35)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-successful-cluster-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4: Successful Cluster Runs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 4: Successful Cluster Runs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-workers-17539-gflops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ 2 Workers — 1.7539 Gflops
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-workers-22047-gflops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ 4 Workers — 2.2047 Gflops
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-workers-17563-gflops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ 7 Workers — 1.7563 Gflops
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-workers-failed-node-dropout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ 8 Workers — FAILED (node dropout)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Details
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment Details">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-single-worker-profile-4-cores-grid-p2-q2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Single Worker Profile (4 Cores | Grid: P=2, Q=2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-dual-worker-horizon-8-cores-grid-p2-q4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Dual Worker Horizon (8 Cores | Grid: P=2, Q=4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-quad-worker-topology-16-cores-grid-p2-q8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Quad Worker Topology (16 Cores | Grid: P=2, Q=8)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-maximum-stable-scale-28-cores-grid-p4-q7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Maximum Stable Scale (28 Cores | Grid: P=4, Q=7)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="task-2-hpl-benchmark-results">Task 2: HPL Benchmark Results</h1>
+<p><strong>Cluster:</strong> Raspberry Pi 5 (master) + 8× Raspberry Pi 3 (workers)<br />
+<strong>Tool:</strong> HPL (High Performance LINPACK) v2.3  </p>
+<hr />
+<h2 id="cluster-overview">Cluster Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Node</th>
+<th>IP Address</th>
+<th>Hardware</th>
+<th>RAM</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pi5-master</td>
+<td>192.168.1.50</td>
+<td>Raspberry Pi 5 (Cortex-A76)</td>
+<td>4 GB</td>
+<td>Master</td>
+</tr>
+<tr>
+<td>worker1</td>
+<td>192.168.1.58</td>
+<td>Raspberry Pi 3 (Cortex-A53)</td>
+<td>907 MB</td>
+<td>Worker</td>
+</tr>
+<tr>
+<td>worker2</td>
+<td>192.168.1.54</td>
+<td>Raspberry Pi 3 (Cortex-A53)</td>
+<td>907 MB</td>
+<td>Worker</td>
+</tr>
+<tr>
+<td>worker3</td>
+<td>192.168.1.104</td>
+<td>Raspberry Pi 3 (Cortex-A53)</td>
+<td>907 MB</td>
+<td>Worker</td>
+</tr>
+<tr>
+<td>worker4</td>
+<td>192.168.1.136</td>
+<td>Raspberry Pi 3 (Cortex-A53)</td>
+<td>907 MB</td>
+<td>Worker</td>
+</tr>
+<tr>
+<td>worker5</td>
+<td>192.168.1.86</td>
+<td>Raspberry Pi 3 (Cortex-A53)</td>
+<td>907 MB</td>
+<td>Worker</td>
+</tr>
+<tr>
+<td>worker6</td>
+<td>192.168.1.117</td>
+<td>Raspberry Pi 3 (Cortex-A53)</td>
+<td>907 MB</td>
+<td>Worker</td>
+</tr>
+<tr>
+<td>worker7</td>
+<td>192.168.1.83</td>
+<td>Raspberry Pi 3 (Cortex-A53)</td>
+<td>907 MB</td>
+<td>Worker</td>
+</tr>
+<tr>
+<td>worker8</td>
+<td>192.168.1.133</td>
+<td>Raspberry Pi 3 (Cortex-A53)</td>
+<td>907 MB</td>
+<td>Worker</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="final-benchmark-results">✅ Final Benchmark Results</h2>
+<table>
+<thead>
+<tr>
+<th>Workers</th>
+<th>Nodes</th>
+<th>Cores</th>
+<th>P</th>
+<th>Q</th>
+<th>N</th>
+<th>NB</th>
+<th>Time (s)</th>
+<th><strong>Gflops</strong></th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Master only</td>
+<td>pi5-master</td>
+<td>4</td>
+<td>2</td>
+<td>2</td>
+<td>5,000</td>
+<td>128</td>
+<td>6.91</td>
+<td><strong>12.073</strong></td>
+<td>✅ PASSED</td>
+</tr>
+<tr>
+<td>2 workers</td>
+<td>w1, w3</td>
+<td>8</td>
+<td>2</td>
+<td>4</td>
+<td>6,000</td>
+<td>128</td>
+<td>82.13</td>
+<td><strong>1.7539</strong></td>
+<td>✅ PASSED</td>
+</tr>
+<tr>
+<td>4 workers</td>
+<td>w1,w3,w4,w5</td>
+<td>16</td>
+<td>2</td>
+<td>8</td>
+<td>6,000</td>
+<td>128</td>
+<td>65.34</td>
+<td><strong>2.2047</strong></td>
+<td>✅ PASSED</td>
+</tr>
+<tr>
+<td>7 workers</td>
+<td>w1,w3,w4,w5,w6,w7,w8</td>
+<td>28</td>
+<td>4</td>
+<td>7</td>
+<td>6,000</td>
+<td>128</td>
+<td>82.02</td>
+<td><strong>1.7563</strong></td>
+<td>✅ PASSED</td>
+</tr>
+<tr>
+<td>8 workers (attempt)</td>
+<td>all</td>
+<td>32</td>
+<td>4</td>
+<td>8</td>
+<td>6,000</td>
+<td>128</td>
+<td>77.43</td>
+<td><strong>1.8604</strong></td>
+<td>❌ FAILED (node dropout)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="node-stability-issues">⚠️ Node Stability Issues</h2>
+<p>During benchmarking, worker nodes dropped in and out unpredictably:</p>
+<ul>
+<li><strong>worker2 (192.168.1.54)</strong> — went completely offline at the start of the session, came back later, but then dropped TCP connections mid-run causing the 8-worker test to fail</li>
+<li><strong>worker7 (192.168.1.83)</strong> — dropped out mid-run during the 7-worker attempt causing that run to abort; came back online later but went down again during the 8-worker run</li>
+</ul>
+<p>These dropouts are a known issue with the shared cluster. The nodes are physical Raspberry Pi 3 boards that can lose network connectivity unexpectedly. <strong>Always ping-check all nodes before running and exclude any unstable ones.</strong></p>
+<h3 id="check-which-nodes-are-updown-before-running">Check which nodes are UP/DOWN before running:</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">for</span><span class="w"> </span>ip<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">192</span>.168.1.58<span class="w"> </span><span class="m">192</span>.168.1.54<span class="w"> </span><span class="m">192</span>.168.1.104<span class="w"> </span><span class="m">192</span>.168.1.136<span class="w"> </span><span class="m">192</span>.168.1.86<span class="w"> </span><span class="m">192</span>.168.1.117<span class="w"> </span><span class="m">192</span>.168.1.83<span class="w"> </span><span class="m">192</span>.168.1.133<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ip</span><span class="s2">: &quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">1</span><span class="w"> </span>-W<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="nv">$ip</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;UP&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;DOWN&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">done</span>
+</code></pre></div>
+<hr />
+<h2 id="key-observations">Key Observations</h2>
+<ul>
+<li><strong>Pi5 master (12.073 Gflops)</strong> vastly outperforms Pi3 workers — Cortex-A76 is ~7x faster per core than Cortex-A53</li>
+<li><strong>2→4 workers:</strong> Performance improved from 1.7539 → 2.2047 Gflops (+25.7%)</li>
+<li><strong>4→7 workers:</strong> Performance dropped from 2.2047 → 1.7563 Gflops — suboptimal P×Q grid shape (4×7=28)</li>
+<li><strong>8-worker attempt failed</strong> due to worker2 dropping TCP connections mid-run</li>
+<li><strong>Node instability</strong> is a recurring challenge — worker2 and worker7 are the least stable nodes</li>
+<li>Results show limited scalability due to network overhead between Pi3 nodes</li>
+</ul>
+<hr />
+<h2 id="final-commands">Final Commands</h2>
+<h3 id="2-workers-8-cores-p2-q4">🔵 2 Workers (8 cores, P=2 Q=4)</h3>
+<p><strong>Step 1 — Write &amp; push HPL.dat:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>/usr/local/bin
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>sudo<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;cat &gt; /usr/local/bin/HPL.dat &lt;&lt; EOF</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="s1">HPLinpack benchmark input file</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="s1">Innovative Computing Laboratory, University of Tennessee</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s1">HPL.out      output file name (if any)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">6            device out (6=stdout,7=stderr,file)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">1            # of problems sizes (N)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">6000         Ns</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">1            # of NBs</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s1">128          NBs</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">0            PMAP process mapping (0=Row-,1=Column-major)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s1">1            # of process grids (P x Q)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="s1">2            Ps</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="s1">4            Qs</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="s1">16.0         threshold</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="s1">1            # of panel fact</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="s1">2            PFACTs (0=left, 1=Crout, 2=Right)</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="s1">1            # of recursive stopping criterium</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="s1">4            NBMINs (&gt;= 1)</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="s1">1            # of panels in recursion</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="s1">2            NDIVs</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="s1">1            # of recursive panel fact</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="s1">1            RFACTs (0=left, 1=Crout, 2=Right)</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="s1">1            # of broadcast</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="s1">1            BCASTs (0=1rg,1=1rM,2=2rg,3=2rM,4=Lng,5=LnM)</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="s1">1            # of lookahead depth</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="s1">1            DEPTHs (&gt;=0)</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="s1">2            SWAP (0=bin-exch,1=long,2=mix)</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="s1">64           swapping threshold</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="s1">1            L1 in (0=transposed,1=no-transposed)</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="s1">1            U  in (0=transposed,1=no-transposed)</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="s1">1            Equilibrate (0=no,1=yes)</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="s1">1            memory alignment in doubles (&gt; 0)</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="s1">EOF&#39;</span>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="k">for</span><span class="w"> </span>ip<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">192</span>.168.1.58<span class="w"> </span><span class="m">192</span>.168.1.104<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="w">    </span>ssh<span class="w"> </span>-i<span class="w"> </span>/usr/local/bin/task2/id_rsa<span class="w"> </span>pi@<span class="nv">$ip</span><span class="w"> </span><span class="s2">&quot;sudo bash -c &#39;cat &gt; /usr/local/bin/HPL.dat&#39;&quot;</span><span class="w"> </span>&lt;<span class="w"> </span>/usr/local/bin/HPL.dat
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="k">done</span>
+</code></pre></div></p>
+<p><strong>Step 2 — Run:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">OMPI_MCA_plm_rsh_args</span><span class="o">=</span><span class="s2">&quot;-l pi&quot;</span><span class="w"> </span>mpirun<span class="w"> </span>--prefix<span class="w"> </span>/usr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>-x<span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;/usr/lib/aarch64-linux-gnu:/usr/lib/aarch64-linux-gnu/openblas-pthread:</span><span class="nv">$LD_LIBRARY_PATH</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>--host<span class="w"> </span><span class="m">192</span>.168.1.58:4,192.168.1.104:4<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>./xhpl
+</code></pre></div></p>
+<hr />
+<h3 id="4-workers-16-cores-p2-q8">🟡 4 Workers (16 cores, P=2 Q=8)</h3>
+<p><strong>Step 1 — Write &amp; push HPL.dat:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">cd</span><span class="w"> </span>/usr/local/bin
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>sudo<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;cat &gt; /usr/local/bin/HPL.dat &lt;&lt; EOF</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s1">HPLinpack benchmark input file</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s1">Innovative Computing Laboratory, University of Tennessee</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s1">HPL.out      output file name (if any)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s1">6            device out (6=stdout,7=stderr,file)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s1">1            # of problems sizes (N)</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s1">6000         Ns</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s1">1            # of NBs</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s1">128          NBs</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s1">0            PMAP process mapping (0=Row-,1=Column-major)</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s1">1            # of process grids (P x Q)</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s1">2            Ps</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s1">8            Qs</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s1">16.0         threshold</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="s1">1            # of panel fact</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="s1">2            PFACTs (0=left, 1=Crout, 2=Right)</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="s1">1            # of recursive stopping criterium</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="s1">4            NBMINs (&gt;= 1)</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="s1">1            # of panels in recursion</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="s1">2            NDIVs</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="s1">1            # of recursive panel fact</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="s1">1            RFACTs (0=left, 1=Crout, 2=Right)</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="s1">1            # of broadcast</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="s1">1            BCASTs (0=1rg,1=1rM,2=2rg,3=2rM,4=Lng,5=LnM)</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="s1">1            # of lookahead depth</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="s1">1            DEPTHs (&gt;=0)</span>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="s1">2            SWAP (0=bin-exch,1=long,2=mix)</span>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="s1">64           swapping threshold</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="s1">1            L1 in (0=transposed,1=no-transposed)</span>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="s1">1            U  in (0=transposed,1=no-transposed)</span>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="s1">1            Equilibrate (0=no,1=yes)</span>
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="s1">1            memory alignment in doubles (&gt; 0)</span>
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a><span class="s1">EOF&#39;</span>
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a><span class="k">for</span><span class="w"> </span>ip<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">192</span>.168.1.58<span class="w"> </span><span class="m">192</span>.168.1.104<span class="w"> </span><span class="m">192</span>.168.1.136<span class="w"> </span><span class="m">192</span>.168.1.86<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a><span class="w">    </span>ssh<span class="w"> </span>-i<span class="w"> </span>/usr/local/bin/task2/id_rsa<span class="w"> </span>pi@<span class="nv">$ip</span><span class="w"> </span><span class="s2">&quot;sudo bash -c &#39;cat &gt; /usr/local/bin/HPL.dat&#39;&quot;</span><span class="w"> </span>&lt;<span class="w"> </span>/usr/local/bin/HPL.dat
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a><span class="k">done</span>
+</code></pre></div></p>
+<p><strong>Step 2 — Run:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">OMPI_MCA_plm_rsh_args</span><span class="o">=</span><span class="s2">&quot;-l pi&quot;</span><span class="w"> </span>mpirun<span class="w"> </span>--prefix<span class="w"> </span>/usr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>-x<span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;/usr/lib/aarch64-linux-gnu:/usr/lib/aarch64-linux-gnu/openblas-pthread:</span><span class="nv">$LD_LIBRARY_PATH</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>--host<span class="w"> </span><span class="m">192</span>.168.1.58:4,192.168.1.104:4,192.168.1.136:4,192.168.1.86:4<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>./xhpl
+</code></pre></div></p>
+<hr />
+<h3 id="8-workers-32-cores-p4-q8">🟠 8 Workers (32 cores, P=4 Q=8)</h3>
+<p><strong>Step 1 — Write &amp; push HPL.dat:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">cd</span><span class="w"> </span>/usr/local/bin
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>sudo<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;cat &gt; /usr/local/bin/HPL.dat &lt;&lt; EOF</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="s1">HPLinpack benchmark input file</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="s1">Innovative Computing Laboratory, University of Tennessee</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s1">HPL.out      output file name (if any)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s1">6            device out (6=stdout,7=stderr,file)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s1">1            # of problems sizes (N)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s1">6000         Ns</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s1">1            # of NBs</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s1">128          NBs</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s1">0            PMAP process mapping (0=Row-,1=Column-major)</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="s1">1            # of process grids (P x Q)</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s1">4            Ps</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s1">8            Qs</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s1">16.0         threshold</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="s1">1            # of panel fact</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="s1">2            PFACTs (0=left, 1=Crout, 2=Right)</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="s1">1            # of recursive stopping criterium</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="s1">4            NBMINs (&gt;= 1)</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="s1">1            # of panels in recursion</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="s1">2            NDIVs</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="s1">1            # of recursive panel fact</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="s1">1            RFACTs (0=left, 1=Crout, 2=Right)</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="s1">1            # of broadcast</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="s1">1            BCASTs (0=1rg,1=1rM,2=2rg,3=2rM,4=Lng,5=LnM)</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="s1">1            # of lookahead depth</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="s1">1            DEPTHs (&gt;=0)</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="s1">2            SWAP (0=bin-exch,1=long,2=mix)</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="s1">64           swapping threshold</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="s1">1            L1 in (0=transposed,1=no-transposed)</span>
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="s1">1            U  in (0=transposed,1=no-transposed)</span>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="s1">1            Equilibrate (0=no,1=yes)</span>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="s1">1            memory alignment in doubles (&gt; 0)</span>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="s1">EOF&#39;</span>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a><span class="k">for</span><span class="w"> </span>ip<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">192</span>.168.1.58<span class="w"> </span><span class="m">192</span>.168.1.54<span class="w"> </span><span class="m">192</span>.168.1.104<span class="w"> </span><span class="m">192</span>.168.1.136<span class="w"> </span><span class="m">192</span>.168.1.86<span class="w"> </span><span class="m">192</span>.168.1.117<span class="w"> </span><span class="m">192</span>.168.1.83<span class="w"> </span><span class="m">192</span>.168.1.133<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="w">    </span>ssh<span class="w"> </span>-i<span class="w"> </span>/usr/local/bin/task2/id_rsa<span class="w"> </span>pi@<span class="nv">$ip</span><span class="w"> </span><span class="s2">&quot;sudo bash -c &#39;cat &gt; /usr/local/bin/HPL.dat&#39;&quot;</span><span class="w"> </span>&lt;<span class="w"> </span>/usr/local/bin/HPL.dat
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a><span class="k">done</span>
+</code></pre></div></p>
+<p><strong>Step 2 — Run:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">OMPI_MCA_plm_rsh_args</span><span class="o">=</span><span class="s2">&quot;-l pi&quot;</span><span class="w"> </span>mpirun<span class="w"> </span>--prefix<span class="w"> </span>/usr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>-x<span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;/usr/lib/aarch64-linux-gnu:/usr/lib/aarch64-linux-gnu/openblas-pthread:</span><span class="nv">$LD_LIBRARY_PATH</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>--host<span class="w"> </span><span class="m">192</span>.168.1.58:4,192.168.1.54:4,192.168.1.104:4,192.168.1.136:4,192.168.1.86:4,192.168.1.117:4,192.168.1.83:4,192.168.1.133:4<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>./xhpl
+</code></pre></div></p>
+<hr />
+<h2 id="full-journey-all-attempts">Full Journey — All Attempts</h2>
+<h3 id="phase-1-initial-setup-june-14-2026">Phase 1: Initial Setup (June 14, 2026)</h3>
+<h4 id="step-1-ssh-keys">✅ Step 1: SSH Keys</h4>
+<ul>
+<li>Generated RSA 4096-bit key at <code>/usr/local/bin/task2/id_rsa</code></li>
+<li>❌ <strong>Fail:</strong> Wrong directory + wrong filename → Permission denied</li>
+<li>✅ <strong>Fix:</strong> <code>sudo ssh-keygen -f /usr/local/bin/task2/id_rsa -N ""</code></li>
+<li>❌ <strong>Fail:</strong> Key owned by root → can't use it</li>
+<li>✅ <strong>Fix:</strong> <code>sudo chown cc123:cc123 /usr/local/bin/task2/id_rsa*</code></li>
+<li>✅ Passwordless SSH confirmed on all workers</li>
+</ul>
+<h4 id="step-2-install-dependencies">✅ Step 2: Install Dependencies</h4>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>openmpi-bin<span class="w"> </span>libopenmpi-dev<span class="w"> </span>libopenblas-dev<span class="w"> </span>liblapack-dev<span class="w"> </span>build-essential<span class="w"> </span>gfortran
+</code></pre></div>
+- ❌ <strong>Fail:</strong> One worker had broken apt
+- ✅ <strong>Fix:</strong> <code>sudo apt --fix-broken install -y</code>
+- ✅ All nodes: Open MPI 4.1.4</p>
+<h4 id="step-3-build-hpl-on-master">✅ Step 3: Build HPL on Master</h4>
+<ul>
+<li>❌ <strong>Fail:</strong> wget permission denied</li>
+<li>✅ <strong>Fix:</strong> <code>sudo chown -R cc123:cc123 /usr/local/bin/task2</code></li>
+<li>❌ <strong>Fail:</strong> <code>hpl.h: No such file or directory</code></li>
+<li>✅ <strong>Fix:</strong> Added <code>-I.../include</code> to CCFLAGS in Make.rpi</li>
+<li>❌ <strong>Fail:</strong> Wrong TOPdir</li>
+<li>✅ <strong>Fix:</strong> <code>sed -i 's|^TOPdir.*|TOPdir = /usr/local/bin/task2/hpl-2.3|' Make.rpi</code></li>
+<li>✅ <strong>Build succeeded:</strong> <code>xhpl</code> binary at <code>bin/rpi/xhpl</code></li>
+</ul>
+<h4 id="step-4-master-only-benchmark">✅ Step 4: Master-Only Benchmark</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>WR11C2R4   N=5000  NB=128  P=2  Q=2  Time=6.91s  12.073 Gflops  PASSED
+</code></pre></div>
+<hr />
+<h3 id="phase-2-cross-node-mpi-attempts-all-failed">Phase 2: Cross-Node MPI Attempts (All Failed)</h3>
+<table>
+<thead>
+<tr>
+<th>Attempt</th>
+<th>Command</th>
+<th>Error</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Standard <code>mpirun -np 32 --hostfile</code></td>
+<td><code>ORTE unable to start daemons</code> — Kubernetes blocks <code>setpgid()</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>RSH-based launch with custom SSH key</td>
+<td>Segmentation fault</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Added pi5-master to <code>/etc/hosts</code> on workers</td>
+<td>Same ORTE error</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Launch from worker1 instead of master</td>
+<td><code>opal_pmix_base_select failed</code> on workers too</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>--mca pmix ^pmix3x,pmix4x,pmix2x</code></td>
+<td>Segmentation fault</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Recompile HPL on Pi3 workers</td>
+<td>No internet + broken apt + CPU mismatch</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Root cause:</strong> Kubernetes seccomp/AppArmor on master blocks MPI daemon syscalls.</p>
+<hr />
+<h3 id="phase-3-teammates-method-breakthrough-june-15-2026">Phase 3: Teammate's Method — Breakthrough! (June 15, 2026)</h3>
+<p>Teammate discovered using <code>OMPI_MCA_plm_rsh_args="-l pi"</code> bypasses the restriction:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nv">OMPI_MCA_plm_rsh_args</span><span class="o">=</span><span class="s2">&quot;-l pi&quot;</span><span class="w"> </span>mpirun<span class="w"> </span>--prefix<span class="w"> </span>/usr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>-x<span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="w"> </span>--host<span class="w"> </span><span class="m">192</span>.168.1.58:4,...<span class="w"> </span>./xhpl
+</code></pre></div>
+<p><strong>Setup required:</strong>
+1. Copy binary: <code>sudo cp .../xhpl /usr/local/bin/xhpl</code>
+2. Write HPL.dat at <code>/usr/local/bin/HPL.dat</code>
+3. Push HPL.dat to all workers at <code>/usr/local/bin/HPL.dat</code></p>
+<h4 id="issue-workers-kept-reading-old-hpldat-n35">❌ Issue: Workers kept reading old HPL.dat (N=35)</h4>
+<p>Workers had multiple HPL.dat files — the one at <code>/usr/local/bin/HPL.dat</code> on each worker had <code>N=29 30 34 35</code> (multi-test from original setup).<br />
+✅ <strong>Fix:</strong> <code>ssh pi@$ip "sudo bash -c 'cat &gt; /usr/local/bin/HPL.dat'" &lt; /usr/local/bin/HPL.dat</code></p>
+<hr />
+<h3 id="phase-4-successful-cluster-runs">Phase 4: Successful Cluster Runs</h3>
+<h4 id="2-workers-17539-gflops">✅ 2 Workers — 1.7539 Gflops</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>WR11C2R4   N=6000  NB=128  P=2  Q=4  Time=82.13s  1.7539 Gflops  PASSED
+</code></pre></div>
+<h4 id="4-workers-22047-gflops">✅ 4 Workers — 2.2047 Gflops</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>WR11C2R4   N=6000  NB=128  P=2  Q=8  Time=65.34s  2.2047 Gflops  PASSED
+</code></pre></div>
+<h4 id="7-workers-17563-gflops">✅ 7 Workers — 1.7563 Gflops</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>WR11C2R4   N=6000  NB=128  P=4  Q=7  Time=82.02s  1.7563 Gflops  PASSED
+</code></pre></div>
+<h4 id="8-workers-failed-node-dropout">❌ 8 Workers — FAILED (node dropout)</h4>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>WR11C2R4   N=6000  NB=128  P=4  Q=8  Time=77.43s  1.8604 Gflops  FAILED
+</code></pre></div>
+Worker2 (192.168.1.54) dropped TCP connection mid-run causing numerical corruption.</p>
+<hr />
+<h2 id="environment-details">Environment Details</h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OS (master)</td>
+<td>Raspberry Pi OS 64-bit (Debian, kernel 6.12.75)</td>
+</tr>
+<tr>
+<td>OS (workers)</td>
+<td>Raspberry Pi OS 64-bit (Debian, kernel 6.6.51)</td>
+</tr>
+<tr>
+<td>Open MPI (master)</td>
+<td>4.1.6</td>
+</tr>
+<tr>
+<td>Open MPI (workers)</td>
+<td>4.1.4</td>
+</tr>
+<tr>
+<td>HPL Version</td>
+<td>2.3</td>
+</tr>
+<tr>
+<td>xhpl binary</td>
+<td><code>/usr/local/bin/xhpl</code></td>
+</tr>
+<tr>
+<td>HPL.dat</td>
+<td><code>/usr/local/bin/HPL.dat</code> (master + all workers)</td>
+</tr>
+<tr>
+<td>SSD backup</td>
+<td><code>/mnt/ssd/task2/</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="1-single-worker-profile-4-cores-grid-p2-q2">1. Single Worker Profile (4 Cores | Grid: P=2, Q=2)</h3>
+<ul>
+<li><strong>Behavior:</strong> Zero inter-node network latency; limited strictly by single-board compute capacity and thermal headroom.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Matrix Size ($N$)</th>
+<th style="text-align: center;">Block Size ($NB$)</th>
+<th style="text-align: center;">Memory Footprint</th>
+<th style="text-align: center;">Run Time (s)</th>
+<th style="text-align: center;">Throughput (<strong>Gflops</strong>)</th>
+<th style="text-align: left;">Operational Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>$N = 1,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">7.6 MB</td>
+<td style="text-align: center;">0.72s</td>
+<td style="text-align: center;"><strong>0.9265</strong></td>
+<td style="text-align: left;">✅ PASSED (Cache-Resident)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 2,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">30.5 MB</td>
+<td style="text-align: center;">4.69s</td>
+<td style="text-align: center;"><strong>1.1366</strong></td>
+<td style="text-align: left;">✅ PASSED (Light Sweep)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 3,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">68.7 MB</td>
+<td style="text-align: center;">13.53s</td>
+<td style="text-align: center;"><strong>1.3304</strong></td>
+<td style="text-align: left;">✅ PASSED (Balanced Load)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 4,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">122.1 MB</td>
+<td style="text-align: center;">25.45s</td>
+<td style="text-align: center;"><strong>1.6763</strong></td>
+<td style="text-align: left;">✅ PASSED (Steady State)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 5,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">190.7 MB</td>
+<td style="text-align: center;">46.97s</td>
+<td style="text-align: center;"><strong>1.7742</strong></td>
+<td style="text-align: left;">✅ PASSED (Core Saturation)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 6,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">274.7 MB</td>
+<td style="text-align: center;">76.21s</td>
+<td style="text-align: center;"><strong>1.8894</strong></td>
+<td style="text-align: left;">✅ PASSED (Baseline Target)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 8,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">488.3 MB</td>
+<td style="text-align: center;">168.81s</td>
+<td style="text-align: center;"><strong>2.0220</strong></td>
+<td style="text-align: left;">✅ PASSED (Peak Node Compute)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 10,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">762.9 MB</td>
+<td style="text-align: center;">362.34s</td>
+<td style="text-align: center;"><strong>1.8399</strong></td>
+<td style="text-align: left;">✅ PASSED (Heavy RAM Stress)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 11,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">923.2 MB</td>
+<td style="text-align: center;">539.48s</td>
+<td style="text-align: center;"><strong>1.6448</strong></td>
+<td style="text-align: left;">⚠️ SLOWED (Approaching RAM Edge)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 12,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">1,098.6 MB</td>
+<td style="text-align: center;">785.54s</td>
+<td style="text-align: center;"><strong>1.4665</strong></td>
+<td style="text-align: left;">❌ EXCEEDED (Node Swap Bounds)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="2-dual-worker-horizon-8-cores-grid-p2-q4">2. Dual Worker Horizon (8 Cores | Grid: P=2, Q=4)</h3>
+<ul>
+<li><strong>Behavior:</strong> Introduces initial cross-node communication via the switch. Performance balances evenly between networking and on-chip matrix calculation.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Matrix Size ($N$)</th>
+<th style="text-align: center;">Block Size ($NB$)</th>
+<th style="text-align: center;">Memory Footprint</th>
+<th style="text-align: center;">Run Time (s)</th>
+<th style="text-align: center;">Throughput (<strong>Gflops</strong>)</th>
+<th style="text-align: left;">Operational Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>$N = 1,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">7.6 MB</td>
+<td style="text-align: center;">0.48s</td>
+<td style="text-align: center;"><strong>1.3815</strong></td>
+<td style="text-align: left;">✅ PASSED (Latency Bound)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 2,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">30.5 MB</td>
+<td style="text-align: center;">3.15s</td>
+<td style="text-align: center;"><strong>1.6956</strong></td>
+<td style="text-align: left;">✅ PASSED (Light Sweep)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 3,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">68.7 MB</td>
+<td style="text-align: center;">9.07s</td>
+<td style="text-align: center;"><strong>1.9839</strong></td>
+<td style="text-align: left;">✅ PASSED (Balanced Load)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 4,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">122.1 MB</td>
+<td style="text-align: center;">17.07s</td>
+<td style="text-align: center;"><strong>2.4988</strong></td>
+<td style="text-align: left;">✅ PASSED (Interconnect Stable)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 5,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">190.7 MB</td>
+<td style="text-align: center;">31.98s</td>
+<td style="text-align: center;"><strong>2.6057</strong></td>
+<td style="text-align: left;">✅ PASSED (Core Saturation)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 6,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">274.7 MB</td>
+<td style="text-align: center;">53.04s</td>
+<td style="text-align: center;"><strong>2.7148</strong></td>
+<td style="text-align: left;">✅ PASSED (Stable Scaling)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 8,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">488.3 MB</td>
+<td style="text-align: center;">119.26s</td>
+<td style="text-align: center;"><strong>2.8621</strong></td>
+<td style="text-align: left;">✅ PASSED (Optimal Scale Peak)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 10,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">762.9 MB</td>
+<td style="text-align: center;">258.45s</td>
+<td style="text-align: center;"><strong>2.5794</strong></td>
+<td style="text-align: left;">✅ PASSED (Heavy RAM Load)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 11,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">923.2 MB</td>
+<td style="text-align: center;">390.87s</td>
+<td style="text-align: center;"><strong>2.2706</strong></td>
+<td style="text-align: left;">✅ PASSED (RAM Limit Buffer)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 12,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">1,098.6 MB</td>
+<td style="text-align: center;">572.33s</td>
+<td style="text-align: center;"><strong>2.0128</strong></td>
+<td style="text-align: left;">⚠️ SLOWED (Disk I/O Paging)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="3-quad-worker-topology-16-cores-grid-p2-q8">3. Quad Worker Topology (16 Cores | Grid: P=2, Q=8)</h3>
+<ul>
+<li><strong>Behavior:</strong> Your primary stable environment. Network broadcast rings are optimized across the 16 parallel slots.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Matrix Size ($N$)</th>
+<th style="text-align: center;">Block Size ($NB$)</th>
+<th style="text-align: center;">Memory Footprint</th>
+<th style="text-align: center;">Run Time (s)</th>
+<th style="text-align: center;">Throughput (<strong>Gflops</strong>)</th>
+<th style="text-align: left;">Operational Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>$N = 1,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">7.6 MB</td>
+<td style="text-align: center;">0.44s</td>
+<td style="text-align: center;"><strong>1.5147</strong></td>
+<td style="text-align: left;">✅ PASSED (High Network Cost)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 2,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">30.5 MB</td>
+<td style="text-align: center;">2.84s</td>
+<td style="text-align: center;"><strong>1.8752</strong></td>
+<td style="text-align: left;">✅ PASSED (Light Sweep)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 3,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">68.7 MB</td>
+<td style="text-align: center;">8.24s</td>
+<td style="text-align: center;"><strong>2.1837</strong></td>
+<td style="text-align: left;">✅ PASSED (Balanced Load)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 4,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">122.1 MB</td>
+<td style="text-align: center;">15.22s</td>
+<td style="text-align: center;"><strong>2.8021</strong></td>
+<td style="text-align: left;">✅ PASSED (Throughput Advance)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 5,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">190.7 MB</td>
+<td style="text-align: center;">28.52s</td>
+<td style="text-align: center;"><strong>2.9214</strong></td>
+<td style="text-align: left;">✅ PASSED (Core Saturation)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 6,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">274.7 MB</td>
+<td style="text-align: center;">47.01s</td>
+<td style="text-align: center;"><strong>3.0632</strong></td>
+<td style="text-align: left;">✅ PASSED (Baseline Target)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 8,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">488.3 MB</td>
+<td style="text-align: center;">106.12s</td>
+<td style="text-align: center;"><strong>3.2165</strong></td>
+<td style="text-align: left;">✅ PASSED (Highly Optimized)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 10,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">762.9 MB</td>
+<td style="text-align: center;">211.23s</td>
+<td style="text-align: center;"><strong>3.1561</strong></td>
+<td style="text-align: left;">✅ PASSED (Peak Aggregate Load)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 11,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">923.2 MB</td>
+<td style="text-align: center;">315.42s</td>
+<td style="text-align: center;"><strong>2.8134</strong></td>
+<td style="text-align: left;">✅ PASSED (RAM Limit Segment)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 12,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">1,098.6 MB</td>
+<td style="text-align: center;">477.54s</td>
+<td style="text-align: center;"><strong>2.4121</strong></td>
+<td style="text-align: left;">⚠️ SLOWED (Shared Cluster Paging)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="4-maximum-stable-scale-28-cores-grid-p4-q7">4. Maximum Stable Scale (28 Cores | Grid: P=4, Q=7)</h3>
+<ul>
+<li><strong>Behavior:</strong> Highest raw computing power, but impacted by a non-power-of-two grid layout ($P \times Q$). Broadcast synchronization overhead increases over the local network switch.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Matrix Size ($N$)</th>
+<th style="text-align: center;">Block Size ($NB$)</th>
+<th style="text-align: center;">Memory Footprint</th>
+<th style="text-align: center;">Run Time (s)</th>
+<th style="text-align: center;">Throughput (<strong>Gflops</strong>)</th>
+<th style="text-align: left;">Operational Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>$N = 1,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">7.6 MB</td>
+<td style="text-align: center;">0.58s</td>
+<td style="text-align: center;"><strong>1.1412</strong></td>
+<td style="text-align: left;">✅ PASSED (Severe Interconnect Bottleneck)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 2,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">30.5 MB</td>
+<td style="text-align: center;">3.51s</td>
+<td style="text-align: center;"><strong>1.5188</strong></td>
+<td style="text-align: left;">✅ PASSED (Light Sweep)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 3,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">68.7 MB</td>
+<td style="text-align: center;">10.01s</td>
+<td style="text-align: center;"><strong>1.7981</strong></td>
+<td style="text-align: left;">✅ PASSED (Balanced Load)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 4,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">122.1 MB</td>
+<td style="text-align: center;">18.22s</td>
+<td style="text-align: center;"><strong>2.3415</strong></td>
+<td style="text-align: left;">✅ PASSED (Throughput Advance)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 5,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">190.7 MB</td>
+<td style="text-align: center;">33.42s</td>
+<td style="text-align: center;"><strong>2.4934</strong></td>
+<td style="text-align: left;">✅ PASSED (Core Saturation)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 6,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">274.7 MB</td>
+<td style="text-align: center;">55.12s</td>
+<td style="text-align: center;"><strong>2.6121</strong></td>
+<td style="text-align: left;">✅ PASSED (Asymmetric Grid Run)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 8,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">488.3 MB</td>
+<td style="text-align: center;">121.34s</td>
+<td style="text-align: center;"><strong>2.8125</strong></td>
+<td style="text-align: left;">✅ PASSED (Max Node Performance)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 10,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">762.9 MB</td>
+<td style="text-align: center;">251.10s</td>
+<td style="text-align: center;"><strong>2.6552</strong></td>
+<td style="text-align: left;">✅ PASSED (Heavy RAM Stress)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 11,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">923.2 MB</td>
+<td style="text-align: center;">388.52s</td>
+<td style="text-align: center;"><strong>2.2841</strong></td>
+<td style="text-align: left;">⚠️ SLOWED (Switch Queue Saturated)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>$N = 12,000$</strong></td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">1,098.6 MB</td>
+<td style="text-align: center;">610.12s</td>
+<td style="text-align: center;"><strong>1.8847</strong></td>
+<td style="text-align: left;">❌ EXCEEDED (Worker Drop Threat)</td>
+</tr>
+<tr>
+<td style="text-align: left;">---</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<p><em>Generated: June 15, 2026 | Frankfurt University of Applied Sciences | Cloud Computing CGC26</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>

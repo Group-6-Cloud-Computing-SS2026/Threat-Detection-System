@@ -1,0 +1,2830 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for the edge-computing threat detection sensor network.">
+      
+      
+      
+      
+        <link rel="prev" href="../mpi-cluster/">
+      
+      
+        <link rel="next" href="../camera-test-stream/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Distributed k3s Kubernetes Deployment - Threat Detection System</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#distributed-k3s-kubernetes-deployment-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Threat Detection System" class="md-header__button md-logo" aria-label="Threat Detection System" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Threat Detection System
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Distributed k3s Kubernetes Deployment
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Group-6-Cloud-Computing-SS2026/Threat-Detection-System" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Threat-Detection-System
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/overview/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../shutdown-and-cold-start/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tasks/overall-status/" class="md-tabs__link">
+          
+  
+  
+  Tasks
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Threat Detection System" class="md-nav__button md-logo" aria-label="Threat Detection System" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Threat Detection System
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Group-6-Cloud-Computing-SS2026/Threat-Detection-System" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Threat-Detection-System
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shutdown-and-cold-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ❗ (MUST FOLLOW!) Cluster Shutdown and Cold Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../backend-pi5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Local Development & Backend Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../minio-s3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MinIO S3 Object Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mpi-cluster/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MPI Cluster Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Distributed k3s Kubernetes Deployment
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Distributed k3s Kubernetes Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start-running-the-existing-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚡ Quick Start: Running the Existing Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#safe-update-workflow-from-your-laptop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safe Update Workflow From Your Laptop
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Safe Update Workflow From Your Laptop">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-update-locally-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Update locally first
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-sync-only-the-changed-files-to-pi5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Sync only the changed files to Pi5
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-deploy-with-the-smallest-possible-restart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Deploy with the smallest possible restart
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-verify-the-update-worked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Verify the update worked
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-keep-the-old-setup-intact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Keep the old setup intact
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-troubleshooting-the-common-pi5-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Troubleshooting the common Pi5 errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-start-services-on-pi5-master" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Start Services on pi5-master
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-verify-and-boot-worker-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Verify and Boot Worker Nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-deploy-the-threat-detection-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Deploy the Threat Detection System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-monitor-deployment-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Monitor Deployment &amp; Distribution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-architectural-distribution-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Architectural Distribution Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-directory-structure-of-manifests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Directory Structure of Manifests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-step-1-build-the-docker-images-natively-on-the-pi-5-master" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Step 1 — Build the Docker Images Natively on the Pi 5 Master
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-step-2-push-images-to-the-local-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Step 2 — Push Images to the Local Registry
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-step-3-import-the-images-into-k3s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Step 3 — Import the Images into k3s
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-step-4-apply-the-kubernetes-manifests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Step 4 — Apply the Kubernetes Manifests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-step-5-verify-the-distributed-scaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Step 5 — Verify the Distributed Scaling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Step 5 — Verify the Distributed Scaling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expected-output-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Output Structure:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-step-5-access-the-distributed-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Step 5 — Access the Distributed API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-verification-troubleshooting-reference-real-world-deployment-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Verification &amp; Troubleshooting Reference (Real-world Deployment Notes)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Verification &amp; Troubleshooting Reference (Real-world Deployment Notes)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-fatal-error-failed-to-find-memory-cgroup-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 — Fatal Error: failed to find memory cgroup (v2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-k3s-agent-on-disklesspxe-nfs-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 — K3s Agent on Diskless/PXE NFS Workers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-high-performance-ssd-storage-migration-for-nfs-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 — High-Performance SSD Storage Migration for NFS Workers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.3 — High-Performance SSD Storage Migration for NFS Workers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-stop-nfs-k3s-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Stop NFS &amp; K3s Services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-copy-the-nfs-rootfs-with-unix-attribute-preservation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Copy the NFS Rootfs with unix-attribute preservation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-bind-mount-ssd-folder-onto-nfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Bind-Mount SSD folder onto /nfs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-make-mount-persistent-in-etcfstab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Make Mount Persistent in /etc/fstab
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-clear-memory-page-cache-fixes-errno-12-nfsd-spawn-failure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Clear Memory Page Cache (Fixes errno 12 nfsd spawn failure)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-start-services-re-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Start Services &amp; Re-export
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-reclaim-sd-card-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Reclaim SD Card Space
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-kubelet-runtime-request-timeout-over-nfs-native-snapshotter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 — Kubelet Runtime Request Timeout over NFS (Native Snapshotter)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#85-dual-homed-dns-routing-metric-masquerading-nat-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 — Dual-Homed DNS Routing Metric &amp; Masquerading NAT Gateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#86-post-reboot-volatile-ram-dns-sandbox-manual-pull-wakeup-and-statefulset-rollout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.6 — Post-Reboot Volatile RAM DNS, Sandbox manual pull wakeup, and StatefulSet rollout
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.6 — Post-Reboot Volatile RAM DNS, Sandbox manual pull wakeup, and StatefulSet rollout">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-volatile-ram-etcresolvconf-on-pxe-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Volatile RAM /etc/resolv.conf on PXE Workers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-containerd-sandbox-pause-image-pull-back-off-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Containerd Sandbox (pause image) Pull Back-Off Loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-stale-dns-and-connection-caching-in-distributed-minio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Stale DNS and Connection Caching in Distributed MinIO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-distributed-minio-o_direct-failures-on-nfs-mounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Distributed MinIO O_DIRECT Failures on NFS Mounts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-distributed-minio-drive-is-part-of-root-drive-on-diskless-nfs-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Distributed MinIO drive is part of root drive on Diskless NFS Workers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../camera-test-stream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Edge Camera Test Stream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cluster-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cluster Setup (PXE & NFS)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cluster-setup-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cluster Setup V2 (Setup & Verification)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ansible/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ansible
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardware-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware Setup & Boot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../synthetic-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HPL Synthetic Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task-distributor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task Distributor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tasks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tasks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/overall-status/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overall Tasks Status
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-01-edge-computing-infrastructure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 1 — Edge Computing Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-02-hpl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 2 — HPL Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task_3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 3 — MPI Cluster
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-04-non-mpi-scaling-laws/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 4 — Non-MPI Scaling Laws
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-05-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 5 — Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-06-model-training/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 6 — Model training & Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-07-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 7 — Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-08-frontend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 8 — Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-09-telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 9 — Telegram Notifications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tasks/task-10-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task 10 — Project Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start-running-the-existing-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚡ Quick Start: Running the Existing Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#safe-update-workflow-from-your-laptop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safe Update Workflow From Your Laptop
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Safe Update Workflow From Your Laptop">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-update-locally-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Update locally first
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-sync-only-the-changed-files-to-pi5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Sync only the changed files to Pi5
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-deploy-with-the-smallest-possible-restart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Deploy with the smallest possible restart
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-verify-the-update-worked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Verify the update worked
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-keep-the-old-setup-intact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Keep the old setup intact
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-troubleshooting-the-common-pi5-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Troubleshooting the common Pi5 errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-start-services-on-pi5-master" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Start Services on pi5-master
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-verify-and-boot-worker-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Verify and Boot Worker Nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-deploy-the-threat-detection-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Deploy the Threat Detection System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-monitor-deployment-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Monitor Deployment &amp; Distribution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-architectural-distribution-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Architectural Distribution Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-directory-structure-of-manifests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Directory Structure of Manifests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-step-1-build-the-docker-images-natively-on-the-pi-5-master" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Step 1 — Build the Docker Images Natively on the Pi 5 Master
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-step-2-push-images-to-the-local-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Step 2 — Push Images to the Local Registry
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-step-3-import-the-images-into-k3s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Step 3 — Import the Images into k3s
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-step-4-apply-the-kubernetes-manifests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Step 4 — Apply the Kubernetes Manifests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-step-5-verify-the-distributed-scaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Step 5 — Verify the Distributed Scaling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Step 5 — Verify the Distributed Scaling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expected-output-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Output Structure:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-step-5-access-the-distributed-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Step 5 — Access the Distributed API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-verification-troubleshooting-reference-real-world-deployment-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Verification &amp; Troubleshooting Reference (Real-world Deployment Notes)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Verification &amp; Troubleshooting Reference (Real-world Deployment Notes)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-fatal-error-failed-to-find-memory-cgroup-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 — Fatal Error: failed to find memory cgroup (v2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-k3s-agent-on-disklesspxe-nfs-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 — K3s Agent on Diskless/PXE NFS Workers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-high-performance-ssd-storage-migration-for-nfs-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 — High-Performance SSD Storage Migration for NFS Workers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.3 — High-Performance SSD Storage Migration for NFS Workers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-stop-nfs-k3s-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Stop NFS &amp; K3s Services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-copy-the-nfs-rootfs-with-unix-attribute-preservation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Copy the NFS Rootfs with unix-attribute preservation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-bind-mount-ssd-folder-onto-nfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Bind-Mount SSD folder onto /nfs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-make-mount-persistent-in-etcfstab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Make Mount Persistent in /etc/fstab
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-clear-memory-page-cache-fixes-errno-12-nfsd-spawn-failure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Clear Memory Page Cache (Fixes errno 12 nfsd spawn failure)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-start-services-re-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Start Services &amp; Re-export
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-reclaim-sd-card-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Reclaim SD Card Space
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-kubelet-runtime-request-timeout-over-nfs-native-snapshotter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 — Kubelet Runtime Request Timeout over NFS (Native Snapshotter)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#85-dual-homed-dns-routing-metric-masquerading-nat-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 — Dual-Homed DNS Routing Metric &amp; Masquerading NAT Gateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#86-post-reboot-volatile-ram-dns-sandbox-manual-pull-wakeup-and-statefulset-rollout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.6 — Post-Reboot Volatile RAM DNS, Sandbox manual pull wakeup, and StatefulSet rollout
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.6 — Post-Reboot Volatile RAM DNS, Sandbox manual pull wakeup, and StatefulSet rollout">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-volatile-ram-etcresolvconf-on-pxe-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Volatile RAM /etc/resolv.conf on PXE Workers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-containerd-sandbox-pause-image-pull-back-off-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Containerd Sandbox (pause image) Pull Back-Off Loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-stale-dns-and-connection-caching-in-distributed-minio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Stale DNS and Connection Caching in Distributed MinIO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-distributed-minio-o_direct-failures-on-nfs-mounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Distributed MinIO O_DIRECT Failures on NFS Mounts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-distributed-minio-drive-is-part-of-root-drive-on-diskless-nfs-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Distributed MinIO drive is part of root drive on Diskless NFS Workers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="distributed-k3s-kubernetes-deployment-guide">Distributed k3s Kubernetes Deployment Guide</h1>
+<p>To satisfy production and academic requirements for a high-availability, distributed cloud-edge architecture, this guide details how to deploy the entire Threat Detection System backend onto a multi-node <strong>k3s Kubernetes cluster</strong> distributed across your 8 Raspberry Pi worker nodes.</p>
+<hr />
+<h2 id="quick-start-running-the-existing-setup">⚡ Quick Start: Running the Existing Setup</h2>
+<p>If the Kubernetes cluster and NFS rootfilesystems are already configured (with the shared <code>/nfs</code> directory bind-mounted to the SSD), use these commands to start, verify, and deploy the application. You do <strong>not</strong> need to recreate configurations or rebuild services.</p>
+<hr />
+<h2 id="safe-update-workflow-from-your-laptop">Safe Update Workflow From Your Laptop</h2>
+<p>Use this flow when you want to update code from your laptop over Wi-Fi without destroying the Pi5 setup, the database, or stored images.</p>
+<h3 id="1-update-locally-first">1. Update locally first</h3>
+<p>Make your code changes on your laptop in the normal workspace. Before touching Pi5, confirm your local repo is clean enough to deploy:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>status
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>git<span class="w"> </span>diff<span class="w"> </span>--stat
+</code></pre></div>
+<p>If you use Git, commit the change locally and push it to your remote branch. If you do not use Git, copy only the files you changed.</p>
+<h3 id="2-sync-only-the-changed-files-to-pi5">2. Sync only the changed files to Pi5</h3>
+<p>From your laptop, send just the files you updated. Do <strong>not</strong> delete the repo or re-create the cluster.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Example: sync the updated backend service or edge script</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>scp<span class="w"> </span>backend/app/services/mqtt_service.py<span class="w"> </span>cc123@192.168.1.50:~/Threat-Detection-System/backend/app/services/
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>scp<span class="w"> </span>edge_node/edge_camera_publisher.py<span class="w"> </span>cc123@192.168.1.50:~/Threat-Detection-System/edge_node/
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Or sync a whole folder safely</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>rsync<span class="w"> </span>-av<span class="w"> </span>--progress<span class="w"> </span>backend/app/<span class="w"> </span>cc123@192.168.1.50:~/Threat-Detection-System/backend/app/
+</code></pre></div>
+<p>If you are using Git on Pi5, an even safer option is:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>cc123@192.168.1.50
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">cd</span><span class="w"> </span>~/Threat-Detection-System
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>git<span class="w"> </span>pull<span class="w"> </span>--ff-only
+</code></pre></div>
+<p><code>--ff-only</code> prevents Git from creating a merge commit and avoids overwriting local changes on Pi5.</p>
+<h3 id="3-deploy-with-the-smallest-possible-restart">3. Deploy with the smallest possible restart</h3>
+<p>Only restart the component you changed:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># If backend code changed</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>cc123@192.168.1.50
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment/tds-api
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/tds-api
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># If edge script changed</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>scp<span class="w"> </span>edge_node/edge_camera_publisher.py<span class="w"> </span>cc123@192.168.1.50:~/Threat-Detection-System/edge_node/
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ssh<span class="w"> </span>cc123@192.168.1.50<span class="w"> </span><span class="s1">&#39;sudo systemctl restart sensor-node.service&#39;</span>
+</code></pre></div>
+<p>Do not delete namespaces, PVCs, or the <code>k8s/</code> manifests unless you intentionally want to rebuild the environment.</p>
+<h3 id="4-verify-the-update-worked">4. Verify the update worked</h3>
+<p>Use a read-only validation path first:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>cc123@192.168.1.50
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Check the pods</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="s1">&#39;app in (tds-api, tds-postgres, tds-minio, tds-mqtt)&#39;</span><span class="w"> </span>-o<span class="w"> </span>wide
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Watch backend logs</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>tds-api
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Test the API internally</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>curl<span class="w"> </span>http://tds-api:8001/api/v1/detections/recent?limit<span class="o">=</span><span class="m">5</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># If you changed MQTT or camera ingestion</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>mosquitto_sub<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-t<span class="w"> </span><span class="s1">&#39;cluster/camera/events&#39;</span><span class="w"> </span>-v
+</code></pre></div>
+<h3 id="5-keep-the-old-setup-intact">5. Keep the old setup intact</h3>
+<p>These rules keep your cluster safe:</p>
+<ul>
+<li>Do not run <code>kubectl delete namespace default</code>.</li>
+<li>Do not run <code>kubectl delete pvc --all</code>.</li>
+<li>Do not rebuild the cluster unless the whole node is broken.</li>
+<li>Do not replace the entire repo on Pi5 with a fresh copy if only one file changed.</li>
+<li>Take one backup before large changes: <code>git status</code> and <code>git branch --show-current</code>.</li>
+</ul>
+<h3 id="6-troubleshooting-the-common-pi5-errors">6. Troubleshooting the common Pi5 errors</h3>
+<p>If <code>kubectl</code> says it cannot read <code>/etc/rancher/k3s/k3s.yaml</code>, use <code>sudo</code> on Pi5:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="s1">&#39;app in (tds-api, tds-postgres, tds-minio, tds-mqtt)&#39;</span><span class="w"> </span>-o<span class="w"> </span>wide
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>sudo<span class="w"> </span>kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment/tds-api
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>sudo<span class="w"> </span>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/tds-api
+</code></pre></div>
+<p>If you prefer to avoid <code>sudo</code> every time, copy the kubeconfig into your user profile on Pi5:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>~/.kube
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/etc/rancher/k3s/k3s.yaml<span class="w"> </span>~/.kube/config
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>sudo<span class="w"> </span>chown<span class="w"> </span>cc123:cc123<span class="w"> </span>~/.kube/config
+</code></pre></div>
+<p>If <code>sensor-node.service</code> is not found on Pi5, that usually means the service is not installed on the master node. The edge camera process normally runs on the Pi4 edge node, so check the edge node itself or inspect the available services there with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span>--type<span class="o">=</span>service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;sensor|edge|camera&#39;</span>
+</code></pre></div>
+<p>If <code>curl http://tds-api:8001/...</code> fails from the Pi5 shell, that is expected outside the pod network. Use one of these instead:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>sudo<span class="w"> </span>kubectl<span class="w"> </span>port-forward<span class="w"> </span>svc/tds-api<span class="w"> </span><span class="m">8001</span>:8001
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>http://localhost:8001/api/v1/detections/recent?limit<span class="o">=</span><span class="m">5</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Or use the Ingress route exposed on Pi5</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>curl<span class="w"> </span>http://192.168.1.50/docs
+</code></pre></div>
+<h3 id="1-start-services-on-pi5-master">1. Start Services on <code>pi5-master</code></h3>
+<p>Ensure the NFS kernel server and K3s orchestration services are active on the Master node:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>nfs-kernel-server
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>k3s
+</code></pre></div></p>
+<h3 id="2-verify-and-boot-worker-nodes">2. Verify and Boot Worker Nodes</h3>
+<p>Ensure all 8 worker nodes are online and registered:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Verify SSH connectivity via Ansible</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ansible<span class="w"> </span>workers<span class="w"> </span>-i<span class="w"> </span>~/pi-cluster/hosts.ini<span class="w"> </span>-m<span class="w"> </span>ping
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check node readiness (should show pi5-master and worker1 through worker8 as &#39;Ready&#39;)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes
+</code></pre></div>
+<em>(If nodes are offline or unreachable, physically power-cycle the worker Pi boards to boot them off the SSD NFS filesystems).</em></p>
+<h3 id="3-deploy-the-threat-detection-system">3. Deploy the Threat Detection System</h3>
+<p>Apply the manifests to start the backend databases, MQTT broker, and high-availability FastAPI service replicas:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># 1. Navigate to the project root</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">cd</span><span class="w"> </span>~/Threat-Detection-System
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># 2. Deploy infrastructure dependencies</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>k8s/postgres.yaml
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>k8s/minio.yaml
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>k8s/mqtt.yaml
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># 3. Deploy the scaled FastAPI backend application</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>k8s/backend.yaml
+</code></pre></div></p>
+<h3 id="4-monitor-deployment-distribution">4. Monitor Deployment &amp; Distribution</h3>
+<p>Watch Kubernetes spin up and distribute your FastAPI replicas across the physical worker nodes using anti-affinity:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>watch<span class="w"> </span><span class="s2">&quot;kubectl get pods -l &#39;app in (tds-api, tds-postgres, tds-minio, tds-mqtt)&#39; -o wide&quot;</span>
+</code></pre></div></p>
+<hr />
+<h2 id="1-architectural-distribution-overview">1. Architectural Distribution Overview</h2>
+<p>In this deployment:
+* <strong>Storage and Broker isolation</strong>: PostgreSQL, MinIO, and Mosquitto MQTT run as dedicated single-pod workloads backed by k3s local-path Persistent Volume Claims (retaining state across rescheduling).
+* <strong>High Availability Application Scaling</strong>: The FastAPI web service is scaled to <strong>9 active replicas</strong>.
+* <strong>Anti-Affinity Distribution</strong>: By implementing <code>podAntiAffinity</code> rules, we force Kubernetes to schedule your backend instances across <strong>different physical worker nodes</strong>, guaranteeing that a single hardware crash cannot take the system offline.</p>
+<hr />
+<h2 id="2-directory-structure-of-manifests">2. Directory Structure of Manifests</h2>
+<p>The configuration is organized under the new <code>k8s/</code> directory in the repository root:
+* <strong><code>k8s/postgres.yaml</code></strong>: PVC, Single-instance deployment, and cluster Service.
+* <strong><code>k8s/minio.yaml</code></strong>: Standalone S3 Object Storage with Console access on Port 9091.
+* <strong><code>k8s/mqtt.yaml</code></strong>: Broker ConfigMap, message persistent storage, and Port 1883/9001 Service.
+* <strong><code>k8s/backend.yaml</code></strong>: Highly available API Deployment, ClusterIP Service, and Traefik Ingress route for <code>/api</code>.
+* <strong><code>k8s/frontend.yaml</code></strong>: Static React dashboard Deployment, Service, and Traefik Ingress route for <code>/</code>.</p>
+<hr />
+<h2 id="3-step-1-build-the-docker-images-natively-on-the-pi-5-master">3. Step 1 — Build the Docker Images Natively on the Pi 5 Master</h2>
+<p>Since the Raspberry Pi worker nodes run on <code>ARM64</code> architecture, the Docker images should be built on the Pi 5 Master so they match the cluster CPU architecture. Build the backend and frontend images from their own project folders:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Backend API image</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">cd</span><span class="w"> </span>~/Threat-Detection-System/backend
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>localhost:5000/tds-api:latest<span class="w"> </span>.
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Frontend dashboard image</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="nb">cd</span><span class="w"> </span>~/Threat-Detection-System/frontend
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>localhost:5000/tds-frontend:latest<span class="w"> </span>.
+</code></pre></div>
+<hr />
+<h2 id="4-step-2-push-images-to-the-local-registry">4. Step 2 — Push Images to the Local Registry</h2>
+<p>If your Pi 5 Master is running the local registry on <code>localhost:5000</code>, push both images so k3s can pull them from the cluster-side registry reference:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>docker<span class="w"> </span>push<span class="w"> </span>localhost:5000/tds-api:latest
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>docker<span class="w"> </span>push<span class="w"> </span>localhost:5000/tds-frontend:latest
+</code></pre></div>
+<p>If you are not using a registry and prefer to import images directly into containerd, you can still do that with the <code>k3s ctr</code> flow below.</p>
+<hr />
+<h2 id="5-step-3-import-the-images-into-k3s">5. Step 3 — Import the Images into k3s</h2>
+<p>If you do not have a private container registry running inside your k3s cluster, you can manually import the compiled image into the <code>k8s.io</code> namespace on the master node:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Save image to tar archive</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>docker<span class="w"> </span>save<span class="w"> </span>localhost:5000/tds-api:latest<span class="w"> </span>-o<span class="w"> </span>tds-api.tar
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>docker<span class="w"> </span>save<span class="w"> </span>localhost:5000/tds-frontend:latest<span class="w"> </span>-o<span class="w"> </span>tds-frontend.tar
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># Import directly into k3s containerd namespace</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>sudo<span class="w"> </span>k3s<span class="w"> </span>ctr<span class="w"> </span>images<span class="w"> </span>import<span class="w"> </span>tds-api.tar
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>sudo<span class="w"> </span>k3s<span class="w"> </span>ctr<span class="w"> </span>images<span class="w"> </span>import<span class="w"> </span>tds-frontend.tar
+</code></pre></div>
+<hr />
+<h2 id="6-step-4-apply-the-kubernetes-manifests">6. Step 4 — Apply the Kubernetes Manifests</h2>
+<p>Apply the manifests in logical dependency order (Databases, Broker, and Storage first, followed by the web application):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># 1. Navigate to the project root on your Master node</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nb">cd</span><span class="w"> </span>~/Threat-Detection-System
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># 2. Deploy Supporting State Services</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>k8s/postgres.yaml
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>k8s/minio.yaml
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>k8s/mqtt.yaml
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="c1"># 3. Deploy the FastAPI Backend Application</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>k8s/backend.yaml
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="c1"># 4. Deploy the React Frontend Dashboard</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>k8s/frontend.yaml
+</code></pre></div>
+<hr />
+<h2 id="7-step-5-verify-the-distributed-scaling">7. Step 5 — Verify the Distributed Scaling</h2>
+<p>Once applied, verify that Kubernetes has successfully scheduled and distributed the backend pods across the distinct Raspberry Pi worker nodes.</p>
+<p>Since your cluster already has many older running pods, use a <strong>label filter</strong> with the <strong><code>-o wide</code></strong> flag to display only your Threat Detection System (TDS) services and reveal the physical node locations:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;app in (tds-api, tds-postgres, tds-minio, tds-mqtt)&quot;</span><span class="w"> </span>-o<span class="w"> </span>wide
+</code></pre></div>
+<h3 id="expected-output-structure">Expected Output Structure:</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Every 2.0s: kubectl get pods -l &#39;app in (tds-api, tds-postgres, tds-minio, tds-mqtt)&#39; -o wide                                                                                                                                                                    pi5-master: Mon Jun  1 22:26:37 2026
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>NAME                            READY   STATUS    RESTARTS        AGE   IP             NODE         NOMINATED NODE   READINESS GATES
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>tds-api-866b6d55d7-8ptfb        1/1     Running   0               17m   10.42.19.119   worker6      &lt;none&gt;           &lt;none&gt;
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>tds-api-866b6d55d7-b8qr8        1/1     Running   4 (22m ago)     45m   10.42.11.107   worker5      &lt;none&gt;           &lt;none&gt;
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>tds-api-866b6d55d7-j52cm        1/1     Running   4 (22m ago)     45m   10.42.15.115   worker3      &lt;none&gt;           &lt;none&gt;
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>tds-api-866b6d55d7-k9pct        1/1     Running   0               17m   10.42.18.118   worker7      &lt;none&gt;           &lt;none&gt;
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>tds-api-866b6d55d7-knvr2        1/1     Running   4 (22m ago)     45m   10.42.13.123   worker2      &lt;none&gt;           &lt;none&gt;
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>tds-api-866b6d55d7-mm9vs        1/1     Running   0               17m   10.42.9.127    worker4      &lt;none&gt;           &lt;none&gt;
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>tds-api-866b6d55d7-r2cmd        1/1     Running   4 (19m ago)     45m   10.42.2.179    worker1      &lt;none&gt;           &lt;none&gt;
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>tds-api-866b6d55d7-rxqlw        1/1     Running   0               17m   10.42.0.64     pi5-master   &lt;none&gt;           &lt;none&gt;
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>tds-api-866b6d55d7-s56qv        1/1     Running   4 (22m ago)     45m   10.42.16.142   worker8      &lt;none&gt;           &lt;none&gt;
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>tds-minio-0                     1/1     Running   0               18m   10.42.0.63     pi5-master   &lt;none&gt;           &lt;none&gt;
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>tds-minio-1                     1/1     Running   0               19m   10.42.19.118   worker6      &lt;none&gt;           &lt;none&gt;
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>tds-minio-2                     1/1     Running   0               20m   10.42.9.126    worker4      &lt;none&gt;           &lt;none&gt;
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>tds-minio-3                     1/1     Running   0               20m   10.42.18.117   worker7      &lt;none&gt;           &lt;none&gt;
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>tds-mqtt-b89b88cc7-9mvcd        1/1     Running   1 (5h34m ago)   27h   10.42.0.48     pi5-master   &lt;none&gt;           &lt;none&gt;
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>tds-postgres-78895cb7f9-b6kdl   1/1     Running   1 (5h34m ago)   27h   10.42.0.43     pi5-master   &lt;none&gt;           &lt;none&gt;
+</code></pre></div>
+<p>🔬 <strong>How this proves Distributed Kubernetes is working</strong>:
+1. <strong>The <code>NODE</code> Column</strong>: Running with <code>-o wide</code> exposes the <strong><code>NODE</code></strong> column. Look closely at the nodes: your pods are actively distributed across the entire physical cluster (<code>pi5-master</code> and <code>worker1</code> through <code>worker8</code>).
+2. <strong>True Anti-Affinity Application Distribution</strong>: Look at the <strong><code>tds-api</code></strong> pods: they are successfully running concurrently and load-balanced across all available hardware. Because of our <code>podAntiAffinity</code> rules, K3s ensures that replicas are evenly spread across separate physical boards, rather than scheduling them all onto a single node!
+3. <strong>4-Node Distributed MinIO Erasure-Coded Pool</strong>: MinIO is configured in distributed mode across 4 dedicated nodes (<code>pi5-master</code>, <code>worker6</code>, <code>worker4</code>, <code>worker7</code>). If any drive or worker node fails, erasure coding guarantees the S3 storage pool remains online and readable with zero data loss.</p>
+<hr />
+<h2 id="7-step-5-access-the-distributed-api">7. Step 5 — Access the Distributed API</h2>
+<p>k3s ships with the <strong>Traefik Ingress Controller</strong> natively. The Ingress routes are now split so the browser can load the frontend from <code>/</code> and the API from <code>/api</code>.</p>
+<p>Simply open your browser and navigate to:
+* Frontend UI: <strong><code>http://192.168.1.50/</code></strong>
+* Swagger UI: <strong><code>http://192.168.1.50/docs</code></strong>
+* API base path for the frontend: <strong><code>/api/v1</code></strong></p>
+<p>Your backend and frontend are now both distributed across k3s, with the browser-facing dashboard served separately from the API layer.</p>
+<hr />
+<h2 id="8-verification-troubleshooting-reference-real-world-deployment-notes">8. Verification &amp; Troubleshooting Reference (Real-world Deployment Notes)</h2>
+<p>During real-world deployment on private local switches and multi-node Raspberry Pi hardware, several cluster-level configuration requirements were identified and resolved:</p>
+<h3 id="81-fatal-error-failed-to-find-memory-cgroup-v2">8.1 — Fatal Error: <code>failed to find memory cgroup (v2)</code></h3>
+<p>By default, Raspberry Pi OS disables kernel memory management and process limits in the cgroups subsystem. When starting, <code>k3s</code> will fail immediately with a fatal error:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>level=fatal msg=&quot;Error: failed to find memory cgroup (v2)&quot;
+</code></pre></div>
+<strong>Resolution</strong>:
+1. Open the system boot config file on the Pi 5 Master:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/boot/firmware/cmdline.txt
+</code></pre></div>
+2. Append these three parameters to the end of the <strong>single line</strong> (separated by spaces, do not add newlines!):
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1
+</code></pre></div>
+3. Reboot the Pi 5 Master to load the kernel changes:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>sudo<span class="w"> </span>reboot
+</code></pre></div></p>
+<h3 id="82-k3s-agent-on-disklesspxe-nfs-workers">8.2 — K3s Agent on Diskless/PXE NFS Workers</h3>
+<p>In a high-availability diskless cluster where Raspberry Pi 3 workers boot from a shared, read-only NFS rootfs (<code>/nfs/rootfs64</code>), standard K3s agent installation scripts fail because the rootfs is read-only for the workers. </p>
+<p>To successfully resolve this, configure the shared filesystem directly from the active <strong>Pi 5 Master</strong>:</p>
+<ol>
+<li>
+<p><strong>Passwordless SSH Auth</strong>: Authorize the Master's SSH keys within the shared rootfs:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/nfs/rootfs64/home/cc123/.ssh
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>/nfs/rootfs64/home/cc123/.ssh
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>cat<span class="w"> </span>~/.ssh/id_rsa.pub<span class="w"> </span>~/.ssh/id_ed25519.pub<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/nfs/rootfs64/home/cc123/.ssh/authorized_keys
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/nfs/rootfs64/home/cc123/.ssh/authorized_keys
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>sudo<span class="w"> </span>chown<span class="w"> </span>-R<span class="w"> </span><span class="m">1000</span>:1000<span class="w"> </span>/nfs/rootfs64/home/cc123/.ssh
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Copy Agent Binary</strong>: Since Master and Workers share the same <code>ARM64</code> architecture, copy the exact working binary:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/usr/local/bin/k3s<span class="w"> </span>/nfs/rootfs64/usr/local/bin/k3s
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </span>/nfs/rootfs64/usr/local/bin/k3s
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Configure Connection Environment</strong>: Create <code>/nfs/rootfs64/lib/systemd/system/k3s-agent.service.env</code>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>K3S_URL=https://192.168.1.50:6443
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>K3S_TOKEN=&lt;node_token&gt;
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Define systemd Service Unit</strong>: Create <code>/nfs/rootfs64/lib/systemd/system/k3s-agent.service</code>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="k">[Unit]</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="na">Description</span><span class="o">=</span><span class="s">Lightweight Kubernetes</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="na">Documentation</span><span class="o">=</span><span class="s">https://k3s.io</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="na">After</span><span class="o">=</span><span class="s">network-online.target firewalld.service</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="na">Wants</span><span class="o">=</span><span class="s">network-online.target</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="k">[Service]</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a><span class="na">Type</span><span class="o">=</span><span class="s">notify</span>
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a><span class="na">EnvironmentFile</span><span class="o">=</span><span class="s">-/etc/default/%N</span>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="na">EnvironmentFile</span><span class="o">=</span><span class="s">-/etc/sysconfig/%N</span>
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a><span class="na">EnvironmentFile</span><span class="o">=</span><span class="s">-/lib/systemd/system/k3s-agent.service.env</span>
+<a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a><span class="na">ExecStartPre</span><span class="o">=</span><span class="s">-/sbin/modprobe br_netfilter</span>
+<a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a><span class="na">ExecStartPre</span><span class="o">=</span><span class="s">-/sbin/modprobe overlay</span>
+<a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a><span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/local/bin/k3s agent --snapshotter native --kubelet-arg=runtime-request-timeout=15m</span>
+<a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a><span class="na">KillMode</span><span class="o">=</span><span class="s">process</span>
+<a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a><span class="na">Delegate</span><span class="o">=</span><span class="s">yes</span>
+<a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a><span class="na">LimitNOFILE</span><span class="o">=</span><span class="s">1048576</span>
+<a id="__codelineno-26-18" name="__codelineno-26-18" href="#__codelineno-26-18"></a><span class="na">LimitNPROC</span><span class="o">=</span><span class="s">infinity</span>
+<a id="__codelineno-26-19" name="__codelineno-26-19" href="#__codelineno-26-19"></a><span class="na">LimitCORE</span><span class="o">=</span><span class="s">infinity</span>
+<a id="__codelineno-26-20" name="__codelineno-26-20" href="#__codelineno-26-20"></a><span class="na">TasksMax</span><span class="o">=</span><span class="s">infinity</span>
+<a id="__codelineno-26-21" name="__codelineno-26-21" href="#__codelineno-26-21"></a><span class="na">TimeoutStartSec</span><span class="o">=</span><span class="s">0</span>
+<a id="__codelineno-26-22" name="__codelineno-26-22" href="#__codelineno-26-22"></a><span class="na">Restart</span><span class="o">=</span><span class="s">always</span>
+<a id="__codelineno-26-23" name="__codelineno-26-23" href="#__codelineno-26-23"></a><span class="na">RestartSec</span><span class="o">=</span><span class="s">5s</span>
+<a id="__codelineno-26-24" name="__codelineno-26-24" href="#__codelineno-26-24"></a>
+<a id="__codelineno-26-25" name="__codelineno-26-25" href="#__codelineno-26-25"></a><span class="k">[Install]</span>
+<a id="__codelineno-26-26" name="__codelineno-26-26" href="#__codelineno-26-26"></a><span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Enable Service via Chroot</strong>: Register the systemd unit inside the workers' rootfs:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>sudo<span class="w"> </span>chroot<span class="w"> </span>/nfs/rootfs64<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>k3s-agent.service
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Worker Kernel Cgroups (cmdline.txt)</strong>: Append memory/cpuset limits to your workers' PXE boot configuration files (usually found on the Master under <code>/tftpboot/</code> or <code>/srv/tftp/</code>):
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1
+</code></pre></div></p>
+</li>
+</ol>
+<h3 id="83-high-performance-ssd-storage-migration-for-nfs-workers">8.3 — High-Performance SSD Storage Migration for NFS Workers</h3>
+<p>When running multiple diskless workers over NFS, hosting the shared root filesystems (<code>/nfs</code>) on the Master's SD card will exhaust storage and cause massive disk I/O latency, leading to K3s SQLite transaction timeouts and <code>NotReady</code> node registration failures.</p>
+<p>To resolve this bottleneck, we migrated all worker filesystems onto the high-performance <strong>500GB SSD</strong> (<code>/mnt/ssd</code>) and bind-mounted it back to <code>/nfs</code> to ensure zero disruption to DHCP/PXE configurations.</p>
+<h4 id="1-stop-nfs-k3s-services">1. Stop NFS &amp; K3s Services</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>nfs-kernel-server
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>k3s
+</code></pre></div>
+<h4 id="2-copy-the-nfs-rootfs-with-unix-attribute-preservation">2. Copy the NFS Rootfs with unix-attribute preservation</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/mnt/ssd/nfs
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>sudo<span class="w"> </span>rsync<span class="w"> </span>-aHAXx<span class="w"> </span>--info<span class="o">=</span>progress2<span class="w"> </span>/nfs/<span class="w"> </span>/mnt/ssd/nfs/
+</code></pre></div>
+<h4 id="3-bind-mount-ssd-folder-onto-nfs">3. Bind-Mount SSD folder onto <code>/nfs</code></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>sudo<span class="w"> </span>mv<span class="w"> </span>/nfs<span class="w"> </span>/nfs.old
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>/nfs
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>sudo<span class="w"> </span>mount<span class="w"> </span>--bind<span class="w"> </span>/mnt/ssd/nfs<span class="w"> </span>/nfs
+</code></pre></div>
+<h4 id="4-make-mount-persistent-in-etcfstab">4. Make Mount Persistent in <code>/etc/fstab</code></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;/mnt/ssd/nfs /nfs none bind 0 0&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/fstab
+</code></pre></div>
+<h4 id="5-clear-memory-page-cache-fixes-errno-12-nfsd-spawn-failure">5. Clear Memory Page Cache (Fixes <code>errno 12</code> nfsd spawn failure)</h4>
+<p>The massive <code>rsync</code> operations cache files in RAM. Force the kernel to flush and drop caches before starting:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>sudo<span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;sync &amp;&amp; echo 3 &gt; /proc/sys/vm/drop_caches&quot;</span>
+</code></pre></div></p>
+<h4 id="6-start-services-re-export">6. Start Services &amp; Re-export</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>nfs-kernel-server
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>k3s
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a>sudo<span class="w"> </span>exportfs<span class="w"> </span>-ra
+</code></pre></div>
+<h4 id="7-reclaim-sd-card-space">7. Reclaim SD Card Space</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>sudo<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>/nfs.old
+</code></pre></div>
+<h3 id="84-kubelet-runtime-request-timeout-over-nfs-native-snapshotter">8.4 — Kubelet Runtime Request Timeout over NFS (Native Snapshotter)</h3>
+<p>Because network-booted Raspberry Pi workers mount their root filesystems over NFS, <code>containerd</code> cannot use <code>overlayfs</code> for container isolation due to filesystem layer limitations. Instead, it falls back to the <code>native</code> snapshotter.
+* <strong>The Blocker</strong>: The <code>native</code> snapshotter performs a file-by-file deep copy of the container rootfs. For a FastAPI application built on a standard Python base image (~820MB with tens of thousands of Python dependency files), this extraction copies all files over 100Mbps Ethernet network interfaces, taking 3–4 minutes under 100% CPU load on Raspberry Pi 3 workers.
+* <strong>The Error</strong>: By default, the Kubelet has a hardcoded container creation timeout of <strong>2 minutes</strong> (<code>runtime-request-timeout</code>). During image pull and native extraction, Kubelet would abort the creation task midway with <code>context deadline exceeded</code>, leaving the containerd tasks orphaned and locking local resource/container names (<code>failed to reserve container name</code>).
+* <strong>The Resolution</strong>: We configured the workers' persistent systemd unit file at <code>/nfs/rootfs64/lib/systemd/system/k3s-agent.service</code> to pass <code>--kubelet-arg=runtime-request-timeout=15m</code> to the K3s agent. This tells the Kubelet to wait up to 15 minutes for slow I/O and network copy phases, which fully resolved the container creation errors on network-booted nodes!</p>
+<h3 id="85-dual-homed-dns-routing-metric-masquerading-nat-gateway">8.5 — Dual-Homed DNS Routing Metric &amp; Masquerading NAT Gateway</h3>
+<p>The Raspberry Pi 5 Master is dual-homed on the same subnet (<code>192.168.1.0/24</code>) with two physical interfaces: Wi-Fi (<code>wlan0</code>, connecting to the home internet network) and Ethernet (<code>eth0</code>, connecting to the private local switch hosting the 8 workers).
+* <strong>The Blocker</strong>: Because the Ethernet port had a lower routing metric (200) than the Wi-Fi port (600), the operating system routed local DNS queries to <code>192.168.1.1</code> over <code>eth0</code> (the private switch) where the internet-connected router did not exist, causing DNS to fail on the Master and blocking worker image pulls.
+* <strong>The Resolution</strong>: 
+  1. Overwrote <code>/etc/resolv.conf</code> on both the Master and the shared worker rootfs (<code>/nfs/rootfs64/etc/resolv.conf</code>) to use public DNS servers:
+     <div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>nameserver 8.8.8.8
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>nameserver 1.1.1.1
+</code></pre></div>
+  2. Setup IP masquerading (NAT) on the Master to share its Wi-Fi internet connection with the Ethernet switch network interface so that PXE-booted worker nodes can retrieve docker base images and dependencies:
+     <div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>sudo<span class="w"> </span>iptables<span class="w"> </span>-t<span class="w"> </span>nat<span class="w"> </span>-A<span class="w"> </span>POSTROUTING<span class="w"> </span>-o<span class="w"> </span>wlan0<span class="w"> </span>-j<span class="w"> </span>MASQUERADE
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>sudo<span class="w"> </span>iptables<span class="w"> </span>-I<span class="w"> </span>FORWARD<span class="w"> </span><span class="m">1</span><span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>-o<span class="w"> </span>wlan0<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>sudo<span class="w"> </span>iptables<span class="w"> </span>-I<span class="w"> </span>FORWARD<span class="w"> </span><span class="m">1</span><span class="w"> </span>-m<span class="w"> </span>state<span class="w"> </span>--state<span class="w"> </span>RELATED,ESTABLISHED<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+</code></pre></div></p>
+<h3 id="86-post-reboot-volatile-ram-dns-sandbox-manual-pull-wakeup-and-statefulset-rollout">8.6 — Post-Reboot Volatile RAM DNS, Sandbox manual pull wakeup, and StatefulSet rollout</h3>
+<p>During a complete physical cluster reboot, we identified three critical runtime interactions affecting the distributed services:</p>
+<h4 id="1-volatile-ram-etcresolvconf-on-pxe-workers">1. Volatile RAM <code>/etc/resolv.conf</code> on PXE Workers</h4>
+<ul>
+<li><strong>The Blocker</strong>: Network-booted Raspberry Pi workers mount <code>/etc</code> as a volatile RAM overlay (<code>tmpfs</code>). As a result, editing the NFS base image at <code>/nfs/rootfs64/etc/resolv.conf</code> <em>after</em> nodes have booted has no effect. The active system memory continues to hold the local, broken DHCP nameserver.</li>
+<li><strong>The Resolution</strong>: We used Ansible to inject clean public resolvers directly into the running nodes' active memory:
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>ansible<span class="w"> </span>workers<span class="w"> </span>-i<span class="w"> </span>~/pi-cluster/hosts.ini<span class="w"> </span>-m<span class="w"> </span>shell<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;printf &#39;nameserver 8.8.8.8\nnameserver 1.1.1.1\n&#39; | sudo tee /etc/resolv.conf&quot;</span><span class="w"> </span>--become
+</code></pre></div></li>
+</ul>
+<h4 id="2-containerd-sandbox-pause-image-pull-back-off-loop">2. Containerd Sandbox (<code>pause</code> image) Pull Back-Off Loop</h4>
+<ul>
+<li><strong>The Blocker</strong>: Because the workers booted without a working DNS resolver, the local container runtime (<code>containerd</code>) failed to pull the required Kubernetes network sandbox container (<code>rancher/mirrored-pause:3.6</code>). Even after fixing DNS, containerd entered a lengthy exponential pull back-off timeout, leaving pods stuck in <code>ContainerCreating</code> with <code>PodReadyToStartContainers: False</code>.</li>
+<li><strong>The Resolution</strong>: We used Ansible to manually force-pull the sandbox image directly into the K3s containerd cache across all nodes, instantly waking up the scheduler threads:
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>ansible<span class="w"> </span>workers<span class="w"> </span>-i<span class="w"> </span>~/pi-cluster/hosts.ini<span class="w"> </span>-m<span class="w"> </span>shell<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;sudo k3s crictl pull rancher/mirrored-pause:3.6&quot;</span><span class="w"> </span>--become
+</code></pre></div></li>
+</ul>
+<h4 id="3-stale-dns-and-connection-caching-in-distributed-minio">3. Stale DNS and Connection Caching in Distributed MinIO</h4>
+<ul>
+<li><strong>The Blocker</strong>: Since some MinIO StatefulSet replicas booted during the DNS lockout, their internal Go client network socket states got stuck retrying stale, failed connections, continually returning <code>503 Service Unavailable</code> even after local routing and IP-level overlays were fully repaired.</li>
+<li><strong>The Resolution</strong>: We forced a clean rollout restart of both the distributed storage StatefulSet and the API service to reset all network connections:
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="c1"># 1. Recycle storage layer</span>
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>statefulset<span class="w"> </span>tds-minio
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>
+<a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="c1"># 2. Recycle API backend layer</span>
+<a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>tds-api
+</code></pre></div></li>
+</ul>
+<h4 id="4-distributed-minio-o_direct-failures-on-nfs-mounts">4. Distributed MinIO <code>O_DIRECT</code> Failures on NFS Mounts</h4>
+<ul>
+<li><strong>The Blocker</strong>: By default, MinIO in distributed mode enforces POSIX Direct I/O (<code>O_DIRECT</code>) for all read and write operations to guarantee transactional consistency on raw block devices. However, network filesystems (like the NFS mounts used by our diskless workers booting over the network share) do not support <code>O_DIRECT</code> flags inside Docker/K3s container mounts. MinIO catches this write check failure during startup and marks the storage drives as <strong><code>drive not found</code> / <code>Offline</code></strong>, completely stalling the cluster bootstrap process.</li>
+<li><strong>The Resolution</strong>: We added the <code>MINIO_API_ODIRECT</code> environment variable with the value <code>"off"</code> inside the StatefulSet environment block (<code>k8s/minio.yaml</code>). This disables the strict Direct I/O requirement, allowing MinIO to leverage the standard Linux page cache and successfully format and write its metadata to our NFS-backed PVs:
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MINIO_API_ODIRECT</span>
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a><span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;off&quot;</span>
+</code></pre></div></li>
+</ul>
+<h4 id="5-distributed-minio-drive-is-part-of-root-drive-on-diskless-nfs-workers">5. Distributed MinIO <code>drive is part of root drive</code> on Diskless NFS Workers</h4>
+<ul>
+<li><strong>The Blocker</strong>: After solving the <code>O_DIRECT</code> issue, MinIO drives still appeared as <code>drive not found</code> in a continuous retry loop. Inspecting the <strong>worker node</strong> logs (<code>kubectl logs tds-minio-1 | head -n 50</code>) revealed the true root cause:
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>Error: Drive ... returned an unexpected error: major: 0: minor: 42:
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>drive is part of root drive, will not be used, please investigate
+</code></pre></div>
+  MinIO performs a safety check comparing the device IDs (<code>major:minor</code>) of the data path (<code>/data</code>) and the root path (<code>/</code>). If they match, MinIO assumes the data directory is on the OS disk and refuses to use it. On our PXE/NFS diskless workers, <strong>both</strong> <code>/</code> and <code>/data</code> are NFS mounts — they both report device <code>major: 0</code> (the NFS pseudo-device), triggering this false positive. The master node (<code>tds-minio-0</code>) only logged the symptom (<code>drive not found, will be retried</code>) but never the cause, making the error misleading when only checking pod-0 logs.</li>
+<li><strong>The Resolution</strong>: We added the <code>MINIO_CI_CD</code> environment variable with the value <code>"on"</code> inside the StatefulSet environment block (<code>k8s/minio.yaml</code>). This disables MinIO's root-drive safety check, which is designed for bare-metal setups with dedicated disks but breaks on NFS-backed storage where all mount points share the same virtual device ID:
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MINIO_CI_CD</span>
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a><span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;on&quot;</span>
+</code></pre></div>
+  After applying this change and wiping stale metadata (<code>rm -rf /data/.minio.sys</code> on all 4 pods), the cluster successfully formatted and booted:
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>INFO: Formatting 1st pool, 1 set(s), 4 drives per set.
+<a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a>INFO: All MinIO sub-systems initialized successfully
+</code></pre></div></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>
