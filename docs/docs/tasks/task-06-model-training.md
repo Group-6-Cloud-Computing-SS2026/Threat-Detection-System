@@ -82,7 +82,10 @@ person            922       2190      0.843      0.607      0.723      0.458
 ![Kaggle Yollo11n Summary](../assets/yollo8n_kaggle.png)
 
 The conversion tool successfully translated the model into individual network hardware components (`cfgA.bin`, `sdpsA.bin`, `manifest.json`, etc.).
-![Kaggle Yollo11n Summary](../assets/yollo8n_conversion_pass.png)
+![Kaggle Yollo11n Conversion](../assets/yollo8n_conversion_pass.png)
+
+Following is a performance heatmap for this model:
+![Kaggle Yollo11n Performance](../assets/Heatmap.svg)
 
 
 ### Experiment 3: YOLOv11n (Kaggle larger dataset ~30000 images)
@@ -108,7 +111,7 @@ Unfortunately due to time constraints, this was not converted and deployed to th
 
 ---
 
-## 3. Edge Deployment Roadblocks and Solutions
+## 4. Edge Deployment Roadblocks and Solutions
 
 During deployment on the Raspberry Pi 4 AI Camera edge node, several technical challenges were encountered and resolved.
 
