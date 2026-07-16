@@ -251,11 +251,6 @@ The public-facing landing page introduces the project to visitors before login:
 - [backend/app/services/mqtt_service.py](../../backend/app/services/mqtt_service.py) — MQTT Shared Subscription service (backend side of the camera stream)
 - [edge_node/edge_camera_publisher.py](../../edge_node/edge_camera_publisher.py) — Pi Camera MQTT publisher
 
----
-
-## 2. Application Structure & Design System
-*Presenter: Javier de Santiago*
-
 ### 2.1 — Project Initialisation & Tooling
 - **React + TypeScript + Vite** project scaffolded as the build foundation
 - **TailwindCSS** integrated with a custom extended colour palette and `@tailwindcss/forms`
