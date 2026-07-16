@@ -1,73 +1,88 @@
-# React + TypeScript + Vite
+# ThreatOff Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ThreatOff is the React + TypeScript dashboard for the **Threat Detection System** project.  
+It provides live camera monitoring, threat detection views, event search, system operations, and platform documentation in a single web UI.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19
+- TypeScript 5.6
+- Vite 6
+- React Router 7
+- Tailwind CSS 4
+- AOS (scroll animations)
+- Nginx (static serving + reverse proxy)
 
-## React Compiler
+## Key Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- JWT-based authentication (login/register flow)
+- Live camera stream (WebSocket + MQTT-backed pipeline)
+- Recent detections panel with severity tags
+- Advanced event search & filtering
+- Operations dashboard (logs, infrastructure, metrics, cluster views)
+- Runtime API endpoint configuration via Settings page
+- Public landing/docs pages + protected dashboard routes
 
-## Expanding the ESLint configuration
+## Project Structure (frontend)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- `src/router/` — route definitions and guards
+- `src/pages/` — page-level screens (`/landing`, `/camera`, `/search`, `/settings`, etc.)
+- `src/components/` — reusable UI components
+- `Dockerfile` — multi-stage frontend build (Node → Nginx)
+- `nginx.conf` — SPA serving + backend/docs proxy rules
 
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
+## Configuration
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+The frontend uses:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+- `VITE_API_BASE_URL` (default: `/api/v1`)
+
+This value is baked at build time and can also be adjusted at runtime in the Settings page (stored in `localStorage`).
+
+## Local Development
+
+From the `frontend/` directory:
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Build production assets:
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
-
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+npm run build
 ```
+
+Preview production build locally:
+
+```bash
+npm run preview
+```
+
+## Docker
+
+The frontend container is built with a multi-stage Dockerfile:
+
+1. Build static assets with `node:20-alpine`
+2. Serve with `nginx:alpine`
+
+Typical build/run:
+
+```bash
+docker build -t threatoff-frontend .
+docker run -p 8080:80 threatoff-frontend
+```
+
+## Deployment Notes
+
+- Designed to run behind Kubernetes + Traefik.
+- Nginx serves the SPA and forwards selected backend-facing paths.
+- Frontend is stateless (safe to scale horizontally).
+
+## Related Files
+
+- `frontend/Dockerfile`
+- `frontend/nginx.conf`
+- `k8s/frontend.yaml`
+- `docs/docs/tasks/task-08-frontend.md`
