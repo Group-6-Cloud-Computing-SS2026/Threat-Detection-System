@@ -213,7 +213,7 @@ ansible workers -i ~/pi-cluster/hosts.ini -m copy -a "src=~/gustafson_multi_benc
 
 ### Table 1: Amdahl's Law Results — Problem Size 1 (10 Million Iterations)
 
-| Cores ($P$) | Total Workload | Execution Time (s) | Speedup ($S_A$) | Parallel Efficiency (%) | Observation |
+| Cores  | Total Workload | Execution Time (s) | Speedup ($S_A$) | Parallel Efficiency (%) | Observation |
 |:-----------:|---------------:|-------------------:|----------------:|------------------------:|-------------|
 | **1** | 10,000,000 | 3.85 | 1.00× | 100.0 | Baseline sequential execution |
 | **2** | 10,000,000 | 1.95 | 1.97× | 98.5 | Near-ideal scaling |
@@ -224,7 +224,7 @@ ansible workers -i ~/pi-cluster/hosts.ini -m copy -a "src=~/gustafson_multi_benc
 
 ### Table 2: Amdahl's Law Results — Problem Size 2 (50 Million Iterations)
 
-| Cores ($P$) | Total Workload | Execution Time (s) | Speedup ($S_A$) | Parallel Efficiency (%) | Observation |
+| Cores  | Total Workload | Execution Time (s) | Speedup ($S_A$) | Parallel Efficiency (%) | Observation |
 |:-----------:|---------------:|-------------------:|----------------:|------------------------:|-------------|
 | **1** | 50,000,000 | 19.25 | 1.00× | 100.0 | Baseline sequential execution |
 | **2** | 50,000,000 | 9.72 | 1.98× | 99.0 | Near-linear scaling |
@@ -235,7 +235,7 @@ ansible workers -i ~/pi-cluster/hosts.ini -m copy -a "src=~/gustafson_multi_benc
 
 ### Table 3: Amdahl's Law Results — Problem Size 3 (100 Million Iterations)
 
-| Cores ($P$) | Total Workload | Execution Time (s) | Speedup ($S_A$) | Parallel Efficiency (%) | Observation |
+| Cores  | Total Workload | Execution Time (s) | Speedup ($S_A$) | Parallel Efficiency (%) | Observation |
 |:-----------:|---------------:|-------------------:|----------------:|------------------------:|-------------|
 | **1** | 100,000,000 | 38.50 | 1.00× | 100.0 | Baseline sequential execution |
 | **2** | 100,000,000 | 19.35 | 1.99× | 99.5 | Near-ideal scaling |
@@ -246,7 +246,7 @@ ansible workers -i ~/pi-cluster/hosts.ini -m copy -a "src=~/gustafson_multi_benc
 
 ### Table 4: Problem Size 4 — 1 Billion Steps (Large Workload Layer)
 
-| Cores ($P$) | Total Workload | Execution Time (s) | Speedup ($S_A$) | Parallel Efficiency (%) | Observation |
+| Cores  | Total Workload | Execution Time (s) | Speedup ($S_A$) | Parallel Efficiency (%) | Observation |
 |:-----------:|---------------:|-------------------:|----------------:|------------------------:|-------------|
 | **1** | 1,000,000,000 | 385.10 | 1.00× | 100.0 | Heavy Computation Load |
 | **2** | 1,000,000,000 | 192.60 | 2.00× | 100.0 | Near-Perfect Scaling |
@@ -257,7 +257,7 @@ ansible workers -i ~/pi-cluster/hosts.ini -m copy -a "src=~/gustafson_multi_benc
 
 ### Table 5: Problem Size 5 — 5 Billion Steps (Extreme Workload / Big Data Layer)
 
-| Cores ($P$) | Total Workload | Execution Time (s) | Speedup ($S_A$) | Parallel Efficiency (%) | Observation |
+| Cores | Total Workload | Execution Time (s) | Speedup ($S_A$) | Parallel Efficiency (%) | Observation |
 |:-----------:|---------------:|-------------------:|----------------:|------------------------:|-------------|
 | **1** | 5,000,000,000 | 1925.50 | 1.00× | 100.0 | High-Capacity Computation |
 | **2** | 5,000,000,000 | 962.80 | 2.00× | 100.0 | Perfect Linear Balance |
@@ -272,7 +272,7 @@ ansible workers -i ~/pi-cluster/hosts.ini -m copy -a "src=~/gustafson_multi_benc
 
 ### Table 6: Problem Size 6 — 1 Million Steps per Core (Light Baseline)
 
-| Cores ($P$) | Total Workload | Execution Time (s) | Speedup ($S_G$) | Parallel Efficiency (%) | Observation |
+| Cores  | Total Workload | Execution Time (s) | Speedup ($S_G$) | Parallel Efficiency (%) | Observation |
 |:-----------:|---------------:|-------------------:|----------------:|------------------------:|-------------|
 | **1** | 1,000,000 | 0.3812 | 1.00× | 100.0 | Baseline Capacity Unit |
 | **2** | 2,000,000 | 0.3825 | 1.99× | 99.5 | Local Thread Scaling |
@@ -283,7 +283,7 @@ ansible workers -i ~/pi-cluster/hosts.ini -m copy -a "src=~/gustafson_multi_benc
 
 ### Table 7: Problem Size 7 — 10 Million Steps per Core (Moderate Baseline)
 
-| Cores ($P$) | Total Workload | Execution Time (s) | Speedup ($S_G$) | Parallel Efficiency (%) | Observation |
+| Cores  | Total Workload | Execution Time (s) | Speedup ($S_G$) | Parallel Efficiency (%) | Observation |
 |:-----------:|---------------:|-------------------:|----------------:|------------------------:|-------------|
 | **1** | 10,000,000 | 3.820 | 1.00× | 100.0 | Baseline Capacity Unit |
 | **2** | 20,000,000 | 3.825 | 1.99× | 99.5 | Highly Consistent Execution |
@@ -294,7 +294,7 @@ ansible workers -i ~/pi-cluster/hosts.ini -m copy -a "src=~/gustafson_multi_benc
 
 ### Table 8: Problem Size 8 — 50 Million Steps per Core (Target Profile Scale)
 
-| Cores ($P$) | Total Workload | Execution Time (s) | Speedup ($S_G$) | Parallel Efficiency (%) | Observation |
+| Cores  | Total Workload | Execution Time (s) | Speedup ($S_G$) | Parallel Efficiency (%) | Observation |
 |:-----------:|---------------:|-------------------:|----------------:|------------------------:|-------------|
 | **1** | 50,000,000 | 19.25 | 1.00× | 100.0 | Benchmark Footprint Base |
 | **2** | 100,000,000 | 19.32 | 1.99× | 99.5 | Symmetrical Thread Processing |
@@ -305,7 +305,7 @@ ansible workers -i ~/pi-cluster/hosts.ini -m copy -a "src=~/gustafson_multi_benc
 
 ### Table 9: Problem Size 9 — 100 Million Steps per Core (Heavy Capacity Scale)
 
-| Cores ($P$) | Total Workload | Execution Time (s) | Speedup ($S_G$) | Parallel Efficiency (%) | Observation |
+| Cores  | Total Workload | Execution Time (s) | Speedup ($S_G$) | Parallel Efficiency (%) | Observation |
 |:-----------:|---------------:|-------------------:|----------------:|------------------------:|-------------|
 | **1** | 100,000,000 | 38.50 | 1.00× | 100.0 | High Core Loading Base |
 | **2** | 200,000,000 | 38.58 | 1.99× | 99.5 | Rock-Solid Synchronicity |
@@ -316,7 +316,7 @@ ansible workers -i ~/pi-cluster/hosts.ini -m copy -a "src=~/gustafson_multi_benc
 
 ### Table 10: Problem Size 10 — 200 Million Steps per Core (Extreme Capacity / Big Data Scale)
 
-| Cores ($P$) | Total Workload | Execution Time (s) | Speedup ($S_G$) | Parallel Efficiency (%) | Observation |
+| Cores  | Total Workload | Execution Time (s) | Speedup ($S_G$) | Parallel Efficiency (%) | Observation |
 |:-----------:|---------------:|-------------------:|----------------:|------------------------:|-------------|
 | **1** | 200,000,000 | 76.25 | 1.00× | 100.0 | Maximum Capacity Footprint |
 | **2** | 400,000,000 | 76.55 | 1.99× | 99.5 | Flawless Core Coordination |
@@ -330,18 +330,14 @@ ansible workers -i ~/pi-cluster/hosts.ini -m copy -a "src=~/gustafson_multi_benc
 ## 6. Analytical Observations & Verification Insights
 
 ### 1. Multi-Workload Resolution of Amdahl's Law
-Amdahl's model states that the speedup of a program is limited by its strictly sequential portions ($s$):
-
-$$S_A = \frac{1}{s + \frac{1-s}{P}}$$
+Amdahl's model states that the speedup of a program is limited by its strictly sequential portions.
 
 By cross-referencing Tables 1 through 5, we see a dramatic shift in behavior. At small problem sizes (10M), the fixed workload gets split so thinly at 32 cores that communication setup takes up more time than the actual calculations. This causes the cluster efficiency to bottom out at **26.8%**.
 
 However, when increasing the workload size **500×** up to **5 Billion integration steps**, the computing time grows large enough to completely drown out network fluctuations. This allows the 32-core configuration to run at a highly optimal **91.9% efficiency rate** and achieve a massive **29.40× speedup**, showing that Amdahl's limitation shifts dynamically based on data scale.
 
 ### 2. Multi-Workload Resolution of Gustafson's Law
-Gustafson's law approaches parallel efficiency from a capacity perspective, stating that scaled speedup is linear with core expansion if the workload scales with the architecture:
-
-$$S_G = P - s(P - 1)$$
+Gustafson's law approaches parallel efficiency from a capacity perspective, stating that scaled speedup is linear with core expansion if the workload scales with the architecture.
 
 Reviewing Tables 6 through 10 confirms that Gustafson's Law completely bypasses the fixed-workload efficiency drop. By keeping the computing load consistent *per core*, total execution times remain incredibly flat across all sweeps, shifting by only minor margins even as the overall system handles up to **6.4 Billion calculations simultaneously**.
 
