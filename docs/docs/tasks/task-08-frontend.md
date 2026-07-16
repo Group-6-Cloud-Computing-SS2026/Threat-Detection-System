@@ -172,7 +172,7 @@ All `/api/*` browser requests go to port 80 on the frontend Nginx pod, which pro
 
 ## 7. Routing & Application Shell
 
-[src/router/index.tsx](/frontend/src/router/index.tsx) defines the route tree with `createBrowserRouter`. Public routes render inside `Root`'s marketing header/footer; `/auth` is gated by `RedirectIfAuthed`; everything else lives under `HomeLayout` behind `RequireAuth` and is lazy-loaded per route.
+`src/router/index.tsx` defines the route tree with `createBrowserRouter`. Public routes render inside `Root`'s marketing header/footer; `/auth` is gated by `RedirectIfAuthed`; everything else lives under `HomeLayout` behind `RequireAuth` and is lazy-loaded per route.
 
 | Path          | Guard                                               | Notes                                                |
 |:--------------|:----------------------------------------------------|:-----------------------------------------------------|
@@ -264,8 +264,8 @@ The header strip shows four live stat tiles (detections, nodes, notifications, c
 
 | File                                        | Details                                             |
 |:--------------------------------------------|:----------------------------------------------------|
-| [frontend/Dockerfile](/frontend/Dockerfile) | Multi-stage: `node:20-alpine` → `nginx:1.27-alpine` |
-| [frontend/nginx.conf](/frontend/nginx.conf) | Route fallback + Swagger/OpenAPI proxy              |
-| [k8s/frontend.yaml](/k8s/frontend.yaml)     | Kubernetes Deployment + Service + Ingress           |
+| `frontend/Dockerfile` | Multi-stage: `node:20-alpine` → `nginx:1.27-alpine` |
+| `frontend/nginx.conf` | Route fallback + Swagger/OpenAPI proxy              |
+| `k8s/frontend.yaml`     | Kubernetes Deployment + Service + Ingress           |
 
 ---
