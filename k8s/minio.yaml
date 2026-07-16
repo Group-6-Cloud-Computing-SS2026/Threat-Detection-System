@@ -1,0 +1,109 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio-sys
+  namespace: default
+  labels:
+    app: tds-minio
+spec:
+  clusterIP: None
+  ports:
+    - name: api
+      port: 9000
+      targetPort: 9000
+    - name: console
+      port: 9001
+      targetPort: 9001
+  selector:
+    app: tds-minio
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: tds-minio
+  namespace: default
+  labels:
+    app: tds-minio
+spec:
+  serviceName: minio-sys
+  replicas: 4
+  selector:
+    matchLabels:
+      app: tds-minio
+  template:
+    metadata:
+      labels:
+        app: tds-minio
+    spec:
+      # Spread MinIO pods across different physical nodes for true hardware redundancy
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - tds-minio
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: minio
+          image: minio/minio:latest
+          imagePullPolicy: IfNotPresent
+          args:
+            - server
+            - http://tds-minio-{0...3}.minio-sys.default.svc.cluster.local/data
+            - --console-address
+            - :9001
+          ports:
+            - containerPort: 9000
+              name: minio-api
+            - containerPort: 9001
+              name: minio-console
+          env:
+            - name: MINIO_ROOT_USER
+              value: "admin"
+            - name: MINIO_ROOT_PASSWORD
+              value: "password123"
+            - name: MINIO_API_ODIRECT
+              value: "off"
+            - name: MINIO_CI_CD
+              value: "on"
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          resources:
+            # Lightweight constraints optimized for concurrent Pi 3 execution
+            limits:
+              cpu: "500m"
+              memory: 256Mi
+            requests:
+              cpu: "50m"
+              memory: 128Mi
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
+        storageClassName: local-path
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+  namespace: default
+spec:
+  type: LoadBalancer
+  ports:
+    - name: api
+      port: 9000
+      targetPort: 9000
+    - name: console
+      port: 9091
+      targetPort: 9001
+  selector:
+    app: tds-minio

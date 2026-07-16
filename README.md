@@ -51,7 +51,7 @@ mkdocs serve
 | 3 | MPI Cluster | Message Passing Interface deployment and scaling |
 | 4 | Non-MPI Scaling Laws | Amdahl's & Gustafson's Law with Task Distributor |
 | 5 | Monitoring | Prometheus / Grafana infrastructure monitoring |
-| 6 | Image Collection & Training | Custom object detection model training |
+| 6 | Model training & Deployment | Custom object detection model training |
 | 7 | Backend | FastAPI service on k3s with distributed storage |
 | 8 | Frontend | React dashboard on k3s |
 | 9 | Telegram Notifications | Real-time alerts via Telegram Bot |

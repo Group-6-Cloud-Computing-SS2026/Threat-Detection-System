@@ -1,0 +1,33 @@
+name: Deploy MkDocs to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - service-repository-backend-v1
+    paths:
+      - "docs/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: docs
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install mkdocs-material
+
+      - name: Deploy to GitHub Pages
+        run: mkdocs gh-deploy --force

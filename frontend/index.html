@@ -1,14 +1,41 @@
 <!doctype html>
-<html lang="en">
+<html
+  lang="en"
+  style="min-height: 100%; color-scheme: dark; background-color: #0a0903"
+>
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico?v=1.0.0" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/favicon-96x96.png?v=1.0.0"
+      sizes="96x96"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/favicon.svg?v=1.0.0"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/apple-touch-icon.png?v=1.0.0"
+    />
+    <meta name="apple-mobile-web-app-title" content="ThreatOff" />
+    <link rel="manifest" href="/site.webmanifest?v=1.0.2" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Threat Detection System — edge-computing sensor network dashboard" />
+    <meta
+      name="description"
+      content="Threat Detection System — edge-computing sensor network dashboard"
+    />
+    <meta name="theme-color" content="#0a0903" />
     <title>Threat Detection System</title>
   </head>
-  <body>
-    <div id="root"></div>
+  <body style="margin: 0; min-height: 100%; background-color: #0a0903">
+    <div id="root" style="min-height: 100vh; background-color: #0a0903"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -1,1 +1,1 @@
-# backend.app.api
+"""API package."""

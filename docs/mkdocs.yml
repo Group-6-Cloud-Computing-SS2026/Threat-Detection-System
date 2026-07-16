@@ -1,7 +1,6 @@
 site_name: Threat Detection System
 site_description: Documentation for the edge-computing threat detection sensor network.
-site_url: https://javierdesant.github.io/Threat-Detection-System/
-repo_url: https://github.com/javierdesant/Threat-Detection-System
+repo_url: https://github.com/Group-6-Cloud-Computing-SS2026/Threat-Detection-System
 repo_name: Threat-Detection-System
 
 theme:
@@ -33,10 +32,17 @@ theme:
 plugins:
   - search
 
+extra_javascript:
+  - https://unpkg.com/mermaid@10/dist/mermaid.min.js
+
 markdown_extensions:
   - admonition
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
@@ -51,14 +57,30 @@ nav:
   - Getting Started:
       - Overview: getting-started/overview.md
       - Installation: getting-started/installation.md
+  - Guides:
+      - "❗ (MUST FOLLOW!) Cluster Shutdown and Cold Start": guides/shutdown-and-cold-start.md
+      - "Local Development & Backend Setup": guides/backend-pi5.md
+      - "MinIO S3 Object Storage": guides/minio-s3.md
+      - "MPI Cluster Setup": guides/mpi-cluster.md
+      - "Distributed k3s Kubernetes Deployment": guides/k3s-deployment.md
+      - "Edge Camera Test Stream": guides/camera-test-stream.md
+      - "Cluster Setup (PXE & NFS)": guides/cluster-setup.md
+      - "Cluster Setup V2 (Setup & Verification)": guides/cluster-setup-v2.md
+      - "Ansible": guides/ansible.md
+      - "Hardware Setup & Boot": guides/hardware-setup.md
+      - "Basic User Guide": guides/user-guide.md
+      - "HPL Synthetic Benchmarks": guides/synthetic-benchmarks.md
+      - "Task Distributor": guides/task-distributor.md
   - Tasks:
-      - "Task 1 — Sensor Nodes & PXE Boot": tasks/task-01-sensor-nodes.md
+      - "Overall Tasks Status": tasks/overall-status.md
+      - "Task 1 — Edge Computing Infrastructure": tasks/task-01-edge-computing-infrastructure.md
       - "Task 2 — HPL Performance": tasks/task-02-hpl.md
-      - "Task 3 — MPI Cluster": tasks/task-03-mpi.md
-      - "Task 4 — Non-MPI Scaling Laws": tasks/task-04-scaling-laws.md
+      - "Task 3 — MPI Cluster": guides/task_3.md
+      - "Task 4 — Non-MPI Scaling Laws": tasks/task-04-non-mpi-scaling-laws.md
       - "Task 5 — Monitoring": tasks/task-05-monitoring.md
-      - "Task 6 — Image Collection & Training": tasks/task-06-model-training.md
+      - "Task 6 — Model training & Deployment": tasks/task-06-model-training.md
       - "Task 7 — Backend": tasks/task-07-backend.md
       - "Task 8 — Frontend": tasks/task-08-frontend.md
       - "Task 9 — Telegram Notifications": tasks/task-09-telegram.md
+      - "Task 10 — Project Documentation": tasks/task-10-documentation.md
   - Architecture: architecture.md

@@ -1,0 +1,148 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tds-api
+  namespace: default
+  labels:
+    app: tds-api
+spec:
+  replicas: 9
+  selector:
+    matchLabels:
+      app: tds-api
+  template:
+    metadata:
+      labels:
+        app: tds-api
+    spec:
+      # Ensures high availability by distributing pods across different physical nodes
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - tds-api
+                topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: api
+          image: localhost:5000/tds-api:latest  # Assumes local container registry inside k3s
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8001
+              name: http
+          env:
+            - name: APP_ENV
+              value: "development"
+            - name: DEBUG
+              value: "true"
+            - name: PROMETHEUS_ENABLED
+              value: "false"
+            - name: JWT_SECRET_KEY
+              value: "dev-secret-change-in-production"
+            - name: BACKEND_CORS_ORIGINS
+              value: '["http://192.168.1.50", "http://localhost", "http://127.0.0.1", "http://localhost:5173", "http://localhost:3000"]'
+            - name: TELEGRAM_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: telegram-credentials
+                  key: bot-token
+            - name: TELEGRAM_CHAT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: telegram-credentials
+                  key: chat-id
+            
+            # Databases & Services linked to k8s Services DNS names
+            - name: POSTGRES_HOST
+              value: "postgres"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_USER
+              value: "tds_user"
+            - name: POSTGRES_PASSWORD
+              value: "tds_secret"
+            - name: POSTGRES_DB
+              value: "threat_detection"
+            
+            - name: MINIO_ENDPOINT
+              value: "minio:9000"
+            - name: MINIO_ACCESS_KEY
+              value: "admin"
+            - name: MINIO_SECRET_KEY
+              value: "password123"
+            - name: MINIO_BUCKET_DETECTIONS
+              value: "detection-images"
+            - name: MINIO_USE_SSL
+              value: "false"
+            
+            - name: MQTT_BROKER_HOST
+              value: "mqtt"
+            - name: MQTT_BROKER_PORT
+              value: "1883"
+            - name: MQTT_TOPIC_DETECTIONS
+              value: "sensors/+/detections"
+            - name: MQTT_TOPIC_HEALTH
+              value: "sensors/+/health"
+            - name: MQTT_TOPIC_CAMERA
+              value: "cluster/camera/#"
+          
+          # Readiness and Liveness probes to guarantee system self-healing
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: 8001
+            initialDelaySeconds: 20
+            periodSeconds: 15
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: 8001
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 3
+          
+          resources:
+            limits:
+              cpu: "500m"
+              memory: 512Mi
+            requests:
+              cpu: "100m"
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tds-api
+  namespace: default
+spec:
+  ports:
+    - port: 8001
+      targetPort: 8001
+      name: http
+  selector:
+    app: tds-api
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tds-api-ingress
+  namespace: default
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: tds-api
+                port:
+                  number: 8001

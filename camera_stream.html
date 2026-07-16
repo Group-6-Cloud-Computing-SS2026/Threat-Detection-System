@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distributed Edge Camera Stream</title>
+    <!-- Modern Premium Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Standalone Paho MQTT WebSockets Client CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
+    
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(16, 22, 37, 0.65);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent-green: #00ff80;
+            --accent-glow: rgba(0, 255, 128, 0.25);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --font-outfit: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-outfit);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 128, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 255, 128, 0.02) 0%, transparent 40%);
+        }
+
+        /* Glassmorphism Container */
+        .dashboard {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            backdrop-filter: blur(16px);
+            padding: 32px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            position: relative;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .header-title h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-title p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Glowing Connection Indicator */
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 99px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .status-badge.connected {
+            color: var(--accent-green);
+            border-color: rgba(0, 255, 128, 0.2);
+            background: rgba(0, 255, 128, 0.05);
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ef4444;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .status-badge.connected .dot {
+            background: var(--accent-green);
+            box-shadow: 0 0 12px var(--accent-green);
+            animation: pulse 1.8s infinite;
+        }
+
+        /* Screen Wrapper */
+        .stream-view {
+            position: relative;
+            background: #060913;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+        }
+
+        .stream-view img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        /* Cyberpunk Grid/No Signal overlay */
+        .no-signal {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        .no-signal svg {
+            width: 48px;
+            height: 48px;
+            stroke: var(--text-muted);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* HUD Stats Overlay */
+        .hud-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            color: var(--accent-green);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .hud-overlay.visible {
+            opacity: 0.85;
+        }
+
+        /* Info metrics grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-card .label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card .value {
+            font-size: 20px;
+            font-weight: 600;
+            font-family: var(--font-mono);
+        }
+
+        .stat-card .value span {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-left: 2px;
+        }
+
+        /* Config Card */
+        .config-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+        }
+
+        .config-card input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            font-size: 14px;
+            width: 150px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .config-card input:focus {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 8px rgba(0, 255, 128, 0.15);
+        }
+
+        .config-card button {
+            background: var(--accent-green);
+            color: #0b0f19;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-family: var(--font-outfit);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .config-card button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.6; box-shadow: 0 0 18px var(--accent-green); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        .scanline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(0, 255, 128, 0),
+                rgba(0, 255, 128, 0.05) 50%,
+                rgba(0, 255, 128, 0) 51%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-title">
+                <h1>Distributed Camera Stream</h1>
+                <p>10 FPS Live Edge telemetry powered by Mosquitto MQTT & K3s</p>
+            </div>
+            <div class="status-badge" id="connBadge">
+                <div class="dot"></div>
+                <span id="connText">DISCONNECTED</span>
+            </div>
+        </div>
+
+        <!-- CONFIGURATION PANEL -->
+        <div class="config-card">
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+                <label style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Broker IP Address</label>
+                <input type="text" id="brokerIp" value="192.168.1.50">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px; margin-right: auto;">
+                <label style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Port (WebSockets)</label>
+                <input type="text" id="brokerPort" value="9001">
+            </div>
+            <button onclick="toggleConnection()" id="btnConnect">CONNECT STREAM</button>
+        </div>
+
+        <!-- CAMERA FEED CONTAINER -->
+        <div class="stream-view" id="streamContainer">
+            <div class="scanline"></div>
+            
+            <!-- Static Grid Overlay HUD -->
+            <div class="hud-overlay" id="hudOverlay">
+                <div>REC ● CLUSTER_NODE: PI4</div>
+                <div id="hudTime">FPS: 10</div>
+            </div>
+            
+            <!-- Dynamic base64 image frame source -->
+            <img id="streamFrame" src="" alt="Live Stream Frame">
+            
+            <!-- Fallback No Signal screen -->
+            <div class="no-signal" id="noSignal">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 7a2 2 0 0 0-2.45-1.45L16 7V5a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2l5 1.45A2 2 0 0 0 23 17V7Z"/>
+                    <path d="m10 11 2 2 4-4"/>
+                </svg>
+                <p id="noSignalText">Broker disconnected. Awaiting manual trigger...</p>
+            </div>
+        </div>
+
+        <!-- TELEMETRY STATS GRID -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="label">Transit Latency</span>
+                <span class="value" id="statLatency">--<span>ms</span></span>
+            </div>
+            <div class="stat-card">
+                <span class="label">Render Frequency</span>
+                <span class="value" id="statFps">--<span>fps</span></span>
+            </div>
+            <div class="stat-card">
+                <span class="label">Total Frames</span>
+                <span class="value" id="statFrames">0<span>frames</span></span>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        let client = null;
+        let isConnected = false;
+        let frameCount = 0;
+        let lastFrameTime = performance.now();
+        let fpsSamples = [];
+        
+        const STREAM_TOPIC = "cluster/camera/stream";
+
+        const elements = {
+            badge: document.getElementById('connBadge'),
+            text: document.getElementById('connText'),
+            btn: document.getElementById('btnConnect'),
+            ip: document.getElementById('brokerIp'),
+            port: document.getElementById('brokerPort'),
+            frame: document.getElementById('streamFrame'),
+            noSignal: document.getElementById('noSignal'),
+            noSignalText: document.getElementById('noSignalText'),
+            hud: document.getElementById('hudOverlay'),
+            statLatency: document.getElementById('statLatency'),
+            statFps: document.getElementById('statFps'),
+            statFrames: document.getElementById('statFrames')
+        };
+
+        function toggleConnection() {
+            if (isConnected) {
+                disconnect();
+            } else {
+                connect();
+            }
+        }
+
+        function connect() {
+            const host = elements.ip.value.trim();
+            const port = parseInt(elements.port.value.trim());
+
+            if (!host || isNaN(port)) {
+                alert("Please specify a valid IP address and WebSocket port.");
+                return;
+            }
+
+            elements.btn.innerText = "CONNECTING...";
+            elements.btn.disabled = true;
+            elements.noSignalText.innerText = `Establishing WebSocket connection to ${host}:${port}...`;
+
+            // Unique client ID to allow concurrent subscribers
+            const clientId = "tds_frontend_stream_" + Math.random().toString(16).substring(2, 8);
+            client = new Paho.MQTT.Client(host, port, clientId);
+
+            client.onConnectionLost = onConnectionLost;
+            client.onMessageArrived = onMessageArrived;
+
+            const options = {
+                timeout: 5,
+                onSuccess: onConnectSuccess,
+                onFailure: onConnectFailure,
+                useSSL: false
+            };
+
+            try {
+                client.connect(options);
+            } catch (err) {
+                onConnectFailure(err);
+            }
+        }
+
+        function disconnect() {
+            if (client) {
+                try {
+                    client.disconnect();
+                } catch(e){}
+            }
+            onConnectionLost({ errorCode: 0, errorMessage: "User disconnected manually." });
+        }
+
+        function onConnectSuccess() {
+            isConnected = true;
+            elements.badge.classList.add('connected');
+            elements.text.innerText = "CONNECTED";
+            elements.btn.innerText = "DISCONNECT STREAM";
+            elements.btn.disabled = false;
+            
+            // Subscribe to the stream topic
+            client.subscribe(STREAM_TOPIC);
+            elements.noSignalText.innerText = "Connection active. Awaiting edge camera stream frames...";
+        }
+
+        function onConnectFailure(err) {
+            isConnected = false;
+            elements.badge.classList.remove('connected');
+            elements.text.innerText = "CONNECTION FAILED";
+            elements.btn.innerText = "CONNECT STREAM";
+            elements.btn.disabled = false;
+            elements.noSignalText.innerText = `Failed to connect to broker at ${elements.ip.value}:${elements.port.value}. Ensure the broker service type is set to LoadBalancer.`;
+            console.error("MQTT Connect Error:", err);
+        }
+
+        function onConnectionLost(responseObject) {
+            isConnected = false;
+            elements.badge.classList.remove('connected');
+            elements.text.innerText = "DISCONNECTED";
+            elements.btn.innerText = "CONNECT STREAM";
+            elements.btn.disabled = false;
+            
+            // UI fallback
+            elements.frame.style.display = "none";
+            elements.noSignal.style.display = "flex";
+            elements.hud.classList.remove('visible');
+            elements.noSignalText.innerText = `Broker disconnected: ${responseObject.errorMessage}`;
+            
+            elements.statLatency.innerHTML = `--<span>ms</span>`;
+            elements.statFps.innerHTML = `--<span>fps</span>`;
+        }
+
+        function onMessageArrived(message) {
+            if (message.destinationName === STREAM_TOPIC) {
+                try {
+                    const payload = JSON.parse(message.payloadString);
+                    const base64Data = payload.image;
+                    const timestampStr = payload.timestamp;
+
+                    // Display frame
+                    elements.frame.src = "data:image/jpeg;base64," + base64Data;
+                    if (elements.frame.style.display === "none" || elements.frame.style.display === "") {
+                        elements.frame.style.display = "block";
+                        elements.noSignal.style.display = "none";
+                        elements.hud.classList.add('visible');
+                    }
+
+                    // Dynamically update HUD Target FPS and description from stream metadata
+                    if (payload.fps) {
+                        document.getElementById('hudTime').innerText = `TARGET FPS: ${payload.fps}`;
+                        document.querySelector('.header-title p').innerText = `${payload.fps} FPS Live Edge telemetry powered by Mosquitto MQTT & K3s`;
+                    }
+
+                    // Calculate real-time latency (distributed synchronization metrics)
+                    if (timestampStr) {
+                        const sentTime = new Date(timestampStr).getTime();
+                        const receiveTime = Date.now();
+                        const latency = receiveTime - sentTime;
+                        elements.statLatency.innerHTML = `${latency}<span>ms</span>`;
+                    }
+
+                    // Calculate actual render FPS
+                    const now = performance.now();
+                    const delta = now - lastFrameTime;
+                    lastFrameTime = now;
+                    const currentFps = Math.round(1000 / delta);
+                    
+                    fpsSamples.push(currentFps);
+                    if (fpsSamples.length > 10) fpsSamples.shift();
+                    
+                    const avgFps = Math.round(fpsSamples.reduce((a, b) => a + b, 0) / fpsSamples.length);
+                    elements.statFps.innerHTML = `${avgFps}<span>fps</span>`;
+
+                    // Increment frame count
+                    frameCount++;
+                    elements.statFrames.innerHTML = `${frameCount}<span>frames</span>`;
+
+                } catch (err) {
+                    console.error("Error parsing stream event:", err);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

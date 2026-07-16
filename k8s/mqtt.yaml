@@ -1,0 +1,99 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tds-mqtt-config
+  namespace: default
+data:
+  mosquitto.conf: |
+    listener 1883
+    protocol mqtt
+
+    listener 9001
+    protocol websockets
+
+    allow_anonymous true
+
+    persistence true
+    persistence_location /mosquitto/data/
+
+    log_dest stdout
+    log_type all
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tds-mqtt-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: local-path
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tds-mqtt
+  namespace: default
+  labels:
+    app: tds-mqtt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tds-mqtt
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: tds-mqtt
+    spec:
+      containers:
+        - name: mqtt
+          image: eclipse-mosquitto:2
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 1883
+              name: mqtt
+            - containerPort: 9001
+              name: mqtt-ws
+          volumeMounts:
+            - name: config
+              mountPath: /mosquitto/config/mosquitto.conf
+              subPath: mosquitto.conf
+            - name: storage
+              mountPath: /mosquitto/data
+          resources:
+            limits:
+              cpu: "500m"
+              memory: 256Mi
+            requests:
+              cpu: "50m"
+              memory: 128Mi
+      volumes:
+        - name: config
+          configMap:
+            name: tds-mqtt-config
+        - name: storage
+          persistentVolumeClaim:
+            claimName: tds-mqtt-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mqtt
+  namespace: default
+spec:
+  type: LoadBalancer
+  ports:
+    - name: mqtt
+      port: 1883
+      targetPort: 1883
+    - name: mqtt-ws
+      port: 9001
+      targetPort: 9001
+  selector:
+    app: tds-mqtt
