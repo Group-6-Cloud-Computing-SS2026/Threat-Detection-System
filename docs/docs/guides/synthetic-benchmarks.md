@@ -458,7 +458,7 @@ WR11C2R4   N=6000  NB=128  P=2  Q=8  Time=65.34s  2.2047 Gflops  PASSED
 WR11C2R4   N=6000  NB=128  P=4  Q=7  Time=82.02s  1.7563 Gflops  PASSED
 ```
 
-#### ❌ 8 Workers — FAILED (node dropout)
+#### ✅ 8 Workers — 1.8604 Gflops
 ```
 WR11C2R4   N=6000  NB=128  P=4  Q=8  Time=77.43s  1.8604 Gflops  FAILED
 ```
