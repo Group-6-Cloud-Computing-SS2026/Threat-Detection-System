@@ -1,15 +1,17 @@
-# Task 8 — Frontend Dashboard
+# Task 8 — Frontend
 
-The frontend of the Threat Detection System is a React + TypeScript single-page application deployed on the K3s cluster. It provides security operators with a real-time surveillance dashboard: a live camera feed streamed directly from the edge node, continuous detection event monitoring, historical event search, and cluster monitoring links.
+The frontend is **ThreatOff**, a React 19 + TypeScript dashboard for the Threat Detection System. It is a client-rendered app built with Vite and routed with **React Router 7** (data router, with several routes lazy-loaded): a public marketing site, a docs page, an auth screen, and an authenticated dashboard with six routes (overview, camera, search, settings, scaling results, operations). It talks to the FastAPI backend over REST, a backend-relayed WebSocket, and — for the raw camera preview — directly to the MQTT broker over WebSocket. The app is packaged as a Docker container (Nginx-served static bundle) and deployed to the k3s cluster.
+
+**Tech stack:** React 19, TypeScript 5.6, Vite 6, React Router 7, Tailwind CSS 4, AOS (scroll animations), Nginx. No component library — everything is hand-built with Tailwind utility classes and a shared brand color palette.
 
 ---
 
 ## 1. Team & Presentation Split
 
-| Order | Presenter | Sections | Contribution Area |
-|---|---|---|---|
-| **1st** | **Md. Forman Ullah Sajib** | 2, 3, 4, 5, 6 | Backend–frontend wiring, authentication, live camera stream, detection data, deployment |
-| **2nd** | **Javier de Santiago** | 7, 8, 9, 10 | Application structure, design system, pages, UI components |
+| Order   | Presenter                  | Sections        | Contribution Area                                                                       |
+|---------|----------------------------|-----------------|-----------------------------------------------------------------------------------------|
+| **1st** | **Md. Forman Ullah Sajib** | 2, 3, 4, 5, 6   | Backend–frontend wiring, authentication, live camera stream, detection data, deployment |
+| **2nd** | **Javier de Santiago**     | 7, 8, 9, 10     | Application structure, routing, design system, pages, UI components                     |
 
 ---
 
@@ -100,9 +102,9 @@ sequenceDiagram
 - Displays the 8 most recent detection events as cards with severity colour-coding: `critical`, `high`, `medium`, `low`
 - Auto-refresh can be paused with a toggle button
 - Click any card to expand it and see:
-  - The raw detection data from YOLO (bounding boxes, labels)
-  - The metadata object
-  - The annotated JPEG image saved in MinIO
+    - The raw detection data from YOLO (bounding boxes, labels)
+    - The metadata object
+    - The annotated JPEG image saved in MinIO
 
 ### 4.3 — Event Search & Filter
 
@@ -168,95 +170,102 @@ All `/api/*` browser requests go to port 80 on the frontend Nginx pod, which pro
 
 ---
 
-## 7. Application Structure & Design System
-*Presenter: Javier de Santiago*
+## 7. Routing & Application Shell
 
-### 7.1 — Project Initialisation & Tooling
-- **React + TypeScript + Vite** project scaffolded as the build foundation
-- **TailwindCSS** integrated with a custom extended colour palette and `@tailwindcss/forms`
-- **Prettier** with Tailwind plugin enforced via **Husky** pre-commit hooks for consistent code style across the team
-- **React Router v6** configured with nested routes and a `RouterProvider`, separating the public landing from the authenticated app shell
+[src/router/index.tsx](/frontend/src/router/index.tsx) defines the route tree with `createBrowserRouter`. Public routes render inside `Root`'s marketing header/footer; `/auth` is gated by `RedirectIfAuthed`; everything else lives under `HomeLayout` behind `RequireAuth` and is lazy-loaded per route.
 
-### 7.2 — Landing Page
-The public-facing landing page introduces the project to visitors before login:
+| Path          | Guard                                               | Notes                                                |
+|:--------------|:----------------------------------------------------|:-----------------------------------------------------|
+| `/landing`    | none                                                | Public landing page — hero, workflows, features, CTA |
+| `/docs`       | none                                                | Public docs page                                     |
+| `/auth`       | `RedirectIfAuthed` — sends logged-in users to `/`   | Login / registration                                 |
+| `/`           | `RequireAuth` — sends anonymous users to `/landing` | Overview dashboard                                   |
+| `/camera`     | `RequireAuth`                                       | Direct MQTT camera preview                           |
+| `/search`     | `RequireAuth`                                       | Historical detection search                          |
+| `/settings`   | `RequireAuth`                                       | API connection settings                              |
+| `/graphs`     | `RequireAuth`                                       | Amdahl/Gustafson scaling results                     |
+| `/operations` | `RequireAuth`                                       | Backend operations console                           |
 
-- **HeroHome** — animated headline with `PageIllustration` and `Spotlight` SVG effects
-- **Features** section — capability overview cards
-- **Workflows** section — pipeline description
-- **CTA** section — call-to-action block
-- **Header** — navigation with logo and links
-- **Footer** — team credits and tech stack wordmarks (custom SVGs)
-- **AOS (Animate on Scroll)** library integrated for entrance animations; disabled dynamically on small screens
-
-### 7.3 — Authenticated Application Pages
-
-| Page | Route | Description |
-|---|---|---|
-| Home / Dashboard | `/home` | Detection dashboard and summary cards |
-| Operations | `/operations` | Sensor operations and management tables |
-| Search Events | `/search` | Historical event search with filters |
-| Graphs | `/graphs` | Amdahl's & Gustafson's Law scaling results with Chart.js |
-| Docs | `/docs` | MkDocs documentation links |
-| Settings | `/settings` | API configuration and user preferences |
-| Login / Register | `/login` | Tabbed authentication form |
-| Profile | `/profile` | User profile page |
-
-### 7.4 — Reusable Component Library
-- `Button` — reusable variant-aware button component
-- `Logo` / wordmark SVGs — brand assets
-- `HomeSidebar` — collapsible mobile navigation with toggle
-- Custom **Nacelle** font family loaded via `@font-face`
-- PWA manifest and updated favicon
+Authenticated routes share a sticky sidebar (`HomeSidebar`) and a route-transition progress bar (`RoutePendingBar`), grouped into **Dashboard** (Overview, Camera stream, Search events), **System** (Settings, Operations, Docs, Scaling results, Grafana, Swagger UI), and **Account** (Sign out) — with the logged-in username and initials avatar in the footer.
 
 ---
 
-## 8. UI Pages — Detail
+## 8. Pages
 
-### 8.1 — GraphsPage (Scaling Law Results)
-- Displays **Amdahl's Law** and **Gustafson's Law** benchmark results from the cluster benchmarking task
-- Line charts rendered with **Chart.js** with custom colour palettes, tooltip styling, and typed options
-- Tables with multi-line headers, column width adjustments, and **horizontal drag-to-scroll** on mobile
-- Responsive layout switching between grid and flex depending on viewport
+### 8.1 — Landing (`/landing`)
 
-### 8.2 — OperationsPage
-- Sectioned tables showing sensor operations and system status
-- Consistent `operationsErrorClass` centralised error styling
-- Responsive layout fixes for narrow viewports
+Public marketing page with a hero (`HeroHome`), a workflows section, a features grid, and a call-to-action, wrapped by `Root`'s shared header/footer and animated with AOS.
 
-### 8.3 — DocsPage
-- Type-safe documentation URL map
-- Section cards linking to the MkDocs documentation site
+### 8.2 — Docs (`/docs`)
 
-### 8.4 — SettingsPage
-- API Base URL configuration
-- Flex-based responsive layout with updated button styles
+Public hero section (`DocsHero`/`DocsOverview`) summarizing the project and linking out to the full documentation site.
+
+### 8.3 — Camera Stream (`/camera`)
+
+Connects directly to the MQTT broker over WebSocket via the Paho MQTT client (loaded from a CDN), separate from the Overview page's relayed feed described in [§4. Live Data Integration](#4-live-data-integration). The broker IP and WebSocket port are user-configurable (defaults `192.168.1.50` / `9001`); it subscribes to `cluster/camera/stream` and shows **Connecting** / **Connect** / **Disconnect** status with inline errors on failure.
+
+### 8.4 — Search Events (`/search`)
+
+Queries `GET /api/v1/detections` with the filters below, reusing the same expandable detection cards described in [§4](#4-live-data-integration). "Search detections" fires the query; "Clear filters" resets everything. Results show `{total} result(s)` and `Showing {n} item(s)`.
+
+| Field            | API parameter              |
+|:-----------------|:---------------------------|
+| Event type       | `event_type`               |
+| Severity         | `severity`                 |
+| Sensor ID        | `sensor_id`                |
+| Acknowledged     | `acknowledged`             |
+| Start / End time | `start_time` / `end_time`  |
+| Skip / Limit     | `skip` / `limit` (max 200) |
+
+### 8.5 — Settings (`/settings`)
+
+Lets the operator see the signed-in username, edit the **API base URL** (persisted to `localStorage` via `useApiSettings`, defaults to `VITE_API_BASE_URL`), open Swagger UI, or sign out.
+
+### 8.6 — Scaling Results (`/graphs`)
+
+Renders the Task 4 Amdahl/Gustafson benchmarks as native React components instead of an embedded iframe: `Graphs` loads Chart.js from a CDN (`chartLoader.ts`) and draws two canvases (`ChartCard`) backed by static data in `graphsData.ts`, followed by `AmdahlTable`/`GustTable` with the full results (flagging Amdahl rows missing speedup values).
+
+### 8.7 — Operations (`/operations`)
+
+A tabbed "backend console" that surfaces most of the read-only backend surface in one place. `useBackendConsole` fires all requests in parallel (`Promise.allSettled`, so one failing endpoint doesn't block the rest) and exposes a manual "Refresh data" action; each tab uses a shared `operationsErrorClass` for consistent error styling.
+
+| Tab            | Backed by                                                                                   |
+|:---------------|:--------------------------------------------------------------------------------------------|
+| Overview       | `GET /dashboard/summary`                                                                    |
+| Detections     | `GET /detections/recent?limit=12`                                                           |
+| Logs           | `GET /logs?limit=20`                                                                        |
+| Nodes          | `GET /infrastructure/status` (node inventory + health)                                      |
+| Notifications  | `GET /notifications?limit=20`                                                               |
+| Infrastructure | `GET /infrastructure/status`, `GET /infrastructure/services`, `GET /infrastructure/storage` |
+| Cluster        | `GET /cluster/mpi/history?limit=8`, `GET /cluster/mpi/scaling-comparison`                   |
+| Auth           | `GET /auth/me` (current session's profile)                                                  |
+| Metrics        | `GET /metrics` (raw Prometheus exposition, previewed and shown in full)                     |
+
+The header strip shows four live stat tiles (detections, nodes, notifications, connected services) and quick links to `/docs` and `<api-origin>/docs` (Swagger UI).
 
 ---
 
 ## 9. Technology Stack
 
-| Technology | Purpose |
-|---|---|
-| React 18 + TypeScript | UI framework, type-safe components |
-| Vite | Dev server + production build |
-| TailwindCSS | Utility-first styling with custom palette |
-| React Router v6 | Client-side routing and protected routes |
-| Chart.js | Benchmark result visualisation |
-| AOS | Scroll-triggered animations |
-| Prettier + Husky | Code style enforcement |
-| Nginx 1.25 (Alpine) | Static file serving + API reverse proxy |
-| Docker | Container packaging |
-| Kubernetes (k3s) | Cluster deployment |
+| Component                 | Details                                                                                                 |
+|:--------------------------|:--------------------------------------------------------------------------------------------------------|
+| React 19 + TypeScript 5.6 | Client-rendered app, routed with React Router 7                                                         |
+| Vite 6                    | Dev server + production static bundle                                                                   |
+| Tailwind CSS 4            | Utility-first styling with a shared brand color palette                                                 |
+| AOS                       | Scroll-triggered entrance animations                                                                    |
+| Paho MQTT / Chart.js      | Loaded from CDN at runtime (camera preview and scaling charts only)                                     |
+| Nginx                     | Serves the static bundle, SPA-style fallback, proxies `/docs`, `/redoc`, `/openapi.json` to the backend |
+
+**Environment variable:** `VITE_API_BASE_URL` (default `/api/v1`) — baked into the bundle at build time. Note that `nginx.conf` does **not** proxy `/api/`, so in practice the API base URL must point at a reachable backend origin (directly, or overridden per-session from the Settings page, which persists the choice to `localStorage`).
 
 ---
 
-## 10. Related Files
+## 10. Related Files / Artifacts
 
-- [frontend/src/App.tsx](../../frontend/src/App.tsx) — Data integration dashboard (auth, WebSocket, detections, search)
-- [frontend/Dockerfile](../../frontend/Dockerfile) — Multi-stage production container
-- [frontend/nginx.conf](../../frontend/nginx.conf) — Nginx reverse proxy + WebSocket passthrough
-- [k8s/frontend.yaml](../../k8s/frontend.yaml) — Kubernetes Deployment, Service, and Ingress
-- [backend/app/services/mqtt_service.py](../../backend/app/services/mqtt_service.py) — MQTT Shared Subscription service (backend side of the camera stream)
-- [edge_node/edge_camera_publisher.py](../../edge_node/edge_camera_publisher.py) — Pi Camera MQTT publisher
+| File                                        | Details                                             |
+|:--------------------------------------------|:----------------------------------------------------|
+| [frontend/Dockerfile](/frontend/Dockerfile) | Multi-stage: `node:20-alpine` → `nginx:1.27-alpine` |
+| [frontend/nginx.conf](/frontend/nginx.conf) | Route fallback + Swagger/OpenAPI proxy              |
+| [k8s/frontend.yaml](/k8s/frontend.yaml)     | Kubernetes Deployment + Service + Ingress           |
 
 ---
