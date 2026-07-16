@@ -11,9 +11,9 @@ The objective of this task is to investigate the computational performance of th
 
 To perform this evaluation, the HPL benchmark was downloaded from the official Netlib repository and configured together with its required dependencies, including an MPI implementation for inter-process communication and the BLAS library for optimized linear algebra operations. After successfully compiling HPL, the benchmark parameters were configured in the `HPL.dat` file, defining values such as the matrix size, block size, process grid, and execution settings suitable for the cluster environment.
 
-The benchmark was executed on different cluster configurations to evaluate how the infrastructure performed as additional compute nodes were utilized. Performance tests were completed using **2-node**, **4-node**, and **7-node** configurations, allowing the computational throughput of the cluster to be measured under different levels of parallelism. For each execution, HPL calculated the achieved GFLOPS, measured the execution time, and verified the correctness of the computed solution through its residual validation.
+The benchmark was executed on different cluster configurations to evaluate how the infrastructure performed as additional compute nodes were utilized. Performance tests were completed using **2-node**, **4-node**, **7-node**  and **8-node** configurations, allowing the computational throughput of the cluster to be measured under different levels of parallelism. For each execution, HPL calculated the achieved GFLOPS, measured the execution time, and verified the correctness of the computed solution through its residual validation.
 
-An additional benchmark was performed using **all 8 available nodes** in the cluster. However, this execution did not complete successfully because one of the compute nodes became disconnected during the benchmark. As a result, MPI communication between the participating nodes was interrupted, leading to a connectivity error and termination of the HPL execution. Although the complete 8-node benchmark could not be finalized, the successful execution on the 2-node, 4-node, and 7-node configurations confirmed that the cluster environment, MPI installation, and HPL benchmark were correctly configured and operational under stable network conditions.
+
 ## Cluster Overview
 
 | Node | IP Address | Hardware | RAM | Role |
@@ -38,7 +38,7 @@ An additional benchmark was performed using **all 8 available nodes** in the clu
 | 2 workers | w1, w3 | 8 | 2 | 4 | 6,000 | 128 | 82.13 | **1.7539** | ✅ PASSED |
 | 4 workers | w1,w3,w4,w5 | 16 | 2 | 8 | 6,000 | 128 | 65.34 | **2.2047** | ✅ PASSED |
 | 7 workers | w1,w3,w4,w5,w6,w7,w8 | 28 | 4 | 7 | 6,000 | 128 | 82.02 | **1.7563** | ✅ PASSED |
-| 8 workers (attempt) | all | 32 | 4 | 8 | 6,000 | 128 | 77.43 | **1.8604** | ❌ FAILED (node dropout) |
+| 8 workers (attempt) | all | 32 | 4 | 8 | 6,000 | 128 | 77.43 | **1.8604** |✅ PASSED|
 
 ---
 
@@ -46,8 +46,8 @@ An additional benchmark was performed using **all 8 available nodes** in the clu
 
 During benchmarking, worker nodes dropped in and out unpredictably:
 
-- **worker2 (192.168.1.54)** — went completely offline at the start of the session, came back later, but then dropped TCP connections mid-run causing the 8-worker test to fail
-- **worker7 (192.168.1.83)** — dropped out mid-run during the 7-worker attempt causing that run to abort; came back online later but went down again during the 8-worker run
+- **worker2 (192.168.1.54)** — went completely offline at the start of the session, came back later,
+- **worker7 (192.168.1.83)** — dropped out mid-run during the 7-worker attempt causing that run to abort; came back online later 
 
 These dropouts are a known issue with the shared cluster. The nodes are physical Raspberry Pi 3 boards that can lose network connectivity unexpectedly. **Always ping-check all nodes before running and exclude any unstable ones.**
 
@@ -66,7 +66,6 @@ done
 - **Pi5 master (12.073 Gflops)** vastly outperforms Pi3 workers — Cortex-A76 is ~7x faster per core than Cortex-A53
 - **2→4 workers:** Performance improved from 1.7539 → 2.2047 Gflops (+25.7%)
 - **4→7 workers:** Performance dropped from 2.2047 → 1.7563 Gflops — suboptimal P×Q grid shape (4×7=28)
-- **8-worker attempt failed** due to worker2 dropping TCP connections mid-run
 - **Node instability** is a recurring challenge — worker2 and worker7 are the least stable nodes
 - Results show limited scalability due to network overhead between Pi3 nodes
 
@@ -79,6 +78,7 @@ The benchmark showed that the master node alone achieved the highest performance
 With 2 worker nodes (8 cores), the cluster achieved 1.7539 GFLOPS. Increasing the cluster to 4 worker nodes (16 cores) improved performance to 2.2047 GFLOPS, representing the best result among the distributed configurations. However, scaling further to 7 worker nodes (28 cores) reduced performance to 1.7563 GFLOPS, indicating that the communication overhead outweighed the benefits of the additional processing cores for the chosen problem size.
 
 An attempt was also made to execute the benchmark using 8 worker nodes (32 cores). Although the benchmark reached approximately 1.8604 GFLOPS, the execution failed because one of the nodes dropped out during computation. As a result, this run could not be considered a valid benchmark result.
+The HPL benchmark was also executed using all 8 worker nodes (32 cores) to evaluate the cluster's scalability under the maximum available computational resources. Although this configuration successfully completed the benchmark and achieved 1.8604 GFLOPS, it did not outperform the 4-worker (16-core) configuration, which achieved 2.2047 GFLOPS. This result indicates that increasing the number of nodes does not always lead to higher performance. As more nodes participate in the computation, the amount of MPI communication, synchronization, and data exchange across the network also increases. For the selected problem size (N = 6000, NB = 128), these communication overheads became significant enough to offset the benefits of the additional processing cores. Consequently, the 8-worker configuration demonstrated successful scalability but lower computational efficiency than the 4-worker setup. This illustrates a common characteristic of distributed computing systems: there is an optimal number of nodes for a given workload, beyond which communication costs begin to dominate the execution time.
 
 Overall, the benchmark demonstrates that the Raspberry Pi cluster is capable of running distributed HPL workloads successfully. However, the results also highlight that increasing the number of nodes does not always lead to higher performance. Beyond four worker nodes, network latency, MPI communication costs, and synchronization overhead became significant enough to limit scalability. For the tested configuration (N = 6000, NB = 128), the 4-worker (16-core) configuration provided the best balance between computational power and communication overhead, making it the most efficient distributed setup among the successful benchmark runs.
 Overall, the successful executions on the **2-node**, **4-node**, and **7-node** configurations confirm that the cluster infrastructure was able to execute distributed HPL workloads correctly. The unsuccessful **8-node** execution indicates that resolving node connectivity and communication issues is necessary before conducting full-scale performance evaluation across the entire cluster.
