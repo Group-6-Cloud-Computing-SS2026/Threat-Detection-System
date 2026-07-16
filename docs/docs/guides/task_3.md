@@ -42,10 +42,24 @@ To guarantee execution consistency across the cluster and bypass NFS directory c
 
 ## 3. Methodology & Implementation Design
 
+
 Because the diskless workers utilize an isolated runtime environment via a shared chroot image, running scripts via higher-level language interpreters (e.g., Python `mpi4py`) encountered environment execution blocks and missing module path flags. To establish a clean, absolute proof without packaging dependencies, both laws were implemented directly in **Native C code** using standard MPI (`mpi.h`) frameworks.
 
 To accommodate massive loop iterations without risking overflow errors or mutex contentions during big data scaling, standard 32-bit `long` integers were extended to 64-bit `long long` types, and thread-safe internal pseudo-randomization functions (`rand_r`) were substituted.
 
+### Verifying OpenMPI Installation
+```c
+mpirun --version
+which mpirun
+```
+
+### Check which nodes are UP/DOWN before running:
+```bash
+for ip in 192.168.1.58 192.168.1.54 192.168.1.104 192.168.1.136 192.168.1.86 192.168.1.117 192.168.1.83 192.168.1.133; do
+    echo -n "$ip: "
+    ping -c 1 -W 1 $ip > /dev/null 2>&1 && echo "UP" || echo "DOWN"
+done
+```
 ### Implementation 1: Amdahl's Law (Fixed Workload)
 The problem calculates an approximation of $\pi$ using numerical integration across a fixed global interval. As the core count ($P$) scales, the iteration range per core drops strictly to $N / P$.
 
@@ -333,6 +347,6 @@ Reviewing Tables 6 through 10 confirms that Gustafson's Law completely bypasses 
 
 No matter how large the baseline footprint gets (ranging from 1M to 200M steps per core), the cluster node efficiency consistently holds within an exceptional **87.0% to 93.5%** corridor. This confirms near-perfect horizontal capacity scaling and validates that the 8-node cluster can handle massive problem spaces effortlessly when scaled outward.
 
-## 7. 
-![Chart](../assets/task 3 with amdahls law.png) 
-![Chart](../assets/TASK 3 (1).png) 
+## 7. Graphical Representation
+![Chart](../assets/amdahl_task3.png) 
+![Chart](../assets/gustafson_task3.png) 
